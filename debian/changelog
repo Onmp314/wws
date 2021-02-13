@@ -1,0 +1,10 @@
+wws (1.4.5) unstable; urgency=low
+
+  * First properly Debian packaged W Window Wystem version.
+  * Updated the W-Lua interpreter and Lua bindings to work with Lua v5.1.
+  * Added versioning to all the shared libraries (libW, libWt, libW2X).
+  * Install also scripts, wlaunch icons, some demos and documentation.
+  * Updated Wterm and Wvt to work with Unix98 PTYs.
+  * Fixed GCC 4.x compilation issues.
+
+ -- Eero Tamminen <eerott@gmail.com>  Sun, 2 Sep 2009 22:33:08 +0300

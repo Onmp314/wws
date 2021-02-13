@@ -1,0 +1,66 @@
+1996
+- Started initial version (although I hadn't got X for MiNT anymore :))
+  using my grafix library as starting point (hence the ugly coding style).
+
+8/1997 (got now again X and it's manual pages)
+- Fixed w_queryevent() and text functions (to use root GC instead of the
+  window GC).
+- Implemented w_settitle().
+- Added beginnings for pattern stuff. Modified box.c, circle.c, poly.c
+  and settings.c.
+
+9/1997
+- Applied changes for W v1, revision 3, beta patchlevel 2.
+- Added ellipse and bezier function.
+- Pattern functions use now the W default pattern (can't be changed).
+
+10/1997
+- Changed to work with my own W v1, revision 4, alpha release.
+- Added quite a few functions and fixed stuff so much that W2Xlib
+  works now also with W toolkit to some extent.
+- Normal W windows will now use one pixmap for backup and two GCs
+  for regular and patterned graphics operations. W container windows
+  don't/can't have pixmap nor GCs.
+
+11/1997
+- Almost all W and W toolkit applications work now with W2Xlib!
+- Most of W font functionality is mapped to X fonts.
+- *Lots* of other changes / fixes.
+
+12/1997
+- Implemented pattern setting.
+
+1/1998
+- Implemented line width and pattern data settings.
+
+2/1998
+- Added arc and pie functions.
+- Fixed dhline, dvline and dline to use fillgc instead of regular gc.
+- Added color function stubs so that color programs can be at least compiled.
+- Added a couple of links for new Wlib sources.
+- Added WWIN<->ID functions.
+- Added w_test().
+
+3/1998
+- Andreas Beck (hi!)  told the magic incantation 'ConnectionNumber' for
+  getting the X file descriptor so that queryevent file descriptor
+  selecting works now very nicely (at least for my networked board games
+  :)).
+
+6/1998
+- Acommodated some Wlib changes.
+
+1/1999
+- Added link generation.
+- Added KeySym -> W sym conversion.
+
+4/1999
+- Fixed w_putblock() flush region so that putblock'ed window contents
+  are updated as they should.
+
+TODO
+- Make Wt popup windows come onto screen without user interaction.
+- Check new attribute against old to see whether change is really needed.
+- Mouse shape setting (w_set/getmousepointer()).
+- Implement color functions.
+- Clean up and optimize code (especially block.c).

@@ -1,0 +1,406 @@
+
+GAMEFRAME (w) 1996 by Eero Tamminen
+
+
+This is a set of C files that implement a framework for networked, turn
+based, two player games in a client-server, callback fashion.  The
+framework handles most of the messaging and user interfacing for the
+game engines.
+
+
+USING THE GAMEFRAME
+
+Game engines just need to fill in a structure, given as argument for
+get_configuration() function, with the game specific callbacks for the
+operations supported in game + a couple of other things like game name
+ID and game area size.
+
+As game 'interfaces' may differ greatly, each game needs a couple of
+functions for handling the input (e.g.  mouse clicks or keys) in relation
+to output (drawing of board and game pieces).  With similar games these
+functions could be in a common source file.
+
+
+PRINCIPLE OF GAME EVENT HANDLING
+
+Here's a diagram of how the different 'modules' of a game interact
+with each other:
+
+         ENGINE        FRAMEWORK     SOCKET   FRAMEWORK        SERVER
+           1               2                      5
+  GID  game logic <-> communication   <=>   communication <-> game logic	
+
+           ^               ^
+           |               |
+           v               v
+
+  GD   out/input  <-  user interface
+       handling 4          3
+
+       (GID = GUI independent, GD = GUI dependent part)
+
+Main() function is in the GUI dependent part of the framework (3).  It
+initializes the callback pointers with a call to the game engine (1),
+draws the framework user interface and initializes the game 'board' with
+a call to the game engine (4).
+
+When the user selects 'start game' (after connecting to another
+framework), user interface part (3) sends a message about that through
+the socket (2) to the other game (5).  When the message returns, the
+communication part (2) of framework calls the game engine (1) to start
+the game.
+
+When the user interface (3) gets a user event (e.g. mouse click) it
+forwards that (possibly preprocessed) to the game engine input handler
+(4), which will convert the GUI coordinates to game coordinates and
+then forward them to the game logic (1) for further checking.
+
+If game engine (1) accepts the user event it will send it to the to
+other game (5) through framework function (2).  If the other game engine
+accepts the game event, it will return the message to the first game
+engine (1) through framework (2).
+
+If the message was sent e.g. to put a piece on board, the engine (1)
+will call the GUI dependent part (4) to show it on screen.
+
+Note that framework (3) will forward the user input to engine (4) only
+if it's this side's turn to make a move (turn changes after framework(s)
+receive MOVE_NEXT/RETURN_NEXT message from a game engine).
+
+All the game events make a round trip before execution to ensure that
+engines on both ends are synced.  callbacks can only send one message to
+the other engine at the time.  That's why user/computer 'input' function
+is repeatedly called until it notifies (returns False) the framework
+that it's are done with the turn.  With non-turn based games the
+messages would need to be buffered.
+
+
+DESCRIPTION OF THE NEEDED / POSSIBLE CALLBACKS
+
+Here I give a less terse explanation of the callback function pointers
+in the GAME structure (which pointer is given as argument to
+get_configuration() function that must be present in every engine)
+declared in the game.h file.
+
+As I hopefully explained above, none of callbacks below will have effect
+if the opponent's engine doesn't have a corresponding callback (in which
+case there will be a RETURN_ILLEGAL message and user will be notified).
+
+
+These structure members have to be set by all the engines:
+
+	long game_id;
+
+Identification value for the game type from the ports.h.
+
+	void (*side)(player_t color);
+
+Called to tell the engine which 'color' it has. Player0 starts game.
+
+	void (*start)(void);
+
+Called when the user starts the game from the framework user interface.
+
+
+This callback need to be set with servers:
+
+	void (*comp)(void);
+
+Called when it's time for the computer to calculate it's move.
+
+	int (*move)(void); 
+
+Called to send the computer move(s) to the opponent.  This callback will
+be called as long as it keeps returning True (as only one message can be
+sent at the time because of syncing).  Note that the last message should
+be MOVE_NEXT or MOVE_PASS so that the frameworks know that turn has
+changed.  This is separate function from 'comp' so that undo etc.
+messages from the other end have a chance of being taken into account.
+
+
+These need to be set with interactive client engines:
+
+	long width;
+	long height;
+
+Playing area size that game needs, in GUI specific units.
+
+
+These callbacks and variables are optional.  The presence of some of
+them (cont, undo, pass) is reflected on the user interface.  Remember
+that when you send a certain message, you should have a corresponding
+callback too!
+
+	int (*args)(char *name, int argc, char *argv[]);
+
+In case engine has some user changeable options this callback will be
+called with the current command line (program name in 'name' parameter,
+without framework specific arguments).  Should return False if failed.
+
+	int (*level)(int level);
+
+For setting the level with servers (not yet implemented in GUIs).
+Should return False with incorrect value.
+
+	int (*cont)(player_t color);
+
+Called when user wants to continue from a setup situation. Should
+return False if continuation is impossible (e.g. there's a played game
+on the board).
+
+	int (*undo)(void);
+
+Called when user wants to undo his last move.  Works only if opponent
+hasn't moved yet and opponent's engine supports this too. Return True
+if undo is OK.
+
+	int (*pass)(player_t color);
+
+Called when user wants to pass a move.  'color' correlates to the value
+given as 'set_side' callback argument.  Return True if passing is OK.
+
+	int (*message)(short type, uchar x, uchar y);
+
+Called to handle non-identified messages in hopes that they are game
+engine specific ones.  Should return False if the message is unsupported
+one (i.e.  non-compatible game engines).  Note that all the messages
+should respond with return message!
+
+	void (*over)(void);
+
+Called after receiving GAME_RESIGN message / user event.
+
+	char *i_info;
+
+Message to show when it's your turn.  This and the one below are the
+only GAME struct members that game engine might have any reason to
+change during the game (see the go.c example).
+
+	char *o_info;
+
+Message to show after you have moved / passed.  These two members are
+provided in case that you'll need to output something in response to
+callbacks that change who's the current player (start, cont, pass,
+undo).  As normal text output with show_info() function would be
+overwritten with the default framework response to these actions...
+Changing these values back to NULL will restore the default messages.
+
+	char *name;
+
+Game name (e.g. for window title).
+
+
+These structure members, which are modified by the framework, may be
+read by the game engines during playing:
+
+	int turn;
+
+How many turns of game has been played.
+
+	int my_move;
+
+True when it's current player's turn.  Shouldn't be needed except on
+some cases of function which are used for both players' actions.
+
+	int playing;
+
+True when there's a game in process.
+
+	player_t player;
+
+Either Player0 or Player1. Player0 is the one that made first move.
+
+
+FUNCTIONS OFFERED BY THE FRAMEWORK
+
+	void send_msg(short type, uchar x, uchar y);
+
+Sends a game event (some examples are in messages.h file) to the other
+engine (through the network).  For simplicity all the messages are
+currently four bytes long.  Note that engine callback may send only
+*one* message / calling (framework calls the engine to do move(s) until
+the MOVE_NEXT message is sent).
+
+	int confirm(char *operation);
+
+Used to acquire a confirmation from the user for an operation described
+with the argument string.  If user accepts, True is returned.
+
+	void show_info(char *msg);
+
+Shows a message to the user.  Something like "illegal move" or "You
+win".  Because the framework uses the same space for it's own uses, some
+messages might not be on screen enough for the user to see them.  That's
+why there are 'i_info' and 'o_info' GAME structure members for from
+standard differing turn change messages.
+
+	void game_over(void);
+
+Should be called when the game ends to set needed framework variables etc.
+
+
+AN EXAMPLE OF USING THE GAME EVENTS
+
+Here's a chess game as example.  It uses it's own messages because of
+those special chess moves.  In the messages.h are some exemplary
+messages which should be sufficient for most other board games.  It's
+suggested that names would be used so that they make sense when they are
+interpreted from their sender's perspective.
+
+1.  In chess there's a certain starting position.  When user click the
+start button, the 'start' engine callback is called (first on opponent's
+engine then after the round trip on where the button was pressed).
+Callback should then reset the game board.
+
+2.  Then pieces are moved from a position to another.  When user clicks
+a piece, engine (specifically the input processing function) sends a
+PIECE_SELECT message.  When the message returns with RETURN_SELECT, the
+'message' callback should then mark the selected piece.
+
+3.  When user clicks a legal board position, the engine sends a
+PIECE_MOVE message.  When message returns successfully (unless other
+engine has other / more advanced rules) with the RETURN_MOVE, the piece
+selected piece will be moved.  Clicking on the selected piece would
+cancel that selection (back to phase 2...).  After receiving the
+confirmation, the MOVE_NEXT message will be sent so that frameworks
+know that turn has changed.
+
+4.  Then the opponent's program performs the same things.  When the
+moves are performed on the board, there will also be a check for whether
+the move will end the game, in which case engine should call the
+'game_over()' function of the framework.
+
+Game players implement just game rules and interactivity.  Servers
+are the ones that can also play the game...
+
+See the examples for more. The reversi clients and server are the
+simplest ones.
+
+
+USER INTERFACE SPECIFIC ISSUES
+
+As game looks and interfaces may differ greatly as do different GUIs,
+there needs to be some GUI specific callbacks implemented for every
+different GUI that game is supposed to work on.  Here are callbacks
+for the W window system and curses:
+
+
+W window system:
+
+	int add_options(widget_t *left_pane);
+
+In this function one might add button etc. widgets to the main 'action'
+panel. Returns True for success.
+
+	widget_t *add_rpane(void);
+
+Returned widget (if any) will be put to the opposite side of gaming
+area from the 'action' panel. Return the widget or NULL.
+
+int initialize_board(widget_t *brd, int x, int y, int wd, int ht);
+
+In this function should be the game area (board) drawing with possible
+loading of images etc. Returns True for success.
+
+
+Curses:
+
+	void add_text(int x, int y);
+
+Function is given as arguments the place where it can output a couple
+of rows of game specific information (captures in go etc.).
+
+	int initialize_board(void);
+
+Draw board grid etc. Returns True for success.
+
+
+And these callbacks are fed with the user input:
+
+W:
+	void process_mouse(WEVENT *ev);
+
+Should process W window system (mouse) events.  i.e.  convert mouse
+clicks to game coordinates and send appropriate message(s).
+
+Curses:
+	void process_key(int key);
+
+Should process keys.  I'd recommend using keypad as cursor keys to avoid
+termcap hassles and space could be used for marking / moving pieces.
+Remember that some letter keys aren't available because framework itself
+uses them.
+
+Doing the coordinate / move validity checks and messaging through a
+separate, GUI independent auxiliary function (which those GUI dependent
+ones could call) would be best.
+
+
+SOURCE FILES
+
+The framework is composed of the following components:
+
+game.h		Engine configuration structure definition and defines for
+		the messages used in the communication.
+
+comms.c		Game communication and message protocol handling. Calls
+comms.h		the game engine functions for handling the messages.
+
+server.c	Framework for the game engine servers.
+server.h	Include file for the game server engines.
+
+Other files (c_game.[ch], w_game.[ch]) implement the different GUI
+dependent parts of the framework.  These contain the main() function and
+use the comms.o object.
+
+There are also ports.h, which has IDs for the already done games, and
+messages.h, which you can use as is or as an example for your own engine
+specific messages.
+
+
+GAMES CURRENTLY USING THE FRAMEWORK
+
+I have done W window system and curses versions of Go, Pente, Gobang and
+Reversi and converted WReversi, AmiGo and William Schubert's Pente game
+'brains' to work as GameFrame servers.  I have also done a W window
+system specific version of Chess.  As it needs piece bitmaps, it doesn't
+work with curses.
+
+Although GameFrame is well suited for board games, other game types can
+be implemented as well, as long as they are turn based, have only two
+players and the messages can be very simple (coordinates etc).
+
+
+TODO
+
+Sending of bulk data like player messages and files (board configurations,
+graphics, sounds etc).
+
+Currently all the games and servers use the same port i.e. there could be
+only server for one game type running at the time.  This is because I
+have intended these games to be used mainly on personal computers where
+there seldom are multiple users (and running several game servers at the
+time also consumes that precious memory).
+
+In case server connection fails due to incompatible game type, clients
+and servers could increase the port number and try again.
+
+Alternatively different game types could use a different port number.
+Then servers could also check whether they are started by inetd
+(Internet super server) and skip the unnecessary initializations /
+forking / connection establishing accordingly.
+
+BTW.  I'd love if somebody would port my GameFrame to other user
+interfaces!  For example X11 / Athena widget set one would be nice.
+
+
+BUGS
+
+If you suspend a _curses_ interface, it will remain frozen until the
+other end 'wakes up' it.  This happens only if you're already listening
+to a socket. I'm puzzled...
+
+
+22th of September, 1996
+
+	Eero Tamminen		http://www.modeemi.cs.tut.fi/~puujalka/

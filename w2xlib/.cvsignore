@@ -1,0 +1,7 @@
+*.O
+*.o
+*.og
+*.ob
+*.olb
+*.a
+libW2X*.so*

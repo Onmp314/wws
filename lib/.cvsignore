@@ -1,0 +1,8 @@
+Wlib.h
+*.O
+*.o
+*.og
+*.ob
+*.olb
+*.a
+libW.so*

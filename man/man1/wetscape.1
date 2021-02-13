@@ -1,0 +1,25 @@
+.TH WETSCAPE 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wetscape \- HTML v1 compliant www-browser for W
+.SH SYNOPSIS
+wetscape [\fIurl\fP]
+.SH DESCRIPTION
+\fIWetscape\fP is a barely HTML 1.0 compliant WWW-browser with JPEG support
+through IJG's (Independent JPEG Group) libjpeg.  It lacks many, many
+features common in current WWW-browsers, but on the other hand, it's
+also very small.  For HTML parsing it uses the HTML widget in W
+toolkit.
+.SH FILES
+You can change some wetscape settings such as homepage, bookmark-file
+and proxy from the wetscape configuration file '~/.wetscape/config'.
+.PP
+The fonts (size & family) used by HTML widget can be changed from the
+W toolkit configuration file `~/.wtrc'.
+.SH NOTES
+If you get html setopt (code 7 or 40) errors, most probable reason
+is that page you're viewing contains some broken image links.
+.SH AUTHORS
+Wetscape was written by Kay Roemer and patched for current W version
+by Eero Tamminen.
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

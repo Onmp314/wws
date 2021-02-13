@@ -1,0 +1,31 @@
+.TH w_ellipse 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_ellipse(), w_dellipse(), w_pellipse(), w_dpellipse() \- draw an ellipse
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_ellipse(WWIN *" win ", short " x0 ", short " y0 ", short " rx ", short " ry ");"
+.sp
+.BI "short w_dellipse(WWIN *" win ", short " x0 ", short " y0 ", short " rx ", short " ry ");"
+.sp
+.BI "short w_pellipse(WWIN *" win ", short " x0 ", short " y0 ", short " rx ", short " ry ");"
+.sp
+.BI "short w_dpellipse(WWIN *" win ", short " x0 ", short " y0 ", short " rx ", short " ry ");"
+.fi
+.SH DESCRIPTION
+.I w_ellipse()
+draws an ellipse with x-radius 'rx' and y-radius 'ry' (width = 2*rx+1,
+height = 2*ry+1), centered at (x,y) in the given window, using the
+current mode.
+.PP
+.I w_dellipse()
+draws a dashed ellipse, using the current mode and pattern.
+.PP
+.I w_pellipse()
+draws a filled ellipse, using the current mode.
+.PP
+.I w_dpellipse()
+draws a dashed filled ellipse, using the current mode and pattern.
+.SH LAST CHANGED
+14th. Feb. 1996 by TeSche

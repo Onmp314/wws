@@ -1,0 +1,36 @@
+.TH w_setmousepointer 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+\fBw_setmousepointer()\fR \- set mouse pointer shape
+.SH SYNOPSIS
+\fB#include <Wlib.h>\fR
+.br
+short w_setmousepointer (WWIN *win, short type, WMOUSE *data);
+.SH DESCRIPTION
+\fBw_setmousepointer()\fR sets the mouse pointer shape, indicated by the
+parameter \fBtype\fR, for the window given by \fBwin\fR.
+The following macros, as defined in \fBWlib.h\fR, can be used for \fBtype\fR:
+.IP \fBMOUSE_ARROW\fR
+Mouse is an arrow (default).
+.IP \fBMOUSE_UPDOWN\fR
+Mouse indicates resizing in the up or down direction.
+.IP \fBMOUSE_LEFTRIGHT\fR
+Mouse indicates resizing in the left or right direction.
+.IP \fBMOUSE_UPPERLEFTLOWERRIGHT\fR
+Mouse indicates resizing in the upper left or lower right direction.
+.IP \fBMOUSE_LOWERLEFTUPPERRIGHT\fR
+Mouse indicates resizing in the lower left or upper right direction.
+.IP \fBMOUSE_MOVE\fR
+Mouse indicates movement of an object.
+.IP \fBMOUSE_BUSY\fR
+Mouse indicates busyness within an window.
+.IP \fBMOUSE_USER\fR
+User defined mouse pointer shape. In this case, \fBdata\fR points to a
+WMOUSE structure which is used as a mouse pointer shape.
+.SH RETURNS
+\fB0\fR in case of success, \fB-1\fR if an error occured.
+.SH BUGS
+none?
+.SH SEE ALSO
+\fBw_getmousepointer\fR(3w)
+.SH LAST CHANGED
+8th. July 1998 by jps

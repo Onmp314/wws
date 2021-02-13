@@ -1,0 +1,25 @@
+
+	W - DRAFT
+
+
+When the program is started you'll be presented with a toolbar.  Any
+images specified on the command line will be loaded and opened into Draft
+windows.
+
+The toolbar has icons for different tools.  The first ones are normal
+graphics tools.  You'll select the tool by a left-click and get the tool
+option dialog with a right-click.
+
+The graphics can be entered to any drawing window just by left-clicking
+for the first and second point.  If the primitive can have more than two
+(control) points, you'll signify the end of points with a right-click.
+Normally a right-click cancels the operation.  After you have specified
+the primitive size / shape, you can position and paste it multiple times
+on any drawing window.
+
+With the new window dialog you can either specify a size for a new
+window or use a fileselector to load an image and open a new window
+for it.
+
+
+	W/ 1996 by Eero Tamminen, puujalka@modeemi.cs.tut.fi

@@ -1,0 +1,81 @@
+Here are some notes on building and running Wserver under MacMiNT.
+
+- To build it, you will need a set of Macintosh header files, converted
+  so as to work with gcc. I've heard it's still possible to get
+	the MPW 3.2 headers from some obscure internet sites, or you can go to
+	my website, lorien.flatirons.org/~oddie, and download the extra script you
+  need in order to use the newer Universal Headers.
+
+- There's no way to detect a MacMiNT machine in the root W makefile
+  (because there's no standard uname for mm), but copy configs/MacMiNT
+  to .config and you should be set...
+
+- Before running wserver, you need to set your monitor to b&w or 256 colors
+	(see last two notes below) and turn off JET's event trapping- I suggest 
+	a shell script like
+
+#!/usr/bin/tcsh
+kill -17 1	# suspend JET event trapping
+wserver
+kill -19 1	# restart JET event trapping
+
+	I used to do simply "kill 1; wserver &" but this way is much nicer 
+	because when you quit wserver it will cleanly restore your normal
+	JET window and Mac desktop to you. Among other things, this means
+	you can start up and quit wserver several times during one MiNT
+	session.
+	
+	The reason for this workaround lies in the internals of JET's event loop,
+	which is called by the MiNT process  IDLE (do ls /proc and you'll see it).
+	IIRC, this event loop assumes (quite reasonably) that the Console window is
+	the only open window belonging to JET, and it accesses some internal 
+	information through a pointer in the structure of the top window...
+	Now, when you open wserver, it first tricks the machine into hiding the
+	menu bar and then opens its own Macintosh window, which covers the screen
+	and becomes the front window. When JET's event loop tries to access the 
+	stuff pointed to by the window's structure, it crashes. So we simply
+	suspend the IDLE process and the event loop doesn't get called.
+	Wserver itself doesn't need JET's event trapping because its keyboard and
+	mouse events are delivered to it by the devices /dev/mackbd and /dev/macmouse
+	(source code for whose .xdds is supplied with the W distribution).
+	If you want to know more, Use the Source. ;)
+
+- sadly, my device drivers are _still_ a bit buggy. The mouse sometimes
+  gets seemingly "locked" in an invisible square on the W desktop. This
+  happens when W and the Mac have different ideas of where the mouse ought
+	to be, but I'm not quite sure what conditions cause this.(*) 
+	Also, sometimes the whole system seems to hang if you are running
+  a heavy terminal I/O program (like listing a directory with lots of files)
+	in a wterm and repeatedly press ^C. Of the reasons for this I haven't
+	the foggiest clue.
+
+(*) To get a normally-functioning pointer back, "push" the pointer against a
+	corner of the screen; since both W and the Mac restrict their pointers to the
+	visible screen, this will realign the two pointers in that corner.
+	It's also a good idea to start up wserver with the pointer in the top left
+	corner of the screen.
+
+- As of the first release after June 2000, you can now run wserver using either 
+	PMONO or BMONO b&w drivers or DIRECT8 (256-color palettized!!)
+	I've tested this on my Performa 575 and both monochrome and color drivers seem
+	to work fine (DIRECT8 is of course a little slower but not enough to be a problem).
+	However, on color machines you should go into the Monitors control panel and change
+	to the mode you want immediately before running wserver, otherwise strange things
+	can happen. I think this has something to do with the way the Mac maps its video ram
+	in the different modes, but as it seems to go away if you use Monitors just 
+	beforehand it's less of a worry than a puzzle to me.
+
+- I suspect that if you have a configuration with multiple monitors wserver may do 
+	strange things, especially in color mode (SetEntries() and kin apparently operate
+	only on current GDevice...) It doesn't do anything really dirty to the system's guts
+	however, so it should be pretty compatible with different graphics cards and suchlike.
+
+I think that's it...
+
+
+enjoy
+
+ttfn
+Jonathan
+<oddie@lorien.flatirons.org>
+<oddie@babylonia.flatirons.org>

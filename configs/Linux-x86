@@ -1,0 +1,52 @@
+# x86-linux (2.1.x / libc6) defines
+
+ARCH = Linux
+
+# if you want shared libraries, change names below to libW.so and
+# libWt.so, recompile, install and run ldconfig.
+WLIB  = libW.a
+WTLIB = libWt.a
+
+# DIRECT8 is the default graphics driver for framebuffer
+DIRECT8 = 1
+#BMONO   = 1
+
+# Additional options
+# 486: -m486
+# 586: -mpentium (egcs)
+#
+# If you don't mind less debuggable applications, you can move
+# -fomit-frame-pointer option from SERVERCFLAGS to BASECFLAGS.
+
+BASECFLAGS	= -pipe -Wall -Wmissing-prototypes -O2
+SERVERCFLAGS	= -DGPM=GPM -fomit-frame-pointer
+SERVERLDFLAGS	=
+SERVERLIBS	= -lgpm -ltermcap
+CLIENTLIBS	= -lW
+
+#CLIENTLIBS	= -lWg -lefence
+#CLIENTLIBS	= -L../w2xlib -lW2X -L/usr/X11R6/lib -lX11
+#MATHCFLAGS	=
+MATHLIB		= -lm
+
+# This is needed for glibc as it doesn't seem to include crypt() anymore
+CRYPTLIB	= -lcrypt
+
+# if wterm/wvt shouldnt' set TERMCAP enviroment variable, comment this out
+EXPORT_TERMCAP = 1
+
+CC = gcc
+MAKE = make
+RANLIB = ranlib
+AR = ar r
+CP = cp
+LN = ln
+RM = rm -f
+CHMOD = chmod
+INSTALL = install
+# no stripping with -s, packaging should split debug syms to another package
+INSTALLBIN = install -m 755
+INSTALLDIRS = install -d
+
+# stuff you want to remove with 'make clean'
+JUNK = core *.rej *.orig

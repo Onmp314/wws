@@ -1,0 +1,37 @@
+.TH PENTED 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+pented \- a Pente/Renju board game server
+.SH SYNOPSIS
+.nf
+pented -l \fIlevel\fP
+.fi
+.SH DESCRIPTION
+.I Pented
+is a port of William Schubert's X11 Pente (sometimes called also Renju)
+board game engine for the networked turn based, two player game framework
+by Eero Tamminen. It offers a Pente game server for the curses and W
+Pente clients.  The Pente clients have an additional last move undo
+feature, which isn't support by this Pente server.
+.SH ARGUMENTS
+The only command line argument the server understands, is the playing level:
+.TP
+\fB-l\fP \fIlevel\fP
+Level 1 is complete idiot, level 3 is good for quick games and levels 4
+and 5 use recursive board evaluation for harder opposition.  The default
+3 should be fast enough for even the lowliest of machines (8Mhz ST).
+.SH PENTE RULES
+Players position a stone at the time.  In addition to more popular
+Gomoku game, opponent's stones can also be removed from the board.  This
+can be accomplished by positioning one's own stones to both ends of the
+opponent's pair (only pairs can be removed).  Game is won by the first
+player who gets five-in-a-row (five pieces either in horizontal,
+vertical or diagonal row) or removes five pairs from the opponent.
+.PP
+The game is made more even with the restriction that the starter needs
+to place his second stone at least three positions off the first one.
+.SH SEE ALSO
+.IR cpente (6),
+.IR amigod (6),
+.IR reversid (6)
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

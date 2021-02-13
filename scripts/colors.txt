@@ -1,0 +1,22 @@
+GEb7c0JThese are the default shared colors available for W applications:
+
+      b0c1 Color b1c0 one   b7                                       b1c0 Color b0c1 one   b7c0
+      b0c2 Color b2c0 two   b7                  b1(b0c11c0b1)b7                  b2c0 Color b0c2 two   b7c0
+      b0c3 Color b3c0 three b7              b3(b0c33c0b3)b7     b5(b0c55c0b5)b7              b3c0 Color b0c3 three b7c0
+      b0c4 Color b4c0 four  b7                  (b0c77c0b7)                  b4c0 Color b0c4 four  b7c0
+      b0c5 Color b5c0 five  b7              b2(b0c22c0b2)b7     b4(b0c44c0b4)b7              b5c0 Color b0c5 five  b7c0
+      b0c6 Color b6c0 six   b7                  b6(b0c66c0b6)b7                  b6c0 Color b0c6 six   b7c0
+      b0c7 Color b7c0 seven b7                                       b7c0 Color b0c7 seven b7c0
+                                       b1Rb7
+gb2 @@@@@@@   @@@@@@   @@@       b7h                     gb2 @@@@@@   @@@@@@@    @@@@@@ b7h
+gb2@@@@@@@@  @@@@@@@@  @@@       b7hb3Yb7                 b5Mb7  gb2@@@@@@@@  @@@@@@@@  @@@@@@@ b7h
+gb2!@@       @@!  @@@  @@!       b7h      b1@b3c1@c0b7b0c1   c0b7b5c1@c0b1@b7c0    gb2    @@!  @@@  @@!  @@@  !@@ b7h
+b2!@!       !@!  @!@  !@!       b7    b3@b0c3  c0b7b1c3@@c0b7c1@c0b7b1c5@@c0b7b0c5  c0b5@b7b7c0  b2    !@!  @!@  !@!  @!@  !@! b7
+b2!@!       @!@  !@!  @!!       b7   b3@b2c3@@c0b7b7c3@@c0b7b0c7c7b3@b1@b5@c0b7b7c5@@c0b7b4c5@@c0b5@b7c0     b2@!@  !@!  @!@!!@!   !!@@!!  b7
+b2!!!       !@!  !!!  !!!       b7   b2@b3c2@@c0b7b7c2@@c0b7b0c7c7b2@b6@b4@c0b7b7c4@@c0b7b5c4@@c0b4@b7c0     b2!@!  !!!  !!@!@!     !!@!!! b7
+b2:!!       !!:  !!!  !!:       b7    b2@b0c2  c0b7b6c2@@c0b7c6@c0b7b6c4@@c0b7b0c4  c0b4@b7b7c0      b2!!:  !!!  !!: :!!        !:!b7
+sb2:!:       :!:  !:!   :!:      b7t      b6@b2c6@c0b7b0c6   c0b7b4c6@c0b6@b7c0        sb2:!:  !:!  :!:  !:!      !:! b7t
+sb1 ::: :::  ::::: ::   :: ::::  b7tb2Gb7                 b4Bb7  sb1::::: ::  ::   :::  :::: :: b7t
+b1 :: :: :   : :  :   : :: : :  b7                     b1 : :  :    :   : :  :: : :  b7
+                                       b6Cb7
+GJ

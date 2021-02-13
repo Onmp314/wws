@@ -1,0 +1,31 @@
+.TH WROOTPIC 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wrootpic \- set (random) image to W root window
+.SH SYNOPSIS
+wrootpic [images from a single directory]
+.SH DESCRIPTION
+.I wrootpic
+selects randomly one of the given images and sets it as the W root
+window background using \fIdjpeg\fP, \fInetpbm\fP utilities, \fIwbm\fP
+and \fIwsetbg\fP.
+.PP
+Note that the colors for the root window won't be updated until you
+move the mouse cursor over it (from a window where it is).
+.SH EXAMPLES
+.nf
+	$ wrootpic ~/rootpics/*.png
+.fi
+.SH FILES
+If no files are given, loads a random picture from
+/usr/share/images/desktop-base/.
+.SH SEE ALSO
+.IR wbm (1),
+.IR wsetbg (1),
+.IR djpeg (1),
+.IR pnmquant (1),
+.IR pnmdepth (1),
+.IR pngtopnm (1),
+.IR giftopnm (1),
+.IR anytopnm (1)
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

@@ -1,0 +1,67 @@
+WETSCAPE WWW-BROWSER
+
+Wetscape is a barely HTML 1.0 compliant WWW-browser with JPEG support
+through IJG's (Independent JPEG Group) libjpeg.  It lacks many, many
+features common in current WWW-browsers, but on the other hand, it's
+also very small.  For HTML parsing it uses the HTML widget in W toolkit.
+
+Wetscape was written by Kay Roemer and patched for current W version
+by Eero Tamminen.
+
+
+WETSCAPE SETTINGS
+
+You can change some wetscape settings such as homepage, bookmark-file
+and proxy from the wetscape configuration file '~/.wetscape/config'.
+
+The fonts (size & family) used by HTML widget can be changed from the
+W toolkit configuration file `~/.wtrc'.  My own favorite settings are:
+	# buttons
+	font_normal = fixed
+	font_fixed = fixed
+	font_size = 10
+	# text itself
+	html_normal = book
+	html_fixed = lucidat
+	html_fsize = 13
+
+
+NOTES
+
+If you get html setopt (code 7 or 40) errors, most probable reason
+is that page you're viewing contains some broken image links.
+
+
+CHANGES
+
+07/2000
+
+++ bsittler 2000.07.04:
+- added Host: header to support virtual-hosted HTTP servers
+
+05/1998
+
+- Glibc defines (all?) global variables into functions for sake of
+  threading, therefore 'errno' member in 'io_t' struct had to be renamed.
+
+12/1997
+
+- adapted Wetscape for new Wt and W font loading scheme.
+- fixed bugs in command line URL name processing.
+- added fileselector button for opening of local files.
+
+
+	- Eero
+
+
+------ Kay's original readme ------------
+
+Here are the sources for wetscape, a (nearly) HTML 1.0 compliant WWW browser
+for W with delayed image loading and some other nice features.
+
+This is an intermediate beta release that is still missing some features and
+may have fatal bugs. To run it you need W1R3pl1 with my patches from the
+W developers list.
+
+Kay
+roemer@vsb.informatik.uni-frankfurt.de

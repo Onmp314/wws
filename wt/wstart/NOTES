@@ -1,0 +1,44 @@
+User notes:
+
+The (untested) 'winstall.sh' script compiles wstart, creates a wstart
+directory to $HOME and links there all the programs from the directory
+where wserver resides and + itself to user's W configuration files
+~/.wconfig and ~/.wrc.  After that you probably want check out the
+directory the script created to remove extra program links and move
+others to subdirectories so that wstart popups fit into screen.  You
+probably want to test out different arguments before saving *your*
+favorite ones from the wstart option dialog...
+
+On a low end machines like ST (8Mhz), reading of the directory contents
+(WStart (sub)menus) may take a while.  And if directory has lots of
+entries, but no subdirectories nor executables in it, you just notice
+that popup item high-lite takes very long time!
+
+-------------
+
+Programming notes:
+
+What happens if menu creates buttons to a pane when it's already realized?
+
+Calling realize again for pane won't probably work, as AFAIK pane
+doesn't keep a `changed childs' flag (just checks that it has already
+been realized).
+
+So...  should I call pane minsize, query_geometry and reshape methods
+and then realize the child widgets myself???  It would be nicer if pane
+would remove, layout and realize itself again when I call reshape after
+children have been added or removed.
+
+Note that pane updating itself automatically every time a child is added
+(realizing child + changing size) won't work very well because child
+options will on most cases be changed after child has been created /
+added and there might be several children added at the time.
+
+
+Shell widget which also has borders like popup does, should add window
+border width to the widget width (and add it to reshape sizes) for
+proper widget positioning.
+
+
+	- Eero
+

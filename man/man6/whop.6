@@ -1,0 +1,27 @@
+.TH WHOP 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+whop \- Toy for W using the Hop-along chaotic algorithm
+.SH SYNOPSIS
+whop
+.SH DESCRIPTION
+\fIWhop\fP plots the result of iterating a 'hop-along' algorithm
+and changing the plotting color at fixed intervals.
+.PP
+\fIHopalong\fP algorithm can be described as 'chaotic'.  In mathematics,
+a very complex behavior / results produced by iteration and interaction
+of very simple rules is called chaotic even though it 'predictable'.
+.PP
+The algorithm is following:
+.nf
+	X = Y - sign(X) * sqrt(abs(X * B - C)
+	Y = A - old_X
+.fi
+The UI allows changing the parameters A, B and C along with the number
+of iterations and zoom factor.
+.SH LITERATURE
+For more info on the Hop-along formula, see A. K. Dewney's book
+'Armchair Universe'.
+.SH AUTHOR
+w/ Feb 1996 by Eero Tamminen
+.SH LAST UPDATED
+09/2009 by Eero Tamminen

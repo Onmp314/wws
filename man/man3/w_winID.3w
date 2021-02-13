@@ -1,0 +1,28 @@
+.TH w_winID 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_winID(), w_winFromID() \- convert between W window and system-wide window ID
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "ulong w_winID(WWIN *" win ");"
+.sp
+.BI "WWIN *w_winFromID(ulong " id ");"
+.fi
+.SH DESCRIPTION
+.I w_winID()
+returns a handle to W window which can be passed from a program
+to another.
+.I w_winFromID()
+will then construct a new WWIN struct around this handle.  You should
+then just inherit that window and delete it (frees just the new struct,
+not the original window) as the reference is a fake one.
+.PP
+You can't pass just the value you'll get from w_create() to another
+program as that's a pointer and therefore not valid outside the program
+it was created in.  With the above two functions you'll program will
+work even if you'll run it under X11 with W2Xlib!
+.SH SEE ALSO
+.IR w_create (3)
+.SH LAST CHANGED
+22th Feb. 1998 by Eero Tamminen

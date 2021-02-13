@@ -1,0 +1,19 @@
+Here are some little programs illustrating W toolkit widget usege:
+	buttons.c	different button widget types
+	drawables.c	drawable (the simplest widget possible)
+	fileselect.c	file selection widget
+	iconeditor.c	icon editing widget
+	labels.c	use label widget as an icon
+	lister.c	select, a drop down list widget
+	listtest.c	a scrollable list widget
+	packtest.c	Tk style layout manager widget
+	popper.c	Menu and popup widgets
+	ranger.c	Range widget
+	textinput.c	text input widget
+	timer_io.c	Wt timer examples
+	viewports.c	viewport widget
+	vttest.c	terminal widget
+
+These are a little more extensive:
+	draw.c		drawable, viewport using, own radio buttons
+	w4.c		minimal WWW-page viewer

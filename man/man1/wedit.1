@@ -1,0 +1,166 @@
+.TH WEDIT 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wedit \- text editor for W
+.SH SYNOPSIS
+.nf
+wedit [\fIoptions\fP] [\fItext file\fP]
+.fi
+.SH DESCRIPTION
+Wedit is a simple text editor based on my Wt text editing
+widget.  It's intended for editing of smallish texts like mails
+and `ex tempore' program sources.  With larger texts / projects,
+you'll be better off with a real text editor (like Emacs
+variants), which offer more flexible text editing, (unlimited)
+undo/redo, regular expressions, macro language and so on.
+.PP
+Edittext widget sets one limitation to the texts, the maximum
+editable line length is the same as the text window width and
+cannot be changed after window has been realized.  The widget
+also wastes a bit of memory because it simply allocates same
+amount of memory for every line regardless of how full the lines
+are (a sleazy compromise between functionality and code
+complexity).
+.PP
+Another limitation is arrow keys.  W server doesn't map the key
+sequencies to separate events so the widgets can't interpret
+them.  Currently W toolkit uses Emacs keys (^f, ^b, ^n, ^p).
+.PP
+However, wedit adds some nice functionality on top of the
+widget's word wrap, current line undo, auto-indentation, proper
+tabs, paragraph formatting, character transpose and clipboard
+cut/copy/paste features.  Besides load/merge/save there are also
+shortcut help, goto line, forward find/replace, pair inserting,
+group indentation and multiline abbreviation expansion.  The last
+one is based on a so called `kurzel' files (name adopted from
+the German Atari text editors :)) which contain abbreviations
+and their expansions.  Normally one would put there often used
+things like names, e-mail addresses, templates for letters etc.
+.PP
+(Basically a full scale abuse of the edittext widget which was
+really intended only for inputting screen-full or so...)
+.SH OPTIONS
+Options `-t', `-i' and `-j' may be changed while program is
+running from the program options dialog.
+.TP
+\fB-w\fP \fIwidth\fP
+Set the text area width in characters. Default is 78.
+.TP
+\fB-h\fP \fIheight\fP
+Set the text area height in characters. Default is 15.
+.TP
+\fB-f\fP \fIfont name\fP
+Use the given font (family) for the text.
+.TP
+\fB-t\fP \fIsize\fP
+Set tab size.  Later you may use `expand' filter to expand tabs
+to spaces or whatever.  Default is eight.  When you're indenting
+text or code, I'd recommend you to always indent to same offset
+with same way. Do not mix tabs and spaces differently on
+different lines or even better, not at all.
+.TP
+\fB-i\fP \fIindent\fP
+How much program indents when newline is input just after {, [
+or (.  If value is same as the tab size, tab is inserted,
+otherwise indentation is done with spaces.  Default is eight.
+.TP
+\fB-j\fP \fIcolumn\fP
+Set word wrap column.  Lines and paragraphs will then be
+`wrapped' at the given offset.  Default is the same as editing
+area width, but if you're editing mail or text indented with
+tab(s), I'll advice you to set wrap column for example to 72.
+That way indented text has `similar' margins on both sides and
+mails will not exceed 80 characters so easily when they are
+quoted.
+.TP
+\fB-k\fP \fIfile\fP
+Load keyboard mapping from given file.  File should have a byte
+for every character and be 256 bytes long.  Zero value means
+that character will not be mapped.  Normally only 8-bit values
+(128-255) containing the umlaut characters etc. would be mapped.
+To know what you're typing, the font (see `-f' option) you'll
+use should have the same character order as to which mapping
+puts characters input from W server.
+.TP
+\fB-a\fP \fIfile\fP
+Load abbreviations from the given file.  If there's no
+abbreviation file specified, WEdit tries to load file
+`~/.kurzels' as such.
+.SH RUNTIME OPTIONS
+.TP
+Pair insert
+When encountering either {, [ or ( character and <space> or <enter>,
+WEdit will insert a pair for the character automagically.  If you'll
+press <space>, WEdit will add ` }' and if you'll press <enter> pair
+indent (in addition to auto- indenting) is used for indenting the new
+line.  Like this (`x' is the cursor):
+.nf
+	array[] = {
+		x
+	}
+.fi
+If there's something after the position where you'll press
+<enter>, pair isn't inserted, just the indentation.
+.TP
+Group (member) aligning
+When <enter> is pressed, WEdit searches the last open pair on current
+line and indents new line to that level.  Group indenting is done with
+spaces to guarantee that it's valid with differing tab-stop values.
+It works like this (`x' is the cursor):
+.nf
+	function(one,
+	         x
+.fi
+.PP
+A `:' followed with newline will also result in pair indentation.
+Python programmers should like this features <g>.
+.SH ABBREVIATION FILE FORMAT
+The abbreviation file syntax is following:
+.nf
+	# comment
+	abbreviation=expanded ~ text
+	=additional lines
+	name=Eero Tamminen
+.fi
+Abbreviations have to be at the beginning of a line and may
+contain only alpha-numeric characters.
+.PP
+White space up to `=' character is ignored so that you can line
+up the expansions.  Text with which the abbreviation will be
+replaced is everything right of the `=' character(s).  If
+expansion contains multiple lines, they all have to be prefixed
+with (white space and) a `='.  Cursor will be positioned where
+the last `~' character was or to the end of the expansion.  If
+you'll need to output `~' characters, you'll have to quote them
+with `\\' like this:
+.nf
+	WWW=<a href="http://www.modeemi.cs.tut.fi/\\~puujalka/">Eero</a>
+.fi
+.PP
+Lines which don't start with an alpha-numeric character or white
+space or aren't a part of an abbreviation are interpreted as
+comments.  For clarity they should start with a same letter, for
+example `#'.  Comment or another abbreviation ends an expansion
+text.
+.SH HINTS
+If you absolutely need to make line longer than currently fits
+into editor window, you could make tab stop value smaller (if
+line starts with tab(s)) in the options dialog.  Next time you'll
+edit the text you should remember to use longer line length (-w
+option) or line(s) will be broken at loading.
+.SH NOTES
+That line length limit in edittext widget is a quite severe
+restriction.  I have thought about how to implement completely
+dynamic editing (max.  line length e.g.  MAX_LONG), but that's
+not stuff I would put into a generic GUI component!  Actually
+paragraph formatting, line wrap or read tabs wouldn't belong
+there either...
+.PP
+I'd like it to have one garbage collection thread / text buffer
+and other neat stuff, so it wouldn't even be very portable
+(thread syntaxes differ between platforms).
+.SH FILES
+.TP
+.B ~/.kurzels
+Abbreviations file
+.SH LAST CHANGED
+11/1997 by Eero Tamminen

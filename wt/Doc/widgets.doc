@@ -1,0 +1,313 @@
+
+ Implementing new widget classes for Wt
+ --------------------------------------
+
+ Writing a new widget class is equivalent to provide a new widget_class_t
+structure. So you need to understand first the widget_t and the widget_class_t
+data structures.
+
+ If you want to implement a composite widget you should start with the
+form widget in form.c. For simple widgets the drawable widget in drawable.c
+is a good starting point.
+
+
+ 1 widget_class_t
+ ----------------
+
+ First the widget_class_t structure. You have to provide all the functions
+in it and finally export a pointer to it that is used as the first argument
+to wt_create() when creating instances (ie widgets) of the widget class.
+
+typedef struct _widget_class_t {
+	char *name;
+
+ This is the name of the widget class, eg "pushbutton" or "box".
+
+	short initialized;
+	long (*init) (void);
+
+ The flag 'initialized' indicates whether the widget class has already been
+initialized. Initialization of a widget class is done by calling 'init' when
+the first widget instance of the class is created. The widget code must not
+change the 'initialized' flag, this is done by the toolkit functions. The
+initial value for 'initialized' must be 0.
+
+ 'init' should return 0 if successful, a negative value otherwise.  You
+can use 'wt_variable()' function to query for widget specific
+configuration options that are load from toolkit configuration file when
+toolkit is initialized.
+
+
+	widget_t *(*create) (widget_class_t *class);
+
+ Create a new widget instance of class 'class'. 'class' is passed so you can
+reuse the create-function for other widget classes (see button.c for an
+example). Creating a widget involves allocating storage for it and
+initializing it, but *not* creating windows for it. This is done by in
+'realize'. 'init' should return a pointer to the newly created widget or
+NULL if creation failed.
+
+	long (*delete) (widget_t *w);
+
+ Delete a widget and all its childs. This involves deleting windows and
+freeing the storage for the widget. You don't need to remove the widget from
+the widget tree, this has already been done when 'delete' is called on a
+widget. Should never fail. Return 0 on success.
+
+	long (*close) (widget_t *w);
+
+ Close the widget 'w', ie remove it temporarily from the screen. This involves
+closing the topmost W window that belongs to the widget. Return 0 on success,
+a negative value otherwise.
+
+	long (*open) (widget_t *w);
+
+ Reopen a widget after it has been closed. Return 0 on success, a negative
+value otherwise.
+
+	long (*addchild) (widget_t *parent, widget_t *w);
+
+ Add the widget 'w' as a child to widget 'parent' and take whatever actions
+are necessary. This involves updating the tree pointers for 'parent' and 'w'.
+This is usually done using one of the support functions wt_add_before() or
+wt_add_after(). Return 0 on success, a negative value otherwise.
+
+	long (*delchild) (widget_t *parent, widget_t *w);
+
+ Remove widget 'w' which is a child of 'parent' from the widget tree and take
+whatever actions are necessary. This involves updating the widget tree
+pointers for 'w' and 'parent'. This is usually done with the support
+function wt_remove().
+
+	long (*realize) (widget_t *w, WWIN *parent);
+
+ Realize the widget 'w' and all its childs. Windows must be created as
+childwindows of 'parent' using wt_create_window (parent, ...) ('parent' is
+one of the W windows of the parent widget of 'w'). Return 0 on success and
+a negative value if an error occures while realizing 'w' or any of its childs.
+
+ For every W window that is created during 'realize' you must store a pointer
+to the widget the window belongs to in window->user_val where 'window' is
+the WWIN "handle" for the windows you create.
+
+	long (*query_geometry) (widget_t *w,
+				long *x, long *y, long *wd, long *ht);
+
+ Return the prefered size and position of widget 'w'. The usual strategy
+here is to tell the values the user has set via WT_XPOS, WT_WIDTH, etc and
+to select useful values for the ones the user didn't specify. Should never
+fail. Return 0 on success.
+
+	long (*setopt) (widget_t *w, long key, void *value);
+	long (*getopt) (widget_t *w, long key, void *value);
+
+ Set/get a configuration option for widget 'w'. 'key' is the configuration
+option (WT_<something>), 'value' a pointer to the value. If size or position
+of widget 'w' is changed during 'setopt' you must notify the parent and the
+childs of 'w' about the change. This is done using the support function
+wt_notify (w, changes). 'changes' is a mask that specifies what has changed.
+'changes' is constructed by ORing together one or more of WT_CHANGED_SIZE and
+WT_CHANGE_POS. Both functions must return 0 on success, a negative value
+otherwise.
+
+ All widgets must support the WT_XPOS, WT_YPOS, WT_WIDTH and WT_HEIGHT options.
+The position set via WT_XPOS and WT_YPOS *must* correspond to the upper left
+outer corner of the widget. Size set via WT_WIDTH and WT_HEIGHT *must*
+correspond to the total (outer) size of the widget.
+
+	WEVENT * (*event) (widget_t *w, WEVENT *ev);
+
+ This function processes events that arrived for one of the W windows
+that belong to the widget.  'w' is the widget the event happened on,
+'ev' is the W event.  It should return NULL if the event is processed,
+or the event, if it was not. If you're in doubt, it's safer to return
+NULL.
+
+ For focus change you should return the event also for all the characters
+that your widget didn't recognize.
+
+	long (*child_change) (widget_t *w, widget_t *child, short what);
+
+ This function is called when the widget 'child' which is a child of 'w'
+has changed size or position. 'what' is a mask of changes constructed by
+ORing together one or more of WT_CHANGED_SIZE or WT_CHANGED_POS. You should
+take whatever actions are necessary, eg change size of 'w'. When you change
+size or position you must notify w's parent of the change using wt_notify().
+But take care not to notify the childs or you can end up in an endless
+recursion. Should never fail. Return 0 on success.
+
+	long (*parent_change) (widget_t *w, widget_t *parent, short what);
+
+ Same as above, only the parent has changed this time. Notify the childs
+if you need to change w's size. But avoid endless recursion! Should never fail.
+Return 0 on success.
+
+} widget_class_t;
+
+
+ 2 widget_t
+ ----------
+
+ Second the widget structure that is created by the 'create' member function
+of widget_class_t.
+
+typedef struct _widget_t {
+	widget_t *next, *prev;
+	widget_t *parent, *childs;
+
+ Pointers used to construct the widget tree. 'parent' points to the parent and
+is only NULL for wt_top_class widgets. 'childs' points to a doubly linked list
+of child widgets. 'prev' and 'next' point to the previous and next sibling of
+this widget and are NULL if the widget is the first / last widget in the
+childlist. You usually do not manipulate these pointer directly but use
+the support functions wt_remove(), wt_add_before() and wt_add_after() instead.
+
+	widget_class_t *class;
+
+ Pointer to the widget class struture this widget is an instance of.
+
+	int x, y, w, h;
+
+ Position and size of the widget.
+
+	long usrval;
+
+ User setable value.
+
+	WWIN *win;
+
+ The primary W window for the widget. This is the window that is returned
+by wt_widget2win().
+
+} widget_t;
+
+
+ Usually you need to store some extra information in the widget structure.
+This is done by defining a new structure that contains a widget_t as the
+first element:
+
+	typedef struct _my_own_widget_t {
+		widget_t w;
+		short extra1;
+		long extra2;
+		.
+		.
+		.
+	} my_own_widget_t;
+
+ Of cource you must then cast the widget_t arguments in the class functions
+to my_own_widget_t and the return values from my_own_widget_t back to
+widget_t.
+
+ my_own_widget_t can be interpreted as derived from widget_t in terms
+of OO programming.
+
+
+ 3 toolkit configuration variables
+ ---------------------------------
+
+ When toolkit is initialized, it reads the toolkit configuration from
+from file. Toolkit wide configuration variables are inside 'wt_global'
+structure and initialized to values gotten from W server, before the
+file is read. Widget specific configurations are linked into the
+'variables' structure member as (variable, value) string pairs. They
+can be accessed with the 'wt_variable()' function.
+
+
+ 4 Support functions Wt offers
+ -----------------------------
+
+ Wt offers you some support functions that assist you in writing new widget
+classes. Use them instead of writing your own code where possible!
+
+
+ 4.1 Drawing with 3d look
+ ------------------------
+
+ Wt offers you some functions that draw primitives with 3d look and output
+text. These help to give the widgets a consistent look.
+
+
+ void wt_box3d (WWIN *w, int x, int y, int wd, int ht);
+
+ void wt_box3d_press (WWIN *w, int x, int y, int wd, int ht, int solid);
+
+ void wt_box3d_release (WWIN *w, int x, int y, int wd, int ht, int solid);
+
+	These three draw a box with 3d look (wt_box3d), make it appear as
+	if it were pushed into the screen (wt_box3d_press), popped out of
+	the screen (wt_box3d_release). The 'solid' flag must be set to one
+	if the box contains a label or icon that must be shifted to
+	"south-east" to make pushing down the box look realistic. Set it to
+	0 if the box is "empty".
+
+
+ void wt_circle3d (WWIN *w, int x, int y, int rad);
+
+ void wt_circle3d_press (WWIN *w, int x, int y, int rad);
+
+ void wt_circle3d_release (WWIN *w, int x, int y, int rad);
+
+	The same for circles.
+
+
+ void wt_arrow3d (WWIN *w, int x, int y, int wd, int ht, int dir);
+
+ void wt_arrow3d_press (WWIN *w, int x, int y, int wd, int ht, int dir);
+
+ void wt_arrow3d_release (WWIN *w, int x, int y, int wd, int ht, int dir);
+
+	The same for arrows (which are just triangles). 'dir' specifies into
+	which direction the arrow points: 0 (up), 1 (down), 2 (left) or
+	3 (right).
+
+
+ void wt_text (WWIN *w, WFONT *fp, char *str,
+		 int x, int y, int wd, int ht, int align);
+
+	Outputs text that is aligned according to 'align'. Possible values are
+	AlignLeft, AlignCenter and AlignRight.
+
+
+ 4.2 Widget tree manipulation
+ ----------------------------
+
+ void wt_remove (widget_t *w);
+
+	Remove widget 'w' from the widget tree.
+
+
+ void wt_add_before (widget_t *parent, widget_t *sibling, widget_t *new);
+
+	Add widget 'new' to the widget tree so that it becomes a child of
+	'parent' and the left sibling of 'sibling'.
+
+
+ void wt_add_after (widget_t *parent, widget_t *sibling, widget_t *new);
+
+	Add widget 'new' to the widget tree so that it becomes a child
+	of 'parent' and the right sibling of 'sibling'.
+
+
+ 3.3 Misc routines
+ -----------------
+
+ char *wt_variable(char *variable);
+
+	Returns the value of the given configuration variable or NULL.
+	(Variable, value) pairs are loaded from toolkit configuration
+	file when toolkit is initialized.
+
+ void wt_change_notify (widget_t *w, short changes_mask);
+
+	Notify the childs and parents of widget 'w' of a configuration change.
+	'changes_mask' specifies what has changed. Is is constructed by ORing
+	together one or more of WT_CHANGED_SIZE and WT_CHANGED_POS.
+
+
+ WWIN *wt_create_window (WWIN *parent, short wd, short ht, short flags);
+
+	This does basically the same as w_createChild() with one exception:
+	wt_create_window (WROOT, ...) works but w_createChild (WROOT, ...)
+	does not as of W1R3. Use always this function instead of using
+	w_createChild() directly.

@@ -1,0 +1,47 @@
+.TH w_allocbm 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_allocbm(), w_duplicatebm(), w_freebm() \- alloc/dup/free BITMAP
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "BITMAP *w_allocbm(short " width ", short " height ", short " type ", short " colors ");"
+.sp
+.BI "BITMAP *w_copybm(BITMAP *" bm ");"
+.sp
+.BI "void w_freebm(BITMAP *" bm ");"
+.fi
+.SH DESCRIPTION
+.TP
+.B w_allocbm()
+will allocate a bitmap of requested size and type, aligned ready for W
+server, and return it with BITMAP structure members filled out correctly.
+It will also allocate space for palette if format uses such.
+.IP
+The \fIcolors\fP argument tells the palette size.  It has relevance only
+with formats which use a palette (PACKEDCOLOR, DIRECT8).  PACKEDCOLOR
+type shouldn't be used except by w_putblock() for in-the-fly conversion
+to the server and therefore allocbm() will use for them the same
+number of planes as server format has.
+.TP
+.B w_copybm()
+will allocate a new bitmap
+and copy argument bitmap values, data and palette to it.
+.TP
+.B w_freebm()
+will free an allocated bitmap.
+.PP
+.I Client programs that intend to output images with W server should use
+.I \fBw_allocbm()\fP to allocate their BITMAPs!
+When they'll fill out the bitmap data, all that has to be remembered is
+that one image line is of `bm->upl * bm->unitsize' lenght in bytes.
+.PP
+Clients needing icons and other simple bitmaps will need only to
+use w_readpbm function (see \fIw_readpbm\fP(3)).
+.SH SEE ALSO
+.IR w_putblock (3),
+.IR w_convertBitmap (3),
+.IR w_readpbm (3),
+.IR w_readimg (3)
+.SH LAST CHANGED
+5/1997 by Eero Tamminen

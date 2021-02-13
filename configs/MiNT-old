@@ -1,0 +1,81 @@
+# Atari MiNT defines for old Atari GCC style linking
+#
+# If you got also a very old GNU Make, you also have to use
+# server/graph/Makefile.MiNT-old instead of the default Makefile
+
+ARCH = MiNT
+
+# If you have linker supporting the old style library names, use bW.olb
+# and bWt.olb.
+
+WLIB  = bW.olb
+WTLIB = bWt.olb
+
+# graphics drivers compiled into server
+PACKEDMONO = 1
+PACKEDCOLORMONO = 1
+PACKEDCOLOR = 1
+
+# included here for debugging purposes
+#DIRECT8 = 1
+#BMONO = 1
+
+# As default binaries are compiled with -mbaserel flag as that makes
+# them smaller (with -mpcrel) and their code can be shared in memory.
+# There are a few gotchas though:
+#
+# Gdb can't debug binaries loaded as basererelative, so you'll also have
+# to switch off the baserel flag from program header ('toglclr -fshare $@')
+# before debugging a baserelatively compiled binary.
+#
+# Because baserelative offsets are word sized, linker won't
+# compile program as baserelative when it's DATA size exceeds 64K.
+# You might try moving the largest array last, as it's the range of
+# variables *start* addresses which counts.
+#
+# NOTES:
+# - If you don't mind less debuggable applications, you can move
+#   '-fomit-frame-pointer' option from SERVERCFLAGS to BASECFLAGS.
+# - I use -mint in CFLAGS to make sure __MINT__ is defined for compiling
+# - Depending what names your libraries have (been linked to) you might
+#   need to add -mint to SERVERLDFLAGS and CLIENTLDFLAGS too.
+# - curses library contains termcap functions if you don't have it separately.
+
+BASECFLAGS	= -mint -Wall -Wmissing-prototypes -O2 -mpcrel
+SERVERCFLAGS	= -fomit-frame-pointer -Iutil
+SERVERLDFLAGS	= -Lutil
+SERVERLIBS	= -ltermcap -lsocket -lutil
+CLIENTCFLAGS	= -mbaserel
+CLIENTLDFLAGS	= -mbaserel
+CLIENTLIBS	= -lbW -lbsocket
+#MATHCFLAGS	= -m68881
+MATHLIB		= -lbm
+
+# extras for programs needing GNU getopt
+UTILCPP		= /server/util
+UTILLIB		= /server/util -lbutil
+
+# Kay Roemer's portlib has crypt() for wgone and forkpty() for wterm/wvt
+CRYPTLIB	= -lbport
+PORTLIB		= -lbport
+
+# if wterm/wvt shouldnt' set TERMCAP enviroment variable, comment this out
+EXPORT_TERMCAP = 1
+
+# prefix for the (gdb) symbol file linker binary
+SYM_LD = -B/usr/gnu/sym-
+
+CC = gcc
+MAKE = make
+#RANLIB = ar s
+AR = ar rs
+CP = cp
+LN = ln
+RM = rm -f
+CHMOD = chmod
+INSTALL = install
+INSTALLBIN = install -s -m 755
+INSTALLDIRS = install -d
+
+# stuff you want to remove with 'make clean'
+JUNK = core *.rej *.orig

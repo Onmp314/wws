@@ -1,0 +1,87 @@
+.TH WGO 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wgo \- Go board game client for W
+.SH SYNOPSIS
+wgo
+.SH DESCRIPTION
+\fIWGo\fP is a W version of Go board game clients for the networked turn
+based, two player game framework by Eero Tamminen.
+.SH STARTING GAME
+Before starting a game one has to contact another game client.  This
+happens either by setting up a server and accepting a connection or by
+connecting yourself to another game server.  You can do this from
+the configuration dialog.
+.PP
+After connecting another player, you can start the game and begin to
+play.  Note that continuing (for clients that support board editing
+before play) asks confirmation from the other player before proceeding.
+.SH GO (Wei-ch'i)
+Go is an ancient game, which is at least as significant in East as Chess
+is on West.  There have been mentions about it about 4000 years old
+(Chess as it's known now, is about 600 years old).  Go rules are simple,
+but the strategy is complex.  That and the size of the Go board make
+the game harder to play for computers than Chess.
+.SH GAMEPLAY
+Game pieces are called 'stones'. They are positioned to the board one
+at the time and never moved.
+.PP
+The aim of Go is to surround as much of territory (board) as possible.
+Game is played by positioning stones onto the board in turns.
+.PP
+Legal positions for a new piece are ones which have freedom(s) or will
+capture opponents stone/group(s) if that will not make a ko.
+.PP
+Captured groups are removed from the board.
+.SH GO TERMS
+.TP
+.B Freedom
+Empty position horizontally or vertically beside the stone.
+.TP
+.B Group
+Group of stones of the same color which connect to each other
+horizontally or vertically.
+.TP
+.B Suicide
+Placing a stone into a position which has no freedoms or
+into the last freedom of a group of the same color.
+.TP
+.B Capture
+Removing the last freedom of opponent's stone/group by
+placing own stone into it.
+.TP
+.B Ko
+Repetition of an earlier board situation.
+.TP
+.B Eye
+An empty board position surrounded horizontally and vertically
+by stones of one group.
+.TP
+.B Dead
+At end of the game a group that can be captured (has only
+one or no eyes (and is on the opponent's territory)) and can't
+be saved (not on neutral territory / not enough space for
+building eye(s)).
+.SH GAME END
+The game ends when both players pass their move i.e. they don't see any
+way to increase the area they have conquered.
+.PP
+At the end of the game, dead groups are removed from the board.
+.PP
+The player with more points wins.  There are slightly differing rules
+(Chinese, Japanese, AGA (go organization)) for calculating the points.
+Player gets points from the areas that are completely surrounded and
+from the prisoners that s/he has taken during the game play.  Normally
+the starter's advantage (0.5 points) is accounted in the scoring.  For
+more info see rec.games.go newsgroup and it's FAQ.
+.PP
+The current Go client requires that dead groups are removed by hand
+after both players have passed (game ends) and then game is passed again
+to calculate the score.  If one tries to remove opponent's group,
+opponent has to confirm the action.
+.SH SEE ALSO
+.IR amigod (6),
+.IR cgo (6),
+.IR wgomoku (6),
+.IR wpente (6)
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

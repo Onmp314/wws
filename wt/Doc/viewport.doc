@@ -1,0 +1,86 @@
+
+ The `viewport' widget class
+ ---------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *viewport = wt_create (wt_viewport_class, <parent widget>);
+	/*
+	 * add a child to viewport later
+	 */
+
+
+ 2 Description
+ -------------
+
+ Viewport widgets are composite widgets that have exactly one child widget.
+A viewport consits of an area throu which you can see a rectangular part of
+the child widget and two scrollbars that let you select the visible part of
+the child.
+
+ The sliders of the two scrollbars are automatically configured according to
+the position and size of the child widget. The scrollbars will be updated
+if you change size or position of the child via wt_setopt (child, ...) using
+WT_XPOS, WT_YPOS, WT_WIDTH or WT_HEIGHT options.
+
+ Even if you delete the child and install a new one the sliders will be
+updated accordingly.
+
+
+ 3 Configuration Options
+ -----------------------
+
+ For each configuration option the widget supports the name of the
+configuration option (WT_<something>), the type of the argument (eg. long *)
+you pass to wt_setopt()/wt_getopt() for this option, possible values, their
+meaning and a description of what the option does is given.
+
+
+ WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a pointer
+	to it) in the widget. This is useful if you have to associate some
+	extra data with a widget.
+
+
+ WT_XPOS (long *)
+
+	Set the X position of the viewport widget, which is relative to the
+	upper left corner of the parent window. The X position is ignored if
+	the parent widget places the childs (like box and pane widgets).
+	Default is 0.
+
+
+ WT_YPOS (long *)
+
+	Set the Y position of the viewport widget, which is relative to the
+	upper left corner of the parent window. The Y position is ignored if
+	the parent widget places the childs (like box and pane widgets).
+	Default is 0.
+
+
+ WT_WIDTH (long *)
+
+	Set the width of the viewport widget (including the scrollbars). If
+	width == 0 (which is the default) the viewport widget will make itself
+	wide enough so the child is totally visible. If you did not add a child
+	the width defaults to 100.
+
+
+ WT_HEIGHT (long *)
+
+	Set the height of the viewport widget (including the scrollbars). If
+	height == 0 (which is the default) the viewport widget will make itself
+	wide enough so the child is totally visible. If you did not add a child
+	the height defaults to 100.
+
+ WT_MODE (long *)
+
+	Specify what the viewport should do when you click on the slider and
+	mode it. It can either move the window whenever you move the slider
+	(ViewpLifeScroll) or only when you release the mouse button again
+	(ViewpLazyScroll, which is the default).

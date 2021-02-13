@@ -1,0 +1,37 @@
+.TH w_querystatus 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_querystatus() \- return W server status
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+typedef struct {
+  ulong ip_addr;
+  long pakets, bytes;
+  short totalWin, openWin;
+} STATUS;
+.sp
+.BI "short w_querystatus(STATUS *" st ", short " index ");"
+.fi
+.SH DESCRIPTION
+.I w_querystatus()
+gives you some status information about wserver. If called with a negative
+.B index
+it will give you the overall wserver statistics and return the number of
+clients currently running. If called with
+.B index
+>= 0 it will tell you the specific information about that particular client
+and return zero if everything is OK or something negative otherwise.
+.SH RETURNS
+see above...
+.SH BUGS
+Since these calls are not atomic it may very well happen that between you
+asked for the number of clients and you ask for a particular client one or
+more clients have already terminated or at least changed, so this information
+is neither accurate nor even guaranteed to exist. See source for
+.I wstatus
+for further info.
+.SH SEE ALSO
+.IR wstatus (1)
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

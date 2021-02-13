@@ -1,0 +1,25 @@
+.TH w_showButton 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_showButton(), w_hideButton() \- show/hide given button
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_showButton(WWIN *" button ");"
+.sp
+.BI "short w_hideButton(WWIN *" button ");"
+.fi
+.SH DESCRIPTION
+.I w_showButton()
+shows a button (opens its window) at the coordinates given at its creation.
+.PP
+.I w_hideButton()
+hides it again (closes its window).
+.SH BUGS
+The use of these buttons is discouraged in favor of the coming W toolkit
+library by Kay Roemer, which will bring much nicer stuff.
+.SH SEE ALSO
+.IR w_createButton (3),
+.IR w_querybuttonevent (3)
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

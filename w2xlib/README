@@ -1,0 +1,278 @@
+
+
+	W2Xlib (w) 1996-1999 by Eero Tamminen
+
+
+W2Xlib emulates a monochrome W server v1r4 with X server by adding Wlib
+interface on top of the Xlib.  This has now mostly been done.  You can
+run almost all programs that run with the W library or W toolkit.
+Mainly things like WSaver and WGone can't be run and for those functions
+you certainly would rather use their X counterparts, wouldn't you?
+
+The purpose of this library is to be able to use advanced visual X
+debuggers also for W applications.
+
+
+***BEFORE COMPILATION***
+
+Before compiling the library, run 'make links' to create necessary
+source file links from the normal Wlib library directory to here.
+
+
+LIBRARY CONVERSION STATUS
+
+
+New internal library functions are (in event.c):
+
+_find_window()		converts X window ID to W window pointer
+_event_handler()	handles X events and converts them to WEVENTs
+_flush_area()		'dirty' rectangle handling for window backups
+_redraw()		copy the area marked with _flush_area() to screen
+
+
+Functions that didn't need any changes (linked from Wlib):
+
+w_trace()		util.c
+_spaces()
+w_fonttype()
+scan_geometry()		geometry.c
+limit2screen()
+_check_window()		window.c
+
+w_selopen()		clipboard.c
+w_selappend()
+w_selclose()
+w_getselection()
+w_putselection()
+w_freeselection()
+
+w_querybuttonevent()	button.c
+w_centerPrints()
+w_createButton()
+w_showButton()
+w_hideButton()
+
+w_allocbm()		bm.c
+w_copybm()
+w_freebm()
+
+w_bmalign()		convert.c
+w_convertFunction()
+w_convertBitmap()	convert2.c
+w_fsdirect2mono()
+
+w_readpbm()		pbm.c
+w_writepbm()		pbmwrite.c
+w_readimg()		img.c
+w_xpm2bm()		xpm.c
+
+w_hatch()		hatch.h
+w_fill()		fill.c
+
+
+Functions that are converted and work (about) as with W:
+
+w_init()		init.c
+w_exit()
+
+w_open()		window.c
+w_create()		could support more window flags
+w_createChild()		parent has to be a W_CONTAINER
+w_winID()
+w_winFromID()
+w_settitle()
+w_resize()		might also move the window slightly
+w_move()
+w_close()
+w_delete()
+w_flush()
+
+w_querywinsize()	queries.c
+w_querywindowpos()
+w_querymousepos()	return value isn't correct
+w_queryevent()
+
+w_setmode()		settings.c
+w_setthickness()
+w_setpattern()
+w_setpatterndata()
+w_settextstyle()
+
+w_plot()		plot.c
+w_line()		line.c
+w_hline()
+w_vline()
+w_box()			box.c
+w_pbox()
+w_circle()		circle.c
+w_pcircle()
+w_ellipse()		ellipse.c
+w_pellipse()
+w_arc()			arc.c
+w_pie()
+w_poly()		poly.c
+w_ppoly()
+w_bezier()		bezier.c
+
+w_dplot()
+w_dline()
+w_dhline()
+w_dvline()
+w_dbox()
+w_dpbox()
+w_dcircle()
+w_dpcircle()
+w_dellipse()
+w_dpellipse()
+w_darc()
+w_dpie()
+w_dpoly()
+w_dppoly()
+w_dbezier()
+
+w_bitblk()		bitblk.c
+w_bitblk2()
+w_vscroll()
+w_getblock()		block.c
+w_putblock()
+w_test()		plot.c
+
+w_strlen()		font.c
+w_printstring()		implements only underline and reverse styles
+w_printchar()
+w_loadfont()		maps only bold and italic style requests
+w_unloadfont()
+w_setfont()
+
+
+Function stubs, won't do anything besides printing -DTRACE info:
+
+w_null()		init.c
+w_beep()
+w_querystatus()		queries.c
+w_setsaver()		settings.c
+
+w_allocColor()		color.c
+w_changeColor()
+w_setForegroundColor()
+w_setBackgroundColor()
+w_allocColorRange()
+w_freeColor()
+
+
+Unimplemented:
+
+w_setmousepointer()
+w_getmousepointer()
+
+
+Window flags / event Ids. ('X' = implemented):
+
+EV_KEYS		X
+EV_MOUSE	X
+EV_ACTIVE	X
+
+W_MOVE			These are generally global X window manager options
+W_TOP
+W_TITLE
+W_CLOSE
+W_ICON
+W_SIZE
+
+W_NOBORDER	X
+W_CONTAINER	X	all windows can be containers in X...
+W_RESIZE	X
+W_NOMOUSE
+
+BUTTON_LEFT	X
+BUTTON_MID	X
+BUTTON_RIGHT	X
+
+EVENT_KEY	X
+EVENT_MPRESS	X
+EVENT_MRELEASE	X
+EVENT_ACTIVE	X
+EVENT_INACTIVE	X
+EVENT_RESIZE	X
+EVENT_BUTTON	X	returned by button.c:w_querybuttonevent()
+EVENT_MMOVE
+EVENT_SAVEON
+EVENT_SAVEOFF
+
+EVENT_GADGET	X	for close button
+GADGET_CLOSE	X	window manager event with a X ICCCM Atom
+GADGET_EXIT
+GADGET_ICON
+GADGET_SIZE		see EVENT_RESIZE
+
+
+IMPLEMENTATION
+
+Windows have two graphics contexts which are updated at the same time.
+'gc' is for normal graphics and 'fillgc' is for patterned graphics
+functions.
+
+Redraws are implemented by allocating a pixmap for every window (just
+like W server does) and then drawing all stuff there (like with
+-DREFRESH W server).  The window on screen will be updated when
+w_flush(), event or mouse query function is called.  Currently windows
+are kept in a linear list.
+
+Because window content pixmaps are kept at the X server, resizing a
+window is very costly operation like with W server.  Container windows
+of course don't have pixmap or GCs, otherwise Wt apps would *really* eat
+memory...
+
+As W text and bitblock/scroll functions have only replace mode, they
+use _Rootgc graphics context instead of the window specific one.
+
+W get- and putblock functions are done by converting the W BITMAP first
+into XImage (client side X bitmap type). This includes reversing the
+bitorder in the bitmap as X uses a different bitorder than W.
+
+w_setpattern/data() re-creates on every call the pixmap into which the
+stipple pattern will be put as I use XCreateBitmapFromData().
+
+w_queryevent() event processing is done by first flushing W commands,
+checking for already queued X events and if there are none that map to
+W events, waiting on the X and user file descriptors for an event or
+timeout.  If X file desriptor was set by select(), pending X events are
+then processed.
+
+'proto.h' header file declares the common variables/structures used in
+the library.
+
+
+NOTES
+
+w_loadfont() can map only bold and italic font styles to W fonts.  Other
+text styles should normally be implemented with text effects anyway.  Of
+W font family names the 'fixed', 'cour' and 'lucidat' are mapped to to
+'fixed' 'courier' and 'lucidtypewriter' X font families (from which they
+were originally converted from).  Other font families are not mapped as
+W programs don't use them as default.  For user selectable font family
+names you can use X ones (set for example "New Century Schoolbook" for
+HTML widget in ~/.wtrc file).
+
+Of text styles w_printstring() implements underline and reverse, not
+bold, italic nor light.  Programs which don't need fixed sized fonts,
+should load bold and italic fonts instead of using effects.
+
+On most occasions above conversions should suffice.
+
+
+BUGS
+
+The window manager always wants user to position the windows although I
+have set window position hints?  This isn't very nice with Wt popups. :-(
+(having some other X documentation besides manual pages might help... :))
+
+Color functions are not implemented and most likely won't be done in
+the future either, unless somebody else does it.
+
+
+LAST CHANGED
+
+19th of April 1999,
+
+	Eero Tamminen,	http://koti.welho.com/kmattil4/

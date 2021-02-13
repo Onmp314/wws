@@ -1,0 +1,18 @@
+.TH w_test 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_test() \- return pixel color
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_test(WWIN *" win ", short " x0 ", short " y0 ");"
+.fi
+.SH DESCRIPTION
+.I w_test
+checks the pixel color.
+.SH RETURNS
+On monochrome server 1 if the pixel is set and 0 otherwise.
+.PP
+On color server the color index for the pixel.
+.SH LAST CHANGED
+13th. Feb. 1996 by TeSche

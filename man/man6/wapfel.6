@@ -1,0 +1,21 @@
+.TH WAPFEL 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wapfel \- Mandelbrot fractal zoomer for W
+.SH SYNOPSIS
+wapfel
+.SH DESCRIPTION
+.I Wapfel
+is both a fractal program and a demonstration how to deal with buttons. Since
+Kay Roemer's changes it's quite quick, just a pity that socket overhead sucks
+its bit of this speed again. :(
+.PP
+You may stop a running calculation by pressing the `abort' button.
+.PP
+If there's no calculation running you can select a rectangle with the left
+mouse button to be zoomed into. Not very comfortable up to now, but it shows
+you what is already possible.
+.SH BUGS
+Due to (only one set of) fixed point calculations, you can't zoom very
+deep until the image gets unaccurate.  But then this is just a demo :).
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

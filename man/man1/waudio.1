@@ -1,0 +1,50 @@
+.TH WAUDIO 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+waudio \- sound sample editor for W
+.SH SYNOPSIS
+.nf
+waudio [\fIsample files\fP]
+.fi
+.SH DESCRIPTION
+\fIWaudio\fP is a sample player / editor.  It supports only raw,
+signed 8-bit samples, but it can play these on all platforms
+which have audio device accepting this sound format.  For linux
+and MiNT it can set the sample playing frequency and sync for
+the audio device.
+.SH THE USER INTERFACE
+.PP
+The meaning of GUI buttons should be quite obvious.  'Zoom in'
+magnifies the selected (painted with mouse) part of sample, 'Zoom out'
+cancels the last selection or if there's none, shows the whole sample.
+.PP
+The 'Samples...'  button presents a dialog that lets you to select,
+load, save, create or delete a the sample. Eventually there should
+also be means for synthesizing new samples just by setting a few
+parameters for sound wave type, base frequencies, harmonies and
+envelope. 
+.PP
+Behind the 'Effects' button you find the means for manipulating
+the current sample.  You can copy, cut and paste parts between
+different samples, change the sample into a signed one (in case
+you loaded an unsigned sample, affects the whole sample),
+reverse, fade in or out selected part of sample etc.  'Maximize'
+will make too quiet sample (part) to use the whole 8-bit range.
+.PP
+Each sample has it's own undo buffer.  Only last action can be
+un-done, but you can always use save if you want to test more
+complex modifications.
+.PP
+Eventually 'Special...'  button would contain effects like
+echo, flanger, reverb, volume setting etc. and the 'Filter...'
+button would contain IIR/FIR/FFT operations.
+.PP
+The 'Fine tune' dialog lets you to fine tune the selection. That
+should be handy when searching for loop points. Eventually the
+dialog should be a visual one.
+.PP
+In the 'Options' dialog you can set how the sample is played: once, or
+in a loop.  'Selected' options tells either to play only the selected
+part of sample or to loop it, depending on whether 'Loop' option is
+set.
+.SH LAST CHANGED
+1/1998 by Eero Tamminen

@@ -1,0 +1,46 @@
+.TH w_createButton 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_createButton() \- create a simple (Wlib) button
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+\fBWWIN *w_createButton(WWIN *\fIparent\fB,
+short\fI x0\fB, short\fI y0\fB, short\fI width\fB, short\fI height\fB);
+.fi
+.SH DESCRIPTION
+.I w_createButton()
+creates a button in a window at the given position. A button is just a simple
+window with a frame, but will be treated separately in
+.I w_querybuttonevent():
+When pressed it will be inverted and when released it will report an
+.B EVENT_BUTTON
+event.
+.PP
+The button will, just like a normal window, not immediately appear but must be
+shown with
+.I w_buttonShow()
+or hidden with
+.I w_buttonHide()
+function.  These calls will always use the coordinates as given at the
+creation of the button.
+.PP
+Buttons are removed from the server with
+.I w_delete()
+function, like any other window.
+.PP
+See the source of
+.B wbuttons
+for how to use this buttons.
+.SH RETURNS
+A non-zero WWIN pointer if everything is OK or NULL if any error occurred.
+.SH BUGS
+The use of these buttons is discouraged in favor of the coming W toolkit
+library by Kay Roemer, which will bring much nicer stuff.
+.SH SEE ALSO
+.IR w_querybuttonevent (3),
+.IR w_showButton (3),
+.IR w_hideButton (3),
+.IR w_delete (3)
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

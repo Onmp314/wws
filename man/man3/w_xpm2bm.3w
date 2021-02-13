@@ -1,0 +1,56 @@
+.TH w_xpm2bm 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_xpm2bm() \- convert XPM image to DIRECT8 W BITMAP
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "BITMAP *w_xpm2bm(char **" strings ");"
+.fi
+.SH DESCRIPTION
+.I w_xpm2bm()
+converts XPM like color bitmap description into DIRECT8 format W BITMAP
+and returns that.
+.PP
+The description is an array of strings where first string has white
+space separated values for image width, heigth, colors and bytes/pixel.
+Following strings contain the color definitions (as many as there are
+colors) and rest of the strings the image data.
+.PP
+The color description lines are composed of a character denoting the
+color value in data, white space, a 'c' character, white space, a '#'
+character and hexadecimal RGB color value in the 'rrggbb' format.  Data
+is composed of the characters defined on color lines.  Data strings have
+to be as long as image is wide and in number as many as image is high.
+For example:
+.RS
+.nf
+static char *pic[] = {
+	"4 3 2 1",
+	"  c #000000",
+	"# c #ffffff",
+	"####",
+	"#  #",
+	"####"
+};
+.fi
+.RE
+.PP
+Would be converted to a two-color 4x3 BITMAP.
+.SH RETURNS
+a non-zero pointer to a BITMAP struct if everything is OK or NULL in case
+of an error.
+.SH BUGS
+Although the format is similar to XPM one, it's not very compatible.
+Function is picky about what it accepts, so you should take care not to
+add anything extra. Color value input should be more flexible.
+.PP
+You should be able to convert XPM files to C
+include files fairly easily though.
+.SH SEE ALSO
+.IR w_readpbm (3),
+.IR w_readimg (3),
+.IR w_putblock (3),
+.IR w_freebm (3)
+.SH LAST CHANGED
+26th. Oct. 1997 by Eero Tamminen

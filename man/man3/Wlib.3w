@@ -1,0 +1,92 @@
+.TH Wlib 3w "Version 1, Release 4" "W Window System" "W LIBRARY INTRO"
+.SH NAME
+Wlib \- the W Window System client library
+.SH SYNOPSIS
+.nf
+.BI #include <Wlib.h>
+.fi
+.SH DESCRIPTION
+.I Wlib
+is the lowest level W client library for sending drawing and other
+requests to the W server.
+.PP
+W client programs will be constructed by calling \fIw_init()\fP at the
+initialization, opening output window(s), possibly drawing something to
+them and then entering the W event loop in which the program will
+repeatedly call \fIw_queryevent()\fP and then dispatch actions based on
+the events, timeouts and ready file descriptors it returns.
+.PP
+Functions that \fIWlib\fP offers can be divided into several different
+groups:
+.TP
+.B Init and exit
+You can use \fIw_init()\fP and \fIw_exit()\fP to connect and disconnect
+from \fIW server\fP. \fIw_init()\fP will return you some info about
+the W server.
+.TP
+.B Window actions
+You can create, open, move, resize, close and remove windows with the
+\fIw_create()\fP, \fIw_open()\fP, \fIw_move()\fP, \fIw_resize()\fP,
+\fIw_close()\fP and \fIw_delete()\fP calls.
+.TP
+.B Queries
+You can receive requested events from your windows when you call
+\fIw_queryevent()\fP or you can just request the position of mouse or
+window with the \fIw_querymousepos()\fP and \fIw_querywindowpos()\fP
+calls.  You can also get statistics from the W socket connections with
+\fIw_querystatus()\fP.
+.TP
+.B Text operations
+You can load, set and remove fonts with \fIw_loadfont()\fP,
+\fIw_setfont()\fP and \fIw_unloadfont()\fP.  With \fIw_settextstyle()\fP
+you can apply text effects; bold, slanted ('italics'), inverted and
+light for text when it's printed.  Hand crafted styles are \fBmuch\fI
+better than computer generated ones though...
+.TP
+.B Drawing operations
+There are many graphics operations you can use with W.  These include
+operations for drawing points, lines, boxes, circles, ellipses, arcs,
+pies, polygons and curves.  There are filled and patterned versions of
+these, but only some of them support other than line width of 1 pixel.
+See \fIw_line()\fP, \fIw_box()\fP, \fIw_circle()\fP, \fIw_ellipse()\fP,
+\fIw_arc()\fP, \fIw_poly()\fP and \fIw_bezier()\fP documentation.
+.TP
+.B Image operations
+There are functions for loading and writing images, transferring them
+between server and client and blitting images between windows. See
+\fIw_readpbm()\fP, \fIw_putblock()\fP and \fIw_bitblk()\fP
+documentation.
+.TP
+.B Color setting
+With color W server you can set color palettes for windows and change
+the drawing colors.  You can use either shared colors or allocate your
+own and then map the color values to returned color 'handles'.
+Monochrome images don't need mapping, but others do.  See
+\fIw_init()\fP, \fIw_allocColor()\fP, \fIw_getColor()\fP.
+.TP
+.B Settings
+Besides setting the window title, you can also use four graphics modes;
+set, clear and invert pixels and a transparent mode for patterned
+graphics.  The pattern for patterned graphics operations and line
+width can be changed.  These apply only for drawing operations, text
+and image operations use always replace mode.  See \fIw_settitle()\fP,
+\fIw_setmode()\fP and \fIw_setpattern()\fP documentation.
+.TP
+.B Utilities
+Local programs can exchange information with W clipboard functions and
+programs with \fIvery\fP simple user interface needs can use the Wlib
+button concept.  See \fIw_putselection()\fP and \fIw_createButton()\fP
+documentation.
+.TP
+.B Debugging
+If you set \fIw_trace(1)\fP in your program, \fIWlib\fP function will
+print their arguments and possible errors to standard output.
+.PP
+Most of the \fIWlib\fP functions just convert their arguments to network
+format, pack them to a struct and send the request to W server.  A few
+functions have to maintain some information also on the client side.
+.SH SEE ALSO
+.I Wlib.h
+include file and manual pages for the above mentioned functions.
+.SH LAST CHANGED
+25th. Oct. by Eero Tamminen

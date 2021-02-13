@@ -1,0 +1,89 @@
+
+ The `arrow' widget class
+ ------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *arrow = wt_create (wt_arrow_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+The arrow widget is a push- or togglebutton that contains an arrow into
+given direction.  In contrary to normal button widget(s), this doesn't
+have any text or border and the arrow fills the the given space
+completely.
+				   
+
+ 3 Configuration Options
+ -----------------------
+
+Here are the options that can be set or queried with setopt() and
+getopt() functions.
+
+
+WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a
+	pointer to it) in the widget. This is useful if you have to
+	associate some extra data with a widget.
+
+
+WT_XPOS (long *)
+
+	Set / get the X position of the widget, which is relative to the
+	upper left corner of the parent window.
+
+
+WT_YPOS (long *)
+
+	Set / get the Y position of the widget, which is relative to the
+	upper left corner of the parent window.
+
+
+WT_WIDTH (long *)
+
+	Set / get the width of the widget.
+
+
+WT_HEIGHT (long *)
+
+	Set / get the height of the widget.
+
+
+WT_MODE (long *)
+
+	Set / get whether arrow acts as a push- or togglebutton with
+	options:
+		ButtonModePush		(default)
+		ButtonModeToggle
+	Toggle button keeps down until it's clicked again.
+
+
+WT_STATE (long *)
+
+	Set / get whether arrow is down or up with options:
+		ButtonStateReleased	(default)
+		ButtonStatePressed
+
+
+WT_ALIGNMENT (long *)
+
+	Set / get the direction into which the `arrow' will point to:
+		AlignTop
+		AlignBottom		(default)
+		AlignLeft
+		AlignRight
+
+
+WT_ACTION_CB ((*)(widget_t *w, int pressed))
+
+	Function which will be called when user clicks on the arrow.
+	When user presses the mouse button, `pressed' will be true,
+	and when mouse button is released `pressed' will be false.
+

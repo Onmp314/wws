@@ -1,0 +1,46 @@
+.TH WLOAD 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wload \- system load average display for W
+.SH SYNOPSIS
+.nf
+wload [-h] [-g \fIgeometry\fP] [-u \fIseconds\fP]
+.fi
+.SH DESCRIPTION
+The
+.I wload
+program displays a periodically updating
+histogram of the system load average.
+It is based on
+.I xload
+for the X window system.
+.SH OPTIONS
+.I wload
+accepts the following options:
+.TP
+.B \-h
+Shows usage line
+.TP
+.B \-g \fIgeometry\fP
+This option is only partially implemented. It currently only supports
+the position part of the option to place the window. Implementing the
+other parts would require major changes.
+.TP
+.B \-u \fIseconds\fP
+This option specifies the interval in seconds at which \fIwload\fP
+updates its display. The minimum amount of time allowed between updates
+is 1 second. The default is 10.
+.SH AUTHOR
+.I wload
+was written by Benjamin Lorenz for use with
+.IR W (1),
+the MiNT window manager. Thanks to Torsten Scherer
+(itschere@techfak.uni-bielefeld.de)!
+.SH "SEE ALSO"
+.IR wserver (1),
+.IR wclock (1),
+.IR wbiff (1),
+.IR wterm (1)
+.SH BUGS
+should be reported to benni@phil15.uni-sb.de, thanks...
+.SH LAST CHANGED
+12/95 by TeSche, itschere@techfak.uni-bielefeld.de

@@ -1,0 +1,104 @@
+.TH WWYRMS 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wwyrms \- two player Nibbles/Tron/LineCycles game for W
+.SH SYNOPSIS
+.nf
+wwyrms [options] <level file> [[options] <level file2> ...]
+.fi
+.SH DESCRIPTION
+.I Wyrms
+is a two-player game along the lines of Nibbles, XTron, Linecycles and
+dozens of other similar games.  The game idea is as old as they come...
+;-) You're a worm, you eat, grow and die when crashing head first to a
+wall.  Level changes when players have collected all the 'number'
+bonuses (1-9) from the level.  There are other bonuses which have
+certain effects on the worm.
+.PP
+There are versions available for TOS, W and curses.
+.SH GAME CONTROLS
+There are five keys for both the players for moving up, down, left or
+right and one for a 'special' action.  \fIPlayer one\fP uses keys
+\fBa\fP, \fBz\fP, \fBx\fP, \fBc\fP, \fBs\fP and \fIplayer two\fP keys
+\fB8\fP, \fB2\fP, \fB4\fP, \fB6\fP, \fB5\fP. You can quit game with
+the 'q' key.
+.PP
+On TOS you can also use two joysticks.
+.SH OPTIONS
+Wyrms expects to get at least one argument as the level on which the
+wyrms are about to battle. If level was not found, an empty one will be
+created. Command line arguments are (# should be replaced with a
+number):
+.TP
+.B -w #
+How many wyrms players got.
+.TP
+.B -s #
+Set worm speed (moves per second).
+.TP
+.B -b #
+Length bonus size in blocks.
+.TP
+.B -l #
+How much wyrms' length is increased.
+.TP
+.B -1 #
+Specify which controls (0-3) player one will use.
+.TP
+.B -2 #
+Specify which controls player two will use.
+.TP
+.B -e
+Edit the level files given as arguments.
+.TP
+.B -h
+Shows the help level (help.h).
+.PP
+For example:
+.IP
+.nf
+wyrms level.1 -s 4 level.1
+.fi
+.PP
+would go through level.1 two times, at the second time with half the
+speed (8 moves / sec is the default speed).
+.PP
+The normal procedure would be to drag all the level files, one wishes
+to play, onto the Wyrms program. Another way would be to install Wyrms
+for e.g. *.lev files (and to install default parameters if needed) and
+to click onto a level file one wants to play.
+.SH BONUSES
+Bonuses are something that wyrms can get (in practice, run over).  Some
+of the bonuses have immediate effect and others need to be activated or
+are activated with a crash into something.  You can have only one bonus
+of each type at the time. All the activated bonuses use a common timer.
+This means that if you'll hit a speed bonus just after slipping on shit,
+you'll end up much farther and faster than you though...
+.PP
+The current bonus tokens are:
+.PP
+\fBA number\fP. Your main goals. Will increase your length and score.
+When the number is 9, you'll get to the next level and the opponent
+loses a life.
+.PP
+\fBA flash\fP.  Pressing the button will make you to move at double
+speed for a little while.  This 'turbo' mode was the thing that
+originally got me to write this game.
+.PP
+\fBA leaf\fP.  Eating this makes you able to excrete once, which will
+increase your score too).  The one who runs into the crapola, will slide
+uncontrollably for a little while.
+.PP
+\fBExplosives\fP.  Will get you through the next obstacle you'll crash
+into (wall, other player etc.).  A head-to-head collision with the other
+worm is fatal though.
+.PP
+\fBA key\fP.  You'll need this to open a door.  Opening a door increases
+your score.
+.PP
+\fBAn arrow\fP.  Player is allowed to go through this item only in the
+direction pointed by the arrow.  Then the arrow disappears.
+.PP
+\fBThe home\fP. You'll pick up another wyrm from your home hole ;-).
+.SH AUTHOR
+Eero Tamminen
+

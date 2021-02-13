@@ -1,0 +1,21 @@
+.TH w_centerPrints 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_centerPrints() \- print string centered to given position
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_centerPrints(WWIN *" win ", WFONT *" font ", char *" s ");"
+.fi
+.SH DESCRIPTION
+.I w_centerPrints()
+is a shortcut to print a string in a given font centered to a window. It may
+be used for displaying text to buttons easily. It does not change the font
+that's selected for this window (i.e. it does change it, but sets back the
+previous one afterwards).
+.SH SEE ALSO
+.IR w_setfont (3),
+.IR w_printchar (3),
+.IR w_printstring (3)
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

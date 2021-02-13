@@ -1,0 +1,35 @@
+#
+# a sample wconfig file for W server
+#
+
+# define root menu
+menuitem = wterm tiny,	wterm -f fixed -s 7
+menuitem = wterm small, wterm -f lucidat -s 11
+menuitem = wterm medium,wterm -f lucidat -s 15
+menuitem = wterm big,	wterm -f lucidat -s 19
+menuitem = refresh,	@refresh
+menuitem = exit,	@exit
+
+# define server fonts (full font names)
+menufont = lucidat13.wfnt	# root menu font
+titlefont = fixed9.wfnt		# window title font
+
+# If your fonts aren't in the default font directory, set this.
+#fontpath = /usr/local/share/wws/fonts
+
+# These are font defaults for clients
+fontfamily = lucidat
+fontsize = 13
+
+# mouse acceleration 0=none, 1=2x, 2=^2
+mouse_accel = 1
+
+# Define shared server colors, indeces for these come right after
+# the first two colors (white and black) reserved for window borders.
+# As default, `wterm' expects these colors, in this order.
+color = 0xff0000	# red
+color = 0x00dd00	# green
+color = 0x0000dd	# blue
+color = 0x00dddd	# cyan
+color = 0xff00ff	# magenta
+color = 0xeeee00	# yellow

@@ -1,0 +1,270 @@
+<pre>
+
+FONT SUBSTITUTION AND SERVER DRAFT
+
+
+* There should be a user definable default font which most apps (needing
+only one font) would use.
+
+* If a font that app requests isn't available, server will substitute
+another font.  App can specify which substitutions (family, size, style)
+are allowed.
+
+* Emulating styles which aren't available, by on-the-fly generated W
+server font `effects'.  This will happen transparently from the
+application point of view (Wlib could be aware of this so that it
+doesn't need to store the font width etc.  information twice) either in
+font or W server.  Fonts will have a mask which specifies which effects
+can be used (will be readable) with the font.
+
+(As computer generates certain effects (underline, reverse) as well as
+humans it's most memory efficient to generate them exclusively on the
+W server. However user should have an option to generate them beforehand
+with either a separate program or in font server (startup options).
+
+----------------
+
+FONT FILES
+
+Font file structure:
+struct {
+	long magic;			/* font `generation' id */
+	short header;			/* header length up to `widths' */
+	long length;			/* font data length */
+
+/* font type */
+	char family[16];		/* font family name */
+	short height;			/* font size */
+	ushort flags;			/* proportional, CHARSET etc. */
+	ushort styles;			/* styles implemented in font */
+
+/* style effect variables */
+	short thicken;			/* `boldness' */
+	short slant_size;		/* slanting width increase */
+	short slant_offset;		/* italic correction */
+	ushort skew;			/* slanting pattern */
+	ushort lighten;			/* pattern for light effect */
+	ushort effect_mask;		/* usable (=readable) style effects */
+
+/* font cell information */
+	short baseline;			/* offset for vertical aligning */
+	short maxwidth;			/* width of the widest char */
+	short top;			/* empty rows above chars */
+	short bottom;			/* -"- below chars */
+	short left;			/* empty columns left of chars */
+	short right;			/* -"- right of chars */
+} HEADER;
+
+/*variable length, optional strings */
+	char info[];			/* font purpose, author etc. */
+
+/* the font data itself */
+	uchar widths[256];		/* individual character widths */
+	ulong data[];			/* font bitstreams */
+
+`Info' member can be shown with the font header manipulation program,
+others can ignore it.  Font editor should know also of different
+`generations' of W fonts and to be able to convert between them.
+
+
+FONT SERVER STRUCTS AND SUBSTITUTION
+
+Font server will eventually implement the following functionality
+(probably in the order given):
+	1) send requested font to the W server
+	2) do byte order conversions to font for the W server
+	3) replace non-existing fonts with the default one
+	4) precalculate font effects according to font server options
+	5) check whether W server already has requested font
+	6) take care of font family / size / style substitutions
+
+From 5) onwards font server will maintain lists of what fonts W
+server(s) has received (so that W server will not be sent a font that it
+already has).  These lists start from a alphabetically sorted font
+family names, which point into different sizes under it in increasing
+order, which point to different font styles in that size.  There are
+separate lists so that searching the fonts and finding a substitute will
+be faster.
+
+Font server font structures on phase:
+	FAMILY *next;		/* pointer to next struct in list */
+	char family[];		/* font family name */
+	FSIZE *sizes;		/* pointer to font sizes in this family */
+
+	FSIZE *next;		/* pointer to next struct in list */
+	short height;		/* font size */
+	FSTYLE *styles;		/* pointer to font styles in this size */
+
+	FSTYLE *next;		/* pointer to next struct in list */
+	short styles;		/* styles in the font */
+	short effects;		/* on-the-fly in W server generated styles */
+	short effect_mask;	/* effects that W server may apply to font */
+	FREF *font;		/* pointer to font in W server (see below) */
+
+`effect_mask' tells which on-the-fly generated (on W server) style
+effects are readable (i.e.  can be used for fallbacks) with the font in
+question.
+
+If app doesn't require any of the attributes to be exact, font
+substitution works like this:
+	0) exact font
+	1) exact family & size, on-the-fly style effect
+	2) exact family & size, normal style
+	3) exact family, default size, exact style
+	4) exact family, default size, on-the-fly style effect
+	5) exact family, default size
+	6) default family, exact size & style
+	7) default family, exact size, on-the-fly style effect
+	8) default family, exact size, default style
+	9) default family & default size, exact style
+	10) default family & default size, on-the-fly style effect
+	11) default font
+
+font server checks with every substitution level whether W server
+already has the substitute, then it will try to load substitute from
+file (and link it to lists).
+
+If requested font family / size doesn't have the requested style flag in
+the effect_mask, the style request will be ignored.
+
+If default size is greater than the requested one, a size just below
+the requested size will be used (remember that sizes are also sorted
+and that font family member will point to the smallest size).
+
+App can also specify which font attributes have to be exact (or
+generated on-the-fly). This will lead into skipping some of the
+substitution steps.
+
+Font server has an option for specifying which effects should be added
+to font in the font server before it's sent to W server.  That way user
+can control the memory v.  speed (generating effects when drawing the
+characters is of course slower) issue.  Font server generated italic
+will widen the characters as does bolding of a proportional font.
+Font server will do effects by converting font bitstreams to bitmaps,
+applying effects and then converting bitmaps back to bitstreams.
+
+Default font is the first one requested by the W server.
+
+
+W SERVER STRUCTS
+
+W server font resources (FONT):
+	HEADER *header;		/* members in font files up to `info' */
+	uchar widths[256];	/* character widths */
+	long offsets[256];	/* offsets into char specific bitstreams */
+	ulong *data;		/* character bitstreams */
+	short refcount;		/* number of references to font */
+
+W server font references (FREF):
+	short effects;		/* style effects to calculate on-the-fly */
+	FONT *font;		/* pointer to above structure */
+
+Currently possible on-the-fly style effects (in any combinations) are:
+bold, italic, underline, reverse and light.  Italics (actually slanted
+pseudo italics) should be done in the server if character widths should
+be same for italic and normal styles.  Server generated bold will be
+inferior to hand crafted (or in some cases even to font server generated)
+style.
+
+
+WLIB STRUCTS
+
+Wlib font resource (WFONT):
+	WFONT *next;
+	short refcount;		/* number of references to font */
+	FREF *font;		/* pointer to W server font reference */
+	HEADER header;		
+	uchar widths[256];	/* character widths */
+
+---------------------
+
+FONT LOADING CHAIN
+
+Wlib:	w_loadfont(char *family, int size, int styles, int required);
+
+Will check whether that font has already been loaded from the font list.
+If it hasn't been, Wlib asks W server to load one.
+Font request packet:
+	short len;
+	short type;
+	short styles;
+	short size;
+	short req_flags;
+	short res;
+	char family[16];
+
+`Required' is a mask of attributes that has to be satisfied:  font
+family (if requesting a symbol font or one with a special character
+mappings (e.g.  for DOS, ISO latin-1, Atari, TeX character sets)), size
+or style.  Giving empty family string or zero size will tell server to
+use default values.
+
+
+Wserver:
+
+When starting, W server will read from the configuration file default
+file family and size.  Then W server connects the font server and asks
+for the default font.  If font server or default font isn't available, W
+server will abort.
+
+When a client font request arrives, W server will forward the request
+to the font server.
+
+Font server will check whether *W server* already has the font:
+
+A) If it does, font server will tell W server where the font is (returns
+a `you already received that font' packet with the W server font
+structure reference address) and what effects to generate when using it.
+
+B) Otherwise font server tries to load the font or a substitution (see
+above).  Then font server will send W server the font header and data.
+W server will reply with a pointer into the new W server font structure.
+
+Server will increase the font reference counter, generate a new
+reference to the font and return address to that for the application.
+In case A) that will be sufficient if Wlib also uses font references.
+On case B) all the other font information has to be sent to Wlib too.
+
+
+Application
+          ^
+    |     | font already
+    v     | loaded
+   Wlib --
+                             ^ send font
+    |                        | info to
+    v                        | Wlib
+ W server      -------------- --------------
+              ^ W server       | return     ^
+    |         | already got    | font addr  | send font
+    v         | the font       v            | to W server
+font server --
+         ^                                  ^
+    |    | check the                        | Font found,
+    v    v fallbacks                        | load it.
+font file ----------------------------------
+
+
+UNLOADING A FONT
+
+When client deletes a font, reference counter will be first decreased in
+Wlib.  When Wlib counter goes to zero, W server is told to delete the
+font.  When W server font reference count goes to zero, font server will
+be told to delete font list member for that font.
+
+
+NOTES
+
+Wlib function w_strlen() will not give the full string extent for a W
+server generated slanted font.  For them there could be another,
+	w_strextent(WFONT *f, char *s, short *x, short *y, short *w, short *h)
+
+function that would return y & h baseline based and x & w based on
+w_strlen() call and slant_size / slant_offset. Wlib should then be
+aware of which of the text styles are generated in the W server!
+
+
+8.12.1996,
+
+	Eero Tamminen,		http://www.modeemi.cs.tut.fi/~puujalka/
+</pre>

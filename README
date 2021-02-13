@@ -1,0 +1,395 @@
+Please read the whole document before starting installation!
+
+Contents:
+- Intro
+- Requirements
+- Installing
+  - Linux SDL notes
+  - Linux GGI notes
+  - Linux SVGALib notes (x86)
+  - Linux framebuffer notes
+  - Other Linux notes
+  - Atari / MiNT notes
+  - Other platform notes
+- Usage
+- Troubleshooting
+  - Internationalization / Unicode
+- Sources directory hierarchy
+- Security
+- Warranty
+
+
+INTRO
+-----
+
+W Window System is a simple, mainly two-color, client-server based
+windowing system originally written for MiNT by Torsten Scherer, later
+enhanced by Kay R"omer and now maintained by Eero Tamminen.
+
+Althought W resembles X11, it's not compatible with it nor intended to
+replace it in any way.  W is much smaller and simpler, also to program
+for and therefore ideal for boot floppies, older computers (eg 386
+laptops with mono LCD) and so on...
+
+
+REQUIREMENTS
+------------
+
+Linux users need either framebuffers (on 2.2 or later kernels), SDL
+(Simple Directmedia Library), GGI (Generic Graphics Interface)
+libraries or SVGAlib.
+
+MiNT users need Kay Roemer's MiNTNet extension and library for sockets
+and (BSD) port library for some auxiliary functions. Mac users need
+MacMiNT and emulation drivers written by Jonathan Oddie (in server
+dir).
+
+Other needed stuff is GNU make, gcc and several megs of free space to
+compile W.  C source might work with other ANSI-C compiler besides
+gcc, but makefiles require _GNU make_.
+
+
+INSTALLING
+----------
+
+If your OS is one of the actively supported ones, compiling W
+should be as easy as typing:
+	1) make config
+	2) <change options in '.config' to your preferences>
+	3) make
+
+and optionally:
+	4) su root
+	5) make install
+	6) tic wterm.terminfo
+	(7) make set-rights)
+
+First step copies appropiate `make' defines from configs/ directory
+into `.config' file.  If there isn't a config file for your OS, you'll
+have to make one and probably do a new initialization file into
+server/graph/ directory.  (If you'll (re-)port W to your OS, please
+send your configuration file and possible other changes to
+w-users@phil.uni-sb.de.)
+
+The second step takes most time[1] as it compiles the W library,
+server, applications and games.  Note: you can link (n)curses library
+if you don't have termcap library.
+
+Fourth step installs binaries, manuals, libraries and fonts to
+suitable places (by FHS compliant directories under /usr/local/),
+which you can change from the '.config' file produced by the first step.
+Installation isn't necessary, but then you'll got to have `fontpath'
+variable correctly set in your `~/.wconfig' file. `fontpath' points to
+directory containing W fonts.
+
+Compiling the terminfo entry isn't strictly necessary, just
+*seriously* recommended so that your (n)curses programs work better.
+If your setup doesn't support terminfo, copy wterm.termcap contents
+to your /etc/termcap file.
+
+[1] On Atari ST compiling the whole W package takes several hours, on
+133Mhz Pentium...  a couple of minutes.  Kay's Wengine 'benchmark'
+gives on Pentium RPM values over 100x greater than on ST, though W
+*is* usable even on ST.
+
+
+LINUX SDL NOTES
+
+Use 'linuxsdl-config' instead of 'make config' in the first step
+to compile W server with SDL backend.
+
+SDL is the most portable W server backend but unfortunately it's
+not the fastest. The reasons are that:
+* SDL doesn't offer a select() style function for getting both events
+  and socket traffic from clients so W server has to poll for them.
+* SDL doublebuffers W screen, so I have to separately tell SDL when
+  to update the screen.
+
+SDL backend uses the largest video mode available in fullscreen 8-bits.
+
+
+LINUX GGI NOTES
+
+Use 'linuxggi-config' instead of 'make config' in the first step
+to compile W server with GGI backend.
+
+Along with SDL, GGI is the best supported W backend. Through libGGI
+you can run W on top of anything that libGGI supports: framebuffer,
+SVGAlib, X...
+
+If trying to run GGI version of W server outputs errors like this:
+	LibGGI: Failed to set mode: 640x480.V640x480.F1.D1x1.[P8/8]
+You have tried to run W in an enviroment which doesn't support 8-bit.
+
+If you're trying to run W server on top of X server, just start your X
+with something like 'xstart -- -bpp 8' so that it will use bitdepth of 8.
+Or use GGI bitdepth emulation by running W server like this:
+	GGI_DISPLAY='tile:-usedb:0,0,640,480,(palemu)' wserver
+
+Note that you can also give W differing screen sizes with GGI enviroment
+variables, like this:
+	GGI_DEFMODE=640x400 wserver
+
+
+LINUX SVGALIB NOTES (x86)
+
+Use 'make svgalib-config' instead of 'make config' in the first step.
+After installing, 'make set-rights' sets wserver setuid root.  SVGAlib
+needs root priviledges to access screen.
+
+You'll probably need to change mouse access rights too as SVGAlib
+needs mouse device to be world readable/writable ('chmod 666
+/dev/mouse' as root).
+
+SVGAlib works with both DIRECT8 and BMONO drivers and as default both
+are compiled in.  640x480x2 BMONO mode is default so you should always
+define at least BMONO.  If you got a SVGAlib supported graphics card
+which can do 256 colors *linearly* on a similar resolution, set
+GSVGAMODE enviroment variable to that ('export
+GSVGAMODE=G640x480x256') as SVGAlib mono mode is buggy.
+
+I'd recommend setting SVGAlib 'mouse_accel_type' to 'off' as mouse
+acceleration doesn't seem to work too well at least with RH 5.2 glibc
+/ SVGAlib 1.3.0.
+
+
+LINUX FRAMEBUFFER NOTES
+
+If your graphics card doesn't support 8-bit (chynky) mode, you might
+try PMONO (for big endian machines which allow long accesses on short
+boundaries eg Amiga & Atari) or BMONO (little endian machines like
+x86).  On Atari there are also available interleaved color mode
+drivers.  PCOLOR does color and PCOLORMONO emulates mono on color
+(*much* faster than PCOLOR as it writes only to one plane).
+
+If you want to debug (suspend) running W server, give it the '--debug'
+argument.  That way it won't handle VT switching / screen restoring i.e.
+freeze your console with suspend...  GPM seems also to dislike this,
+when you're using the framebuffer/GPM W version, so you need to give
+it '--debug' option too :-(.  Only x86/fb version of W needs GPM.
+
+For wserver to be able to write to the framebuffer, you either have
+let the framebuffer device (/dev/fb0) be world writable or suid
+wserver to a user or group that can write to it. It's upto you to
+decide which you prefer (generally latter is used)...
+
+For a few terminal related functions, you need to link wserver with
+'termcap' library.  If your system lacks this, 'curses' and 'ncurses'
+libraries both contain this functionality.
+
+
+OTHER LINUX NOTES
+
+Read the .config file produced by step 1) carefully before proceeding.
+Depending on whether you have libc5 or libc6 (glibc), you might need
+to change some lines in it!
+
+If you want to use shared libraries, you could either add the
+path for the libraries to /etc/ld.so.conf and run /sbin/ldconfig
+or use in your login script something like this:
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+
+ATARI / MiNT NOTES
+
+Atari MiNT users offering a W server binary should compile the server
+at least with all the PACKED drivers, so that W will work on all
+reasonably standard resolutions.  Note that for MiNT you'll need
+fairly new GNU Make and ld or you'll have to edit .config and
+Makefile(s) by hand before they work [2].
+
+In color resolutions you might want to run W server with '--forcemono'
+option so that it takes less memory and works much faster (ie uses
+PCOLORMONO driver instead of PCOLOR one). Color W server isn't really
+usable unless you'll have a little more colors, but the speed slows
+down significantly when the number of bits/planes increases.  Color
+wterm needs 8 colors and djpeg needs at least the same to be able to
+quantize images for wbm ('djpeg -colors 14 image.jpg | ppm24to8 | wbm'
+will look quite passable btw).
+
+[2] If you fail to compile W server graphics drivers, you might try to
+edit and use the MiNT-old Makefile on the graph library directory.  If
+you get 'absolute reference' errors when linking W clients you have an
+obsolete version of ld.  Add 'b' after every '-l' (except for server
+libraries) in '.config' file.
+
+
+OTHER PLATFORM NOTES
+
+*** I have tested this version only on x86-linux so other platforms
+*** most like will need some fixing!
+
+If you're not using GGI or SDL, you most likely have to fix terminfo
+key sequence entries, because ATM W will map special keys like arrows
+only for them.  As default W will transmit the codes from your console
+as is.  For linux and vt220 the default cursor sequences should be
+right, but at least function keys will need fixing.
+
+If none of your programs uses the plain termcap, you could shave a bit
+from wterm/wvt size by commenting out EXPORT_TERMCAP from the .config
+file.
+
+If you want to make client library/binaries slightly smaller, remove
+the TRACE define from the W and Wt library makefiles.
+
+Non-atari users could #undef ATARI_SERVER from lib/convert.c if they
+want to save a few bytes of client memory.  This will exclude packed
+color(mono) bitmap conversion routines from Wlib.
+
+Amiga Linux/NetBSD users can use either the DIRECT8 or PACKEDMONO
+driver depending on their graphics card.
+
+Sparc (SunOS) users are left with DIRECT8 driver.  According to
+TeSche's notes, Sparcs don't like long accesses on short boundaries
+which PACKEDMONO driver does. You might try BMONO driver after you
+have changed it's mouse functions to use shorts instead of longs
+(other stuff 'should' work).
+
+
+USAGE NOTES
+-----------
+
+* Right mouse button on window title or border tops/bottoms it.
+* Left mouse button on window title moves the window.
+* If window is resizable:
+  - Mouse shape changes on the window border.
+  - Left mouse button on border allows window resize.
+  - Left-clicking on border _without moving mouse_ allows moving
+    the window after that (this is mainly for windows which title
+    is out of the screen).
+  Otherwise left mouse button on border just moves the window.
+
+
+TROUBLESHOOTING
+---------------
+
+* If W complains at startup about not finding fonts, check that:
+	- W fonts were installed to the 'FONTDIR' directory
+	  defined in '.config' compilation configuration file.
+	- 'wconfig' file was installed to the 'LIBDIR' directory
+	  (mentioned in '.config') or into $HOME as '~/.wconfig'.
+	- 'fontpath' in 'wconfig' file points where W fonts are.
+	- Fonts which W server complains about actually exist
+	  in the font directory.  If they do not, set other
+	  (fontpath or) fonts in 'wconfig' configuration file.
+
+* If your mouse or keyboard doesn't work in W, check that your
+  keyboard and mouse devices are readable. Some setups might need the
+  devices to be writable too.
+
+* If you're unable to run W binaries or view W manual pages after
+  installation, that's probably because your system doesn't know where
+  they are.  Check that the enviroment variables PATH ('echo $PATH')
+  and MANPATH include the directories where you have installed W
+  binaries and manual pages.  If they don't, fix the variables in your
+  login script.  With Bourne shell and default W location you would
+  add something like this to '~/.bash_profile':
+	export PATH=$PATH:/usr/local/bin
+	export MANPATH=$MANPATH:/usr/local/man
+
+* If you have edited and compiled wterm terminfo entry, but programs
+  still won't function properly in regards to colors, mouse and
+  function keys, 'unset TERMCAP'.  Wterm and Wvt set this enviroment
+  variable for old termcap-only programs, but some (IMHO silly)
+  ncurses versions seem to think that TERMCAP entry should override
+  terminfo one...
+
+* If every wterm instance just opens it's window and then exits even
+ when all the options seem to be correct, check your PTY/TTY
+ (/dev/ptyp* and /dev/ttyp*) device attributes.  They should be
+ 'crw-rw-rw' for wterm to be able to communicate with the shell.
+
+* If you want to debug what W clients are doing set WTRACE environment
+  variable before starting them, like this:
+    WTRACE=1 wchars
+
+
+ITERNATIONALIZATION / UNICODE
+
+2008: All desktop operating systems use now Unicode character
+encodings (Linux distributions 8-bit variable width UTF-8 and
+Windows 16-bit characters).
+
+Neither W window system fonts, widgets or terminal support unicode.
+Therefore 'startw' unsets LANG for certain things to work better. You
+probably want to set it to something like <your language>.ISO-8859-1
+(=latin-1, ISO-8859-15 i.e. latin-9 should be OK too).
+
+Note also that the compiler used to build server and client library
+& clients need to have same understanding of whether "char" is signed
+or unsigned.
+
+
+DIRECTORY HIERARCHY
+-------------------
+
+- apps		W applications (wterm etc)
+ +- wsaver	W screen saver / modules
+- benchmark	W benchmarking programs
+- configs	configuration files (and scripts) for different OSes
+- diffs		diffs for getting some X programs to work with W
+- demos		demos for different Wlib features
+- docs		W documentation
+ +- html	older HTML documentation for W
+- fonts		W server fonts
+- games		some simple games
+ +- wdragon	port of a X Mahjong game
+ +- wflic	FLI player for MiNT (optional)
+ +- wjewel	colors/columns/xjewel game clone
+ +- wyrms	nybbles/xtron/linecycles game clone
+- lib		Wlib, the W client library
+- man		manual pages
+ +- man3	W library documentation
+ +- man1	documentation for W programs and games
+ +- cat1	directory for ASCII versions of above
+- scripts	some W (terminal) test and utility scripts
+- server	W server
+ +- graph	graphics routines and gfx initialization
+ +- util	utility functions for W server (and programs)
+ +- xconout2	console output redirector for MiNT
+- w2xlib	Wlib emulation for X
+- wlua		Lua language interpreter with W support
+- wt		W toolkit
+ +- Doc		toolkit documentation
+ +- Wt		toolkit widgets
+ +- Test	test programs for toolkit widgets
+ +- netgames	some networked board games
+ +- waudio	simple 8-bit sample editor / player
+ +- warzone	incomplete game + dial widget
+ +- wchat	networked 'chat' program
+ +- wdraft	simple drawing program for testing W server
+ +- wedit	buggy textedit widget and text editor
+ +- wetscape	HTML 1.0 WWW-browser with jpeg support
+ +- wicone	PBM icon editor
+ +- wstart	Windows style start-menu application
+ +- wvt		terminal with copy&paste and history
+
+
+SECURITY
+--------
+
+SVGAlib W server has to be run as root.  SVGAlib will give up root
+priviledges after initializing signal handlers, mouse and screen.  If
+any other platform needs W to be run suid to something, add code to
+give up these rights after screen initialization in
+server/main.c:initialize().
+
+*** As default the AF_UNIX_ONLY define is set in server/config.h.
+*** This will make W to listen/accept connections only from
+*** clients on the same machine.
+
+Until W server has been rigorously examined for buffer overrun
+possibilities and other holes, restrict access to it to people you
+trust!  If you're going to use W server over internet, I'd advice you
+to use some encrypting socket forwarding software like ssh instead of
+enabling W to be connected from anywhere.
+
+
+WARRANTY
+--------
+
+None.
+
+
+
+    - Eero

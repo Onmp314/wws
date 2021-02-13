@@ -1,0 +1,83 @@
+.TH w_setpattern 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_setpattern(), w_setpatterndata(), w_hatch() \- set drawing pattern
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "ushort w_setpattern(WWIN *" win ", ushort " pattern ");"
+.sp
+.BI "ushort w_setpatterndata(WWIN *" win ", ushort *" data ");"
+.sp
+.BI "ushort w_hatch(int " type ", int " width ", int " times ");"
+.fi
+.SH DESCRIPTION
+\fIw_setpatterndata()\fP and \fIw_setpattern()\fP set the drawing
+pattern for 'dashed' graphics operations for given window.  Former
+accepts an ushort[16] array for the pattern image and latter just uses
+an ID of a predefined server pattern.  \fIw_hatch()\fP calculates an ID
+for a hatch pattern with given properties.
+.PP
+The pattern origin is always at the upper left corner of the window so that
+graphics align visually.
+.SH SERVER PATTERN IDENTIFIERS
+W server can compose four kinds of pattern based on their IDs:
+.TP
+Grayscale patterns
+Values between 0 (black) and MAX_GRAYSCALES (white) result in an ordered
+dither matrix.
+.TP
+Rolled patterns
+The given pattern is rolled on every line either left (bit 0x200 set)
+or right (bit 0x8000 set). These can be used with the \fIw_dhline()\fP
+and \fIw_dvline()\fP functions to get different kinds of dashed lines.
+.TP
+Hatch patterns
+The given pattern is rolled to both directions if bit 0x100 is set.
+These kind of patterns are often used on designing programs.
+.TP
+Arbitrary server patterns
+IDs for these are defined in the Wlib.h include file.
+.SH HATCH GENERATION
+\fIw_hatch()\fP generates IDs for rolled hatch patterns according to
+these three parameters:
+.TP
+.I type
+Hatch type can be either P_LINE__L, P_LINE_R or P_HATCH.  First two
+are line patterns which roll either left or right. Last one rolls the
+patterns in both directions.
+.TP
+.I width
+This gives the width of the line(s) used in the pattern. It can be
+from 1 to 8.
+.TP
+.I times
+You can have either one, two or three of above lines evenly positioned
+to the 16 pixel lenght of a pattern.
+.PP
+As you noticed from above, this gives evenly generated hatch patterns.
+For decorational purposes random, thicker patterns may look nicer.  You
+can test patterns with the \fIwsetbg\fP program.  Try for example having
+the upper byte an odd value and the lower byte a value differing from
+that (odd or even).  For example:  0x9174, 0x77ff, 0x71ac, 0x1511,
+0x55aa or 0x33aa.
+.SH NOTES
+If your program changes patterns, it's best to always explicitly set one
+before drawing anything.  Wlib won't forward redundant attribute
+requests to W server.
+.PP
+If you're using the ROOT window you
+.B have to
+set everything explicitly as other programs may also change the window
+attributes.
+.SH RETURNS
+\fIw_hatch\fP returns ID for requested hatch pattern and other functions
+return ID for the old pattern.  If the pattern was set with
+\fIw_setpatterndata()\fP, the old ID will be USER_PATTERN meaning that
+\fIw_setpattern()\fP can't restore the earlier pattern.
+.SH SEE ALSO
+.IR w_setmode (3)
+and
+.IR wsetbg (1)
+.SH LAST CHANGED
+2/98 by Eero Tamminen

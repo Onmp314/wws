@@ -1,0 +1,260 @@
+<html>
+<head>
+<title>You tell me, I tell you...</title>
+</head>
+<body>
+
+<h2>W Inter-Client Communication Protocol Draft</h2>
+
+W will (1998? :)) provide two mechanisms for client communication;
+messages and clipboard for passing data.
+
+
+<h3>Clipboard</h3>
+
+Clipboard can be used for providing data either globally or for a
+specific application.  An example of the global way would be the
+painting of text in one window with left mouse button and then pasting
+it into another window with a right mouse button.  Drag & drop will
+need use of messages and of private clip types.<p>
+
+
+<h4>Interface:</h4>
+
+<code>
+	<li>short w_putselection(char *type, char *data, long length, short lock);<p>
+</code>
+
+Will send the 'data' data of 'length' length to clipboard under 'type'
+identification.  `Lock' should be set when another program asks for the
+data.  It will prevent other programs from (accidentally) `corrupting'
+i.e.  overwriting the data.  Returns NULL for failure.<p>
+
+<code>
+	<li>w_selection_t *w_getselection(char *type, short unlock);<p>
+</code>
+
+Will get clipboard data with 'type' identification.  Returns the
+acquired clip or NULL if requested failed. If `unlock' is set, will
+free the write-lock on the clip. This should be used when reading
+data that was requested from another program.<p>
+
+<code>
+	<li>w_freeselection(w_selection_t *);<p>
+</code>
+
+Frees the memory allocated for the clip by the w_getselection() call.<p>
+
+<code>
+	<li>w_clipboard_t w_selopen(char *type);<p>
+</code>
+
+Will open a clip of type `type' and return handle to clip or NULL.<p>
+
+<code>
+	<li>w_clipboard_t w_selappend(w_clipboard_t, char *data, long length, short lock);<p>
+</code>
+
+Will append data into earlier opened clip.<p>
+
+<code>
+	<li>void w_selclose(w_clipboard_t);<p>
+</code>
+
+Closes and flushes an earlier opened clip.<p>
+
+<code>
+	<li>short w_copy_bm(WWIN *win, short x, short y, short w, short h);<p>
+</code>
+
+Copies the specified image block into clipboard.  Returns NULL for failure.
+
+<code>
+	<li>short w_paste_bm(WWIN *win, short x, short y);<p>
+</code>
+
+Pastes the image from clipboard into the specified place.  Returns NULL
+for failure.<p>
+
+<code>
+	<li>WWIN *w_stat_bm(void);<p>
+</code>
+
+Returns the clipboard image information (size and window pointer (for
+w_getblock())) or NULL if clipboard is empty.<p>
+
+
+<h4>Implementation:</h4>
+
+Clipboard could be implemented either in W server, W library or in a
+separate server.  Clipboard server receives, stores and send the data
+from/to clients.  Data will be stored in files on some directory (could
+be configurable) according to their type (= filename).  The type names
+could probably be limited to 8-16 characters in Wlib (should be then
+mentioned in the docs of course).<p>
+
+There could be `priorities' attached to clips so that clipboard server
+would notify other clients (through W messages, see below) about
+receiving clips above certain priorities.<p>
+
+Clipboard images (stored on W server so that using them is faster) need
+some additional code to the W server.  They would be stored in a hidden
+window.<p>
+
+A separate clipboard server could also have a W interface so that user can
+manipulate the clips (show, copy, delete them).<p>
+
+Clipboard open, append and close functions would probably be implemented
+completely in the W library.
+
+W_SEL_TEXT would be the `default' clip type and should be used
+exclusively for visual text copy / paste operations.  Clients which
+don't translate '\t' or '\n' should either ignore or convert to spaces
+values that are smaller than 32, not just `show' them (fonts might have
+null width chars on those positions and that will disrupt window offsets
+for fixed width font programs).<p>
+
+Client specific clip types should include a little identification string,
+for example:  "Word.rtf", "Word.pbm".  Client could also provide a more
+generic version of it's clip for pasting into other apps.<p>
+
+
+<h3>Messaging</h3>
+
+Messages are just IDs and clipboard will be used for passing data.
+Using application specific clip type identifications, there should be
+no confusion (unless of course apps select their names unwisely :)).<p>
+
+Messages will be given to clients as 'EVENT_MESSAGE' events.
+The WEVENT structure will be filled like this:<p>
+
+<pre>
+	win:	window		(from w_msgwin())
+	type:	EVENT_MESSAGE
+	x:	message ID
+	y:	optional message information
+	key:	sender ID	(for w_toClient())
+</pre>
+<p>
+
+Except for broadcasts (which should be enough for starters), the
+messages will need a receiver.  Therefore clients that can accept
+messages, will have to register themselves.<p>
+
+
+<h4>Interface:</h4>
+
+<code>
+	<li>void w_register(char *name, char *category, long version);<p>
+</code>
+
+Registers the client with given attributes. Usually done right after
+w_init().<p>
+
+<code>
+	<li>short w_broadcast(short msg_id, short msg_arg, char *category);<p>
+</code>
+
+Sends the message to all the registered clients in 'category' category.
+If 'category' is NULL, will send message to all registered clients.
+Returns number of clients (or maybe just non-zero if there were clients)
+to which message was sent.<p>
+
+<code>
+	<li>long w_clientID(char *client_name, long version);<p>
+</code>
+
+Returns the ID for the first client registered with given name.  Clients
+whose version number is smaller than the given one, will be ignored.  If
+client wasn't found, returns zero.<p>
+
+<code>
+	<li>short w_toClient(long id, short msg_id, short msg_arg);<p>
+</code>
+
+Sends a 'msg' message to 'id' client. Returns zero if given client
+wasn't registered.<p>
+
+<code>
+	<li>short w_msgwin(short x, short y, short msg_id, short msg_arg);<p>
+</code>
+
+Sends message to the client owning the window at position (x,y). This
+function is vital for drag&drop implementation.<p>
+
+
+<h4>Implementation:</h4>
+
+<code>
+	<li>void  w_register(char *name, char *category, long version);
+</code>
+
+Server should have some new CLIENT structure members for storing the
+client name, category and version.  The name strings could be limited to
+16-32 characters and category to same length as the clipboard types.<p>
+
+<code>
+	<li>long  w_clientID(char *client_name, long version);
+	<li>short w_toClient(long id, short msg_id short msg_arg);<p>
+</code>
+
+The id is the CLIENT structure pointer/id.<p>
+
+<code>
+	<li>short w_msgwin(short x, short y, short msg_id, short msg_arg);<p>
+</code>
+
+Search the window that is visible at the SCREEN (x,y) co-ordinates and
+then send it's owner a message WEVENT with this window id.  Other
+messages could use WROOT as their WEVENT 'win' member.<p>
+
+<hr>
+
+<h3>Notes</h3>
+
+Probably the most important application for the messages and clipboard
+would be drag and drop. For clipboard the main usage would be cut & paste.
+
+Drag and drop will be nice when somebody starts to build a W file manager
+(start programs by clicking on their data files, or e.g.  change the
+image to display just by dropping it to application window etc.).
+However, W file manager might need some other changes to Wserver too.
+Here's how drag-and-drop would work:<p>
+
+<ol>
+  <li>When mouse button is released, restore icon's original position.
+  <li>Get release co-ordinates (they are relative to source window).
+  <li>From that calculate mouse position on ROOT window.
+  <li>Then get the window under the given co-ordinates.
+  <li>And 'drop' the icon to the client owning that window.
+  <ol>
+	<li>Save and lock the path and filename to the dropped file
+	    (dd.file).  Instead of a file, there could also be text
+	    (dd.text) or whatever.
+	<li>Send drop message about the file for the window owner.
+	<li>Window owner will read and unlock the filename...
+	<li>...And act accordingly.
+  </ol>
+</ol>
+<p>
+
+This would also need sub windows (icons) to be movable out of their parent
+window(s).<p>
+
+
+Changing the W Toolkit widgets to use a server clipboard instead of the
+toolkit one would be easy to fix, but handling the messages would need a
+bit more code.  Maybe wt_top_class could be setopt() with application
+registration values and message handler callback?  These would take
+effect immediately.<p>
+
+If there's a lot of data to move (continuously) between specific
+applications, they should use Wserver just for contacting each other for
+an exchange of socket addresses and further on do all their
+communications by direct contacts.  All this could probably be handled
+transparently with a special W Toolkit widget?<p>
+
+<hr>
+Eero Tamminen, <a href="mailto:t150315@cc.tut.fi">puujalka@modeemi.cs.tut.fi</a>
+</body>
+</html>

@@ -1,0 +1,18 @@
+.TH XBM2W 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+xbm2w \- convert XBM images to C-code for W programs
+.SH SYNOPSIS
+xbm2w <XBM image> <header file>
+.SH DESCRIPTION
+Converts monochrome XBM image to a format that can be included into
+C-programs as BM_MONOCHROME image data.  The image will be aligned to
+32 and bits be flipped (because XBM is inverted compared to monochrome
+W BITMAPs).
+.SH EXAMPLE
+Convert test.xbm to C code and save it as test.h:
+.br
+	xbm2h test.xbm test.h
+.SH SEE ALSO
+.IR wbm (1)
+.SH LAST CHANGED
+30th Aug 2009 by Eero Tamminen

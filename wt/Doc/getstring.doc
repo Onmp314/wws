@@ -1,0 +1,121 @@
+
+ The `getstring' widget class
+ ----------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *getstring  = wt_create (wt_getstring_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+The getstring widget can be used to acquiring a string from the user.
+
+For the user getstring editing field will offer del, backspace and Emacs
+editing keys (^a start, ^e end, ^f forward, ^b backward) and copy&paste
+with mouse (left to paint, right to paste) between widgets of the same
+application.  If the string gets longer (but still smaller than the set
+maximum string lenght) than fits into the editing window field, the text
+will scroll.
+
+
+ 3 Configuration Options
+ -----------------------
+
+Here are the options that can be set or queried with setopt() and
+getopt() functions.
+
+
+ WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a pointer
+	to it) in the widget. This is useful if you have to associate some
+	extra data with a widget.
+
+
+ WT_XPOS (long *)
+
+	Set / get the X position of the getstring widget, which is relative
+	to the upper left corner of the parent window.
+
+
+ WT_YPOS (long *)
+
+	Set / get the Y position of the getstring widget, which is relative
+	to the upper left corner of the parent window.
+
+
+ WT_WIDTH (long *)
+
+	Set / get the width of the getstring widget.  Can be set only
+	before widget is realized.
+
+
+ WT_HEIGHT (long *)
+
+	Set / get the height of the getstring widget.  Can be set only
+	before widget is realized.
+
+
+ WT_FONT (char *) / (WFONT **)
+
+	Set / get the font used in the edit field. The font has to
+	be a fixed width one for the edit field to work correctly
+	and can be set only before the widget is realized.
+
+
+ WT_STRING_ADDRESS (char *)
+
+	Set / get the string address. The string has to be a valid
+	(NULL terminated) C string and is copied to the space allocated
+	by the widget.
+
+
+ WT_STRING_LENGHT (long *)
+
+	Set / get the maximum string lenght.  If this is zero when the
+	widget is realized, it will be set to the string lenght.
+
+
+ WT_STRING_WIDTH (long *)
+ 
+	Set / get the width of the string editing field in characters.
+	If this is zero when the widget is realized, it will be set
+	to the string lenght.
+
+
+ WT_STRING_MASK (char *)
+ 
+	Set / get the string input 'mask'. If this is set, the widget
+	will accept only characters that match the mask. Mask is
+	composed of single characters and and ranges like "a-zA-Z"
+	which would accept all the upper or lowercase 7-bit letters.
+	The range mark '-' can be quoted with '--' like in "--+*/".
+
+
+ WT_ACTION_CB (void *) (widget_t *, char *text, int cursor_position)
+
+	Set / get the function that will be called when the user presses
+	<enter>.  The function will get the string and cursor position
+	as arguments.
+
+
+ WT_CHANGE_CB (void *) (widget_t *, char *text, int cursor_position)
+
+	Set / get the function that will be called when the user presses
+	any key that modfies the widget contents. Calls the function with
+	current string and cursor position as arguments. Mainly of use
+	when doing string autolocators (see the listbox example).
+
+
+ WT_MODE
+
+	Specify whether or not to draw a border around the edit field.
+	Possible values are GetstrModeWithBorder (default) and
+	GetstrModeNoBorder.
+

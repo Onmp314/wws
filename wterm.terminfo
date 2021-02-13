@@ -1,0 +1,55 @@
+# A fairly complete W terminal terminfo entry, (w) 1998 by Eero Tamminen
+#
+# Following things are defined:
+# - terminal name
+# - terminal capabilities and functions
+# - mouse event output prefix (same as with xterm)
+# - text effects: reverse, bold, underline, slanted, light, reset
+# - cursor keys, home, end, pgup, pgdn, function keys f1-f10
+# - other keys: insert, delete, backspace, bell, CR, tab
+# - standard numeric values
+# - Number of colors and color pairs (colors^2): colors #, pairs #
+# - Set fg and bg colors (ANSI/tektronix style): setaf #, setab #
+# - Reset fg/bg colors: op
+# Missing features:
+# - An important vtxx0 addition to wterm would be scrolling regions
+#   as that might speed up the output of some programs.
+# - Can change colors capability: ccc
+# - Set color: initc #RGB
+# - Reset all colors: oc
+#
+# Compile with 'tic' to get those ncurses programs to work properly.
+#
+# Note that special key mapping (cursor keys etc) isn't implented for
+# all platforms, on some wserver just outputs the (ESC-)sequencers that
+# the underlying console / OS provides. See wterm.termcap file for
+# some such keybindings.
+
+wterm|W terminal,
+	am, msgr, is2=\Ev\EG, rs2=\EE\Ev\EG, clear=\EE, ed=\EJ,
+	el=\EK, dl1=\EM, il1=\EL, home=\EH, ri=\EI, cub1=\ED, cuf1=\EC,
+	cuu1=\EA, cud1=\EB, cup=\EY%p1%' '%+%c%p2%' '%+%c,
+	smcup=\Ev\Ee\EG, rmcup=\EG, rc=\Ek, sc=\Ej, cnorm=\Ee,
+	civis=\Ef,
+
+	kmous=\E[M,
+
+	smso=\Ep, rmso=\Eq, blink=\Ei, bold=\Eg, rev=\Ep,
+	smul=\Ei, rmul=\Em, sitm=\En, ritm=\Er, dim=\Es,
+	sgr0=\EG,
+
+	kcub1=\E[D, kcuf1=\E[C, kcuu1=\E[A, kcud1=\E[B,
+	khome=\E[1~, kend=\E[4~, kpp=\E[5~, knp=\E[6~,
+
+	kf1=\E[[A, kf2=\E[[B, kf3=\E[[C, kf4=\E[[D, kf5=\E[[E,
+	kf6=\E[[F, kf7=\E[[G, kf8=\E[[H, kf9=\E[[I, kf0=\E[[J,
+	lf0=F10,
+
+	kich1=\E[2~, kdch1=\E[3~, kbs=^H, bel=^G, cr=^M, ht=^I,
+
+	it#8, cols#80, lines#24,
+
+	colors#8, pairs#64,
+
+	setaf=\Eb%p1%d, setab=\Ec%p1%d, op=\Ec0\Eb7,
+

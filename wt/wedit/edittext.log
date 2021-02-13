@@ -1,0 +1,42 @@
+Edittext widget (w) 1997 by Eero Tamminen
+
+Changes in chronological order:
+- user callbacks for:
+  - editing / outputting buffer lines
+  - showing current cursor line / column
+  - remapping input characters
+- user input / key events:
+  - cursor moving
+  - char/line insert/delete
+  - output to window
+  - indenting
+- paste from clipboard.
+- undo for current line (back to the state where line was when cursor was
+  moved vertically.  that's 100 times easier than `proper' undo...).
+- real tabs. as they affect everything visual, almost all line processing
+  functions needed changes to ensure that cursor / modifications are on
+  correct position and that line lenght isn't exceeded on even on screen.
+  Much used offset2window() and window2offset() functions hog a lot cpu
+ compared to previous situation (use of just w->index variable).
+- user input / key events:
+  - word wrap
+  - line joining
+  - paragraph format
+  - character transposing
+- cursor keeps either it's horizontal or vertical screen position when moving.
+- automatic line allocation. NOTE: allocated memory will be freed
+  only when the widget is deleted or WT_TEXT_CLEAR options is called.
+- vertical scroller and automatic allocation of lines.
+- scrolling text selection and replace / copy to clipboard (single,
+  double (word limited to alphanumeric chars) and triple click (from vt.c).
+- Added WT_TEXT_WRAP option and allowed tab size change `on the fly'.
+- if no selection, cut and copy keys `anchor' text selection.
+- WT_TEXT_INDENT flag, WT_TEXT_CHAR and WT_TEXT_APPEND options.
+  WT_TEXT_INSERT now returns current line contents.
+- WT_OFFSET/ACTION_CB will give callback also the getopt argument.
+- Changed all short and (u)char callback arguments to ints.
+- much better paragraph formatting.
+
+Last update 24.4.1997
+
+(well, I fixed this for new w_loadfont(), but that's all...)

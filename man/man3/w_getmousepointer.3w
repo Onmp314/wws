@@ -1,0 +1,36 @@
+.TH w_getmousepointer 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+\fBw_getmousepointer()\fR \- inquire mouse pointer shape
+.SH SYNOPSIS
+\fB#include <Wlib.h>\fR
+.br
+short w_getmousepointer (WWIN *win);
+.SH DESCRIPTION
+\fBw_getmousepointer()\fR inquires the current mouse pointer shape.
+This can currently be one of the following macros as defined in Wlib.h:
+.IP \fBMOUSE_ARROW\fR
+Mouse is an arrow (default).
+.IP \fBMOUSE_UPDOWN\fR
+Mouse indicates resizing in the up or down direction.
+.IP \fBMOUSE_LEFTRIGHT\fR
+Mouse indicates resizing in the left or right direction.
+.IP \fBMOUSE_UPPERLEFTLOWERRIGHT\fR
+Mouse indicates resizing in the upper left or lower right direction.
+.IP \fBMOUSE_LOWERLEFTUPPERRIGHT\fR
+Mouse indicates resizing in the lower left or upper right direction.
+.IP \fBMOUSE_MOVE\fR
+Mouse indicates movement of an object.
+.IP \fBMOUSE_BUSY\fR
+Mouse indicates busyness within an window.
+.IP \fBMOUSE_USER\fR
+User defined mouse shape.
+.PP
+In case of an error, \fBw_getmousepointer()\fR returns \fB-1\fR.
+.SH RETURNS
+Number of the current mouse pointer shape or -1 if error.
+.SH BUGS
+none?
+.SH SEE ALSO
+\fBw_setmousepointer\fR(3w)
+.SH LAST CHANGED
+7th. July 1998 by jps

@@ -1,0 +1,6 @@
+
+Here are the sources for wvt, an improved terminal program for W. It has
+a scrollback buffer ("history") and allows xterm-like copy&paste.
+
+Kay.
+roemer@vsb.informatik.uni-frankfurt.de

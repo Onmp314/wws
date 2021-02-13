@@ -1,0 +1,51 @@
+
+	Reversi (w) 1996 by Eero Tamminen
+
+
+These are Reversi games for my GameFrame framework:
+
+creversi	Curses Reversi client
+wreversi	W Window System Reversi client
+reversid	Reversi daemon (server)
+
+
+STARTING
+
+Before starting a game one has to contact another game client.  This
+happens either by setting up a server and accepting a connection or by
+connecting yourself to another game server.
+
+With curses versions one needs to use '-c' option to specify the address
+into which to connect (e.g.  'creversi -c saturn.outer.space.org').  If
+this option isn't used, the game will itself setup a server.  Graphical
+user interface version(s) should have a separate configuration dialog
+from which you can perform either of these actions.
+
+After connecting another player, you can start the game and begin to
+play.  Note that continuing (for clients that support board editing
+before play) asks confirmation from the other player before proceeding.
+
+
+REVERSI / OTHELLO RULES
+
+Players position one stone onto the board at the time.  The opponent's
+pieces that are between (horizontally, vertically and diagonally) the
+new piece and the earlier pieces of the same color, will be converted to
+the new color.  Only moves which convert opponent's pieces are legal.
+Game ends when both players pass.  The player with most stones on the
+board wins.
+
+
+SERVER OPTIONS
+
+The reversi server playing level (how deep the board checks for computer
+move are) can be set with the '-l <number>' option.  The default server
+level is 3 which is fast enough even for the lowliest of machines and
+offers suitable opposition for beginners.  Levels above 4 begin to offer
+serious resistance depending on who starts.
+
+
+23th of September,
+
+	Eero Tamminen		http://www.modeemi.cs.tut.fi/~puujalka/
+

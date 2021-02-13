@@ -1,0 +1,65 @@
+Hardware / OS specific functions are in a couple of files:
+
+
+server/graph/**/*
+
+Graphics driver drawing functions.  If your graphics card supports
+8-bit or monochrome graphics, you probably need not to write any code.
+
+If you want accelerated graphics functions, you'll have to write
+replacements for stuff you'll need.
+
+
+server/graph/*.c
+
+An init function that sets or gets a graphics mode and it's attributes
+and sets the palette.
+
+
+server/init.c
+server/gproto.h
+
+Add call to your new init function and it's prototype.
+
+
+server/events.c
+
+Functions for selecting which input is ready and functions for processing
+mouse and key events.
+
+
+server/mouse.c
+
+Mouse initialization (eg. get mouse file descriptor).
+
+
+server/kbd.c
+
+Keyboard initialization. As default, does nothing.  Later will probably
+have stuff for interpreting special keys.
+
+
+server/main.c
+
+Code for initializing (calling other initialization functions) and exit.
+Might not need changes.
+
+
+NOTES
+
+In the future W will probably lean into the direction of GGI (Generic
+Graphics Interface) which provides standardized API for accessing
+graphics and input devices.
+
+W works also with non-unix, non-virtual memory systems, MiNT is a proof
+of that.  You'll need quite a bit of unix like features though (sockets,
+unix C-lib functions (POSIX with some BSD flavors)) and (library
+providing) linearly accessible graphics memory without any special
+tricks.
+
+Before starting your porting effort, contact the current W maintainer
+and ask for latest sources!  It's also possible that somebody else has
+already done the port...  :-)
+
+
+	- Eero

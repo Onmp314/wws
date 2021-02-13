@@ -1,0 +1,46 @@
+.TH CPENTE 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+cpente/wpente \- Pente/Renju board game clients
+.SH SYNOPSIS
+.nf
+cpente [-c \fIaddress\fP]
+wpente
+.fi
+.SH DESCRIPTION
+\fICPente\fP is a curses and \fIWPente\fP is a W version of Pente/Renju
+board game clients for the networked turn based, two player game
+framework by Eero Tamminen.
+.SH STARTING GAME
+Before starting a game one has to contact another game client.  This
+happens either by setting up a server and accepting a connection or by
+connecting yourself to another game server.
+.PP
+With curses versions one needs to use '-c' option to specify the address
+into which to connect (e.g.  'creversi -c saturn.outer.space.org').  If
+this option isn't used, the game will itself setup a server.  Graphical
+user interface version(s) should have a separate configuration dialog
+from which you can perform either of these actions.
+.PP
+After connecting another player, you can start the game and begin to
+play.  Note that continuing (for clients that support board editing
+before play) asks confirmation from the other player before proceeding.
+.SH PENTE/RENJU RULES
+Players position a stone at the time to the board. In addition to this,
+opponent's stones can also be removed from the board.  This can be
+accomplished by positioning one's own stones to both ends of
+the opponent's pair (only pairs can be removed).
+.PP
+The game is won by the person who first gets five of his/her stones
+onto a row, either horizontally, vertically or diagonally, or who
+removes five pairs from the opponent.
+.PP
+The game is made more even with the restriction that the starter needs
+to place his second stone three positions off the first one.  As the
+starter always has to position his stone onto the board center, this is
+done by the game itself.
+.SH SEE ALSO
+.IR cgo (6),
+.IR cgomoku (6),
+.IR pented (6)
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

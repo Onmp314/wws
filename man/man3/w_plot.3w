@@ -1,0 +1,34 @@
+.TH w_plot 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_plot(), w_dplot() \- clear/draw/invert a pixel
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_plot(WWIN *" win ", short " x0 ", short " y0 ");"
+.sp
+.BI "short w_dplot(WWIN *" win ", short " x0 ", short " y0 ");"
+.fi
+.SH DESCRIPTION
+.I w_plot()
+clears, draws or inverts a pixel in a window, depending on the
+.B drawing mode
+set with the 
+.I w_setmode()
+call.
+.PP
+.I w_dplot()
+plots a pixel according to the currently active drawing mode and
+.B pattern
+as set with the
+.I w_setpattern()
+call.
+.SH RETURNS
+nothing sensible yet
+.SH BUGS
+none
+.SH SEE ALSO
+.IR w_setmode (3),
+.IR w_setpattern (3)
+.SH LAST CHANGED
+12th. Feb. 1996 by TeSche

@@ -1,0 +1,107 @@
+
+	Documantatation for `wt_menu_item' structure
+
+
+	This file describes the the `wt_menu_item' structure and it's
+	use with `menu' and `popup' widgets.  Below I will refer to the
+	wt_menu_item array describing the menu and popup widget looks
+	and behavior as `menu'.
+	
+	
+	Items in the menu may be one of the following types:
+
+	typdef enum {
+		MenuEnd,		/* menu end (default type, = 0) */
+		MenuItem,		/* normal menu item */
+		MenuCheck,		/* checkable menu item */
+		MenuSub			/* submenu item */
+	} _item_t;
+
+	Normal menu items are of type `MenuItem', items opening submenus
+	are of type `MenuSub' and menu is (_has_to_be_) ended with a
+	item of type `MenuEnd'.
+
+
+	The structure for a menu item is following:
+
+	typedef struct {
+		char *string;
+		BITMAP *icon;
+		void *info;
+		struct wt_menu_item *sub;
+		void (*select_cb) (widget_t *w, wt_menu_item *item);
+		_item_t type;
+	} wt_menu_item;
+
+	Structure members have following meanings:
+
+	+ type:		menu item type, one of the above mentioned ones
+	+ string:	menu item text
+	+ icon:		menu item icon
+	+ sub:		pointer to submenu array
+	+ select_cb:	callback to be called when item is selected
+	+ info:		pointer to application data associated with item
+
+	If structure members are set, they of course have to point to
+	a valid data or function. Simplest applications use only
+	`type', `string' and `select_cb' members on their popups.
+
+
+	Widgets interpret the presence or absence of item members
+	according to following rules:
+
+	- If `string' and `icon' members are both NULL, item is
+	interpreted to be a menu separator (line).
+
+	- If `select_cb' member is not set, item behaviour depends
+	on it's type:
+		- `MenuSub' item will act normally.
+		- `MenuItem' item will be disabled.
+		- `MenuCheck' item behaves differently with
+		persistant popups, see below.
+
+	When popup is of `PopupTransient' type, it will vanish when
+	mouse button is released. `PopupPersistant' popups will keep
+	on screen until menu item of type `MenuItem' or `MenuCheck'
+	with a `select_cb' callback is selected.
+
+	- `select_cb' callback arguments are pointers to the calling
+	widget and to the selected menu item.
+
+	- Item member `sub' acts as flag for checking with `MenuCheck'
+	item types. So when `MenuCheck' item `select_cb' callback is
+	called, you just test item->sub to see whether entry is checked.
+
+	- If item is of `MenuSub' type, `select_cb' will be called, if
+	it's present, before submenu is opened.  Callback will be needed
+	only when you'll want to create submenus on-the-fly.  See WStart
+	source for an example.
+
+	- Other members beside `sub' and `info' shouldn't be changed
+	after menu has been given to a widget.  You shouldn't need to
+	change `sub' except when you're creating submenus dynamically.
+
+	- BITMAP structure that `icon' member points to needs to have only
+	valid width and height members.  They are used on reserving
+	space for the `icon'.  Callback function set with widgets'
+	WT_DRAW_FN option takes care of actually drawing the BITMAP
+	`contents'.
+
+
+	Some notes:
+
+	- Applications may store item specific data into the `info'
+	member of the item structure.  Whole menu specific data could be
+	stored into the last menu item (of `MenuEnd' type) `info' member.
+	See WStart source for an example.
+
+	- Style guides recommend limiting number of items in one group
+	to approximately seven members and not to nest menus more than
+	three levels deep.  You are free to do as you wish, but with
+	lots of members you should at least group items a bit with menu
+	separators.
+
+
+	Last update:
+
+		4/97 by Eero Tamminen

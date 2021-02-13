@@ -1,0 +1,51 @@
+Current WSaver 'modules':
+
+* ants.c	an 'ant simulator' by Eero Tamminen.
+* bounce.c	bouncing ball adapted from a GGI demo.
+* cracks.c	'lightning flashes' by Eero Tamminen.
+* lines.c	by Torsten Scherer (TeSche).
+* pyro.c	pyrotechnics by Eero Tamminen.
+* snails.c	circling 'snails' by Torsten Will.
+* stars.c	starfield adapted from a GGI demo.
+
+
+W graphics are drawn to the backup bitmap and blitted from there to
+screen when server is idle, unless the *whole* window is visible.
+Drawing straight to the screen is noticably faster, but as that output
+isn't synced to the screen refresh either, it will flicker even more.
+The more stuff is output and slower your machine is, the more noticable
+this flickering is.  You could of course double buffer the output
+manually, but IMHO that's not an answer either.
+
+
+Adding a new saver 'module':
+
+1.  In wsaver.c add function name to 'savers' table and increase SAVERS.
+2.  Copy the event handling code from another module to your own file
+and then code rest of your module.
+
+'win', 'swidth', 'sheight' and 'scolors' variables give you the window
+into which to draw, it's size and number of shared colors it has.
+Simple, isn't it?
+
+
+You can best optimize the performance of your module by making sure that
+no redundant calls are sent to the server.  On slower machines doing all
+object removals first with eg.  M_CLEAR and then redrawing them with
+M_DRAW could make the output flicker more though if machine's not fast
+enough to do all this between one screen refresh. Then I'd recommend to
+use less objects so that the whole refresh fits into socket buffer.
+
+A screen sync call for W_TOP windows (only) might be nice but as making
+W server wait for vertical refresh may seriously slow down it, as
+default that kind of functionality should be disabled.
+
+
+Btw.  In the modules I have used random() function, because with older
+rand() implementations the lower bits, which are the ones most often
+used, aren't very random.  If your C-lib doesn't have random (originally
+BSD function), add '#define random rand' to the wsaver.h and do 'make
+clean; make'.
+
+
+	- Eero

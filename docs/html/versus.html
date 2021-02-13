@@ -1,0 +1,110 @@
+<html>
+<head>
+<title>On the right corner W1, 4MB; on the left corner X11, 100MB. Clang...</title>
+</head>
+<body>
+
+<h3>Silly comparison between W1R4 and X11R5</h3>
+
+First of all, W and X are intended (or have evolved) for slightly
+different purposes.  X is a heavy-weight networked graphics system
+whereas W is a intended to be small, simple and fairly portable.  If you
+have monochrome graphics where video memory is located into normal RAM
+(Atari/Amiga), W is a bit faster than X.  It's main goal is to be easy
+to program for though.
+<p>
+
+<h4>Window managers</h4>
+<ul>
+  <li>W has a simple builtin window manager.
+  <li>With X one needs an external window manager.  This is more
+      flexible as user can select (from window `managers' available)
+      one which has the needed functionality.
+</ul>
+<p>
+
+<h4>Window redraws</h4>
+<ul>
+  <li>W keeps backups of all window contents (for non-container windows)
+      and does all the redraws by itself.  This simplifies W server and
+      libraries and means less network traffic.  On monochrome systems
+      the memory used for the window backups isn't an issue, except for
+      window resizes which need to reallocate memory, but color systems
+      are quite a different matter...
+  <li>Normally X uses redraw messages for redrawing the windows, but
+      there's also an option for window specific backing storage.
+      All servers don't support that though.
+</ul>
+<p>
+
+<h4>Messages</h4>
+
+<ul>
+  <li>W server doesn't support any kind of inter-client messaging yet.
+      W library has simple clipboard functionality.
+  <li>X server has both the clipboard and inter-client messaging.
+</ul>
+<p>
+
+<h4>Graphics subsystem</h4>
+
+As X is older, widely used and commercially supported, it understandably
+supports graphics hardware (better), has more complete graphics contexts
+and function sets.  W graphics functions have the following deficiencies
+at the moment:
+<p>
+<ul>
+  <li>No support for truecolor modes (besides monochrome).
+  <li>Neither block nor text functions support graphics modes.
+  <li>Only one line width (therefore no different line join and end
+      types either).
+  <li>Graphics contexts are window specific, not separate.
+</ul>
+<p>
+W has also a couple of things which X lacks:
+<ul>
+  <li>Slanted text style.
+  <li>Splines (easy when one doesn't need to worry about line joins).
+</ul>
+<p>
+
+<h4>X11 features missing from W1R4</h4>
+
+<p>X11R5 features missing from W1R4:
+<ul>
+  <li>Lots of things are hardcoded (e.g. key mappings in backends
+      which support them, window management policy)
+  <li>No client authorization.  W server doesn't have much access
+      restrictions for clients. W_TOP windows used for screen locking
+      can be created only by the person running the W wserver (same
+      uid and local connection).
+  <li>No font server.
+  <li>Protocol extension mechanism and shared memory extension to make
+      local image transfer faster.
+  <li>HW acceleration support (W GGI backend could easily be made
+      to support HW acceleration that GGI offers).
+  <li>Extensive test suite.
+</ul>
+
+<p>Later X11 versions have these additional features:
+<ul>
+  <li>Support for vector fonts.
+  <li>Support for Unicode text and fonts.
+  <li>Support for loadable binary drivers.
+  <li>Support for OpenGL and Video.
+  <li>Many advanced widget sets.
+</ul>
+
+<h4>W1R4 and X11R5 size difference</h4>
+
+On MiNT, the statically linked monochrome W server is 100KB and
+X11<b>R5</b> 500KB.  When running, W server uses about 300KB and
+X11 900KB of RAM. Statically linked Wlib binaries are about 50-90KB,
+Xlib ones 120-300KB, W Toolkit ones 100-200KB and Athena widget set
+ones 400-800KB.  With shared libraries the library sizes won't matter
+that much though.
+
+<hr>
+<a href="mailto:oak@welho.com">oak@welho.com</a>
+</body>
+</html>

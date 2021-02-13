@@ -1,0 +1,32 @@
+
+Here are some fairly trivial scripts easing W usage:
+	startw		start W and direct messages to ~/.w-errors
+	wmouse-on	wterm mouse reports on
+	wmouse-off	wterm mouse reports off
+	wview		view given images on color W server
+	xbm2w		XBM data conversion to W BM_PACKEDMONO data
+
+The last four scripts need also 'djpeg' and 'giftopnm' programs.
+
+
+Benjamin C. W. Sittler provided also two scripts to ease W usage:
+	won		W version of xon
+	wrootpic	show image on W root window (edit before use!)
+
+
+I've done also some scripts for W maintenance and testing:
+	replace.sh	replace strings in files matching a pattern
+	wup.sh		update W while preserving old makefiles
+
+
+You can 'cat' VT52.txt and colors.txt files to test WTerm font styles
+and color capabilities.  The first file also documents some of the ESC
+codes used by wterm.  Only special key (arrow, function etc) codes
+should differ from those.
+
+
+The scripts need POSIX compliant shell (/bin/sh) for the ${var%expr} etc
+string operations.
+
+
+	- Eero

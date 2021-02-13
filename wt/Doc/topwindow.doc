@@ -1,0 +1,107 @@
+
+ The `topwindow' widget class
+ ----------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *win = wt_create (wt_topwindow_class, <parent widget>);
+
+
+ 2 Description
+ -------------
+
+ Topwindow widgets are application main windows for things that shell
+widget isn't flexible enough. Topwindow widgets are drawable and cannot
+contain any children so you can / have to take care of all the window
+events and drawing of the contents. Topwindow parent should be the top
+widget.
+
+ Before realizing the widget tree options WT_WIDTH, WT_HEIGHT,
+WT_EVENT_MASK and WT_EVENT_CB have to be set.
+
+
+ 3 Configuration Options
+ -----------------------
+
+ For each configuration option the widget supports the name of the
+configuration option (WT_<something>), the type of the argument (eg.
+long *) you pass to wt_setopt()/wt_getopt() for this option, possible
+values, their meaning and a description of what the option does is
+given.
+
+
+ WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a
+	pointer to it) in the widget.  This is useful if you have to
+	associate some extra data with a widget.
+
+
+ WT_XPOS (long *)
+
+	Set the X position of the topwindow widget, which is relative to
+	the upper left corner of the parent window.  The special value
+	UNDEF will make the window manager "ask" the user where to place
+	the window when it is created.  Default value is UNDEF.
+
+
+ WT_YPOS (long *)
+
+	Set the Y position of the topwindow widget, which is relative to
+	the upper left corner of the parent window.  The special value
+	UNDEF will make the window manager "ask" the user where to place
+	the window when it is created.  Default value is UNDEF.
+
+
+ WT_WIDTH (long *)
+
+	Set the width of the working area of the topwindow widget (ie.
+	excluding border and possible titlebar).
+
+
+ WT_HEIGHT (long *)
+
+	Set the height of the working area of the topwindow widget (ie.
+	excluding border and possible titlebar).
+
+
+ WT_LABEL (char *)
+
+	Set the title of the topwindow widget (which will appear in the
+	title bar of the window if the topwindow was configured to have
+	a title bar).  Default is no title.
+
+
+ WT_EVENT_MASK (long *)
+
+	Select an appearance and events for the topwindow widget.
+	The mask corresponds to the normal Wlib values.
+
+
+ WT_EVENT_CB (WEVENT * (*cb) (widget_t *w, WEVENT *ev))
+
+	Install a callback function for handling the window events
+	that you have selected with the WT_EVENT_MASK option.
+
+	Default is no callback. If callback doesn't process the given
+	event, it should return it, otherwise NULL.
+
+
+ WT_DRAW_FN (void (*cb) (WWIN *win, short width, short height))
+
+	Install a callback function that draws the initial window
+	contents when the widget tree is realized. The function will
+	get the window handle and size on the arguments.
+
+
+ WT_WINDOW_HIDDEN (long *)
+
+	A flag that signifies that the topwindow widget should stay
+	hidden when the widget tree is realized. That's usable when
+	you eg. need to implement icon(ization) for 'main' topwindow
+	widget. After realization the widget can be shown / hidden
+	with wt_open() and wt_close() calls.

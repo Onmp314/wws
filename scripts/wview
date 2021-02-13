@@ -1,0 +1,17 @@
+#!/bin/sh --
+# Shows given image using djpeg, netpbm and wbm
+# with necessary color and image size reductions.
+# Recognices following image types:
+# gif,png,jpg,p8m,bmp and anything anytopnm can convert
+
+for img in $*; do
+	echo "Showing image: '$img'"
+	case "$(echo :"$img" | tr A-Z a-z)" in
+	:*.p8m) wbm $img;;
+	:*.gif) giftopnm $img | ppmquant -fs 248 | ppm24to8 | wbm;;
+	:*.png) pngtopnm $img | ppmquant -fs 248 | pnmdepth 255 | ppm24to8 | wbm;;
+	:*.jpg|:.*jpeg) djpeg -colors 248 $img | ppm24to8 | wbm;;
+	:*.bmp) cjpeg -quality 100 $img | djpeg -pnm -colors 248 | ppm24to8 | wbm;;
+	:*|:.*) anytopnm ppmquant -fs 248 | pnmdepth 255 | ppm24to8 | wbm;;
+	esac
+done

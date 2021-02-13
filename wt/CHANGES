@@ -1,0 +1,285 @@
+++oddie 9/2000:
+- fixed listbox/filesel resizing & added minimum size setopt.
+
+++bsittler 7/2000:
+- Fixed vt color/reverse and attribute resetting
+- Add HTTP/1.1 'Host' header to Wetscape requests
+- Other minor changes (netgames, wvt, waudio)
+
+++jcarlson 7/2000:
+- WTINYSCREEN changes
+
+++eero, 5/1999:
+- Fixed key handling for special keys in Wt/getstring.c & wedit/wedit.c.
+
+++eero, 1/1999:
+- Added support for new W special keys so that now on W platforms which
+implement special key mappings, you don't need to use Emacs shortcuts
+with text widgets (or remap your console cursor keys)...
+
+
+------ notes for version released with W R1PL0 ----------
+
+ADDITIONAL WIDGETS
+
+- Arrow, a simple button with an arrow drawn into it.
+
+- Dial, a dial widget where you can position a needle into desired
+  angle.  This isn't in the W toolkit library itself as then you would
+  need to link math library to all of your Wt programs.  You'll find it
+  in the warzone game tar-ball.
+
+- Edittext, mainly intended for simple one page stuff, but as this
+  spaghetti can do some additional stuff like paragraph formatting,
+  there's a real abuse built on this, the WEdit.  As edittext widget is
+  large and buggy, it's in the WEdit directory instead of the toolkit.
+
+- Menu, a strip of buttons from which popups pop-up.  Both the popups
+  and menus use a structure defined in Wt.h instead of strings that Kay
+  was using.  The reason is that I want callbacks to follow
+  automatically hierarchically opened popups.
+
+- Popup, hierarchical popups.  Can include subpopups, images, lines and
+  in addition items can also be disabled and checked.
+
+- Range, a scrollbar composite with which you can select a value between
+  given limits.
+
+- Select, a getstring widget coupled with an arrow openable listbox from
+  which items can be selected into a getstring widget.
+
+
+OTHER CHANGES
+
+- vt can now do everything wterm  can do + user can rebind the colors
+  in wtrc.
+
+- Added '.wtconfig' file and made makefiles use the W compilation
+  configuration file '.config' in parent directory.
+
+- wt_do_event() doesn't call wt_dispatch_event() anymore with
+  EVENT_GADGET/GADGET_EXIT event as those might not have valid window
+  pointer.  If you want to check for abnormal (unboud) exit, check the
+  wt_return value.  GADGET_EXIT returns a negative number and
+  GADGET_CLOSE (in shell widget) a positive number now.
+
+- Added xterm mouse events, reverse mode, fd/bgcolor setting + improved
+  double/triple click timing in VT widget.
+
+- Aliases a couple new tags into others in HTML widget and added
+  HTML header (ignored) and TITLE parsing.
+
+- Widget event processing functions return now unrecognized or
+  non-processed WEVENTs or NULL instead of long.  Assumption is that if
+  function returns WEVENT, the widget whose action it was, is still
+  around.  If in doubt, use NULL.  Unrecognized key events should be
+  returned for focus change though.  (actually it could still have been
+  an int, but returning a WEVENT offers a possibility for event mapping
+  widgets.)
+
+- Added wt_global structure containing Wt configuration variables and
+  made widgets to use it.  wt_init() will now read these variables from
+  ~/.wtrc + a list of (variable, value) pairs.  Widget specific
+  initialization code in their init() functions may read these with the
+  wt_variable() function.
+
+- HTML widget fonts can be configured by above method.
+
+- Added wt_loadfont() function which will use the user specified Wt
+  default if widget doesn't specify some font parameter.  It also exits
+  program if Wt default fonts can't be loaded, because otherwise
+  unavailable fonts may chrash naive programs.
+
+- Changed widgets to reflect the new w_loadfont() syntax (NULL/zero
+  values tell Wlib/server to use server defaults).
+
+- Added new WT_FONTSIZE define.  The earlier WT_FONT setopt sets now the
+  font *family* name, new one sets the font size.
+
+- Getopting WT_FONT returns WFONT* pointer also for above reason.
+
+- Removed 'fontname' members from widget structures.  Needed information
+  and more can be gotten from the 'font' member if needed.
+
+- Fileselector has now separate lists for directory and file names.
+  Both of course have an autolocator (type & return in addition to point
+  & click).
+
+- Wt_keys.h defines values for some special keys like cursors etc.  Half
+  of the defines are Emacs style and half what the special keys itself
+  give or are in use on other platforms.
+
+- Changed Wt option defines.  There were a couple overlapping ones.
+
+
+------- Kay's original notes: ----------------------------------------------
+
+- added some missing close() and truncate the file to zero length before
+  writing a new selection in selection.c.
+
+- better selection handling in VT widget.
+
+- made everything resizeable.
+
+- applied patches by eero and fixed some more bugs myself.
+
+- implemented a simple clipboard and changed getstring and vt widget to use it.
+
+- fixed several serious bugs in the html widget.
+
+- wrote VT widget.
+
+- added an option to the icon editor to sync edit field with display
+  field (simon).
+
+- added missing special chars to html widget (simon).
+
+- added code to the fileselector to set a default file name.
+
+- lots of changes by eero (button.c, fileselect.c, listbox.c, getstring.c), some
+  fixes to his changes by me.
+
+- added missing wt_ungetfocus() to listbox and getstring.
+
+- wrote Tk-like packer widget.
+
+- new fileselect widget and testprogram by eero. Added better filename
+  matching (eeros version was a joke, really).
+
+- getstring and listbox updates by eero.
+
+- changed the scrollbar widget's user interface to become more user friendly.
+  See scrollbar.doc for details on how to use it. Also changed viewport and
+  listbox to use the new interface.
+
+- added listbox_focus(). Otherwise listbox cannot receive keyboard focus...
+
+- big bugfix: when wt_delete() is called on a widget all pending timers must
+  be canceled! (affected list, iconedit and getstring).
+
+- WT_HEIGHT and WT_WIDTH queries on the scrollbar now return
+  MAX (realsize, minsize).
+
+- added eero's listbox widget and example program. NOTE: I changed the callback
+  to pass the widget as the first argument and adopted the example program.
+
+- changed all composite widgets to query the geometry of their childs only once.
+
+- added WT_DEFAULT_FONT to Wt.h and changed all the widgets to use this font
+  as the default one.
+
+- when a ButtonModeRadio button is pressed all other ButtonModeRadio buttons
+  that have the same parent are automatically released.
+
+- added icons for wt_dialog (stolen from tk 4.0).
+
+- added eeros's changes to make selecting in getstring widget scroll.
+
+- wrote list widget (wt_list_widget) and wt_popup().
+
+- wrote simple text output widget (wt_text_class) and wt_dialog().
+
+- when deleting a widget the widget class' delete function must now call
+  wt_ungetfocus() on the widget if it can receive the input focus.
+
+- started to write some useful support functions for dialog, entrybox, etc
+  handling.
+
+- fixed a bug in top_delete().
+
+- the getstring callback functions now gets the widget as the first argument.
+  YOU WILL HAVE TO CHANGE EXISTING SOURCES!
+
+- wt_bind (NULL, <eventmask>, <eventcallback>) now installs a global event
+  handler that will be called whenever an event is received that matches
+  <eventmask>. Useful for accelerators (i.e. keyboard shortcuts and such).
+
+- you can call now wt_realize(w) on widgets != wt_top_class if the parent of
+  w is already realized.
+
+- Print out special chars (&...) unchanged when we do not know about them or
+  a semicolon is missing.
+
+- html widget can now receive the keyboard focus.
+
+- added wt_bind() to install a user defined event handler for a widget. This
+  works on all widget types and obsoletes the WT_EVENT_MASK and WT_EVENT_CB
+  configuration options that were defined for some widget classes.
+
+- added proper handling for comments (<!-- ... -->) to the html widget.
+
+- fixed a bug in the html widget (anchor_position() failed on anchors that
+  had an empty body).
+
+- arrrgh! Fixed a bug in html_vmove() that I introduced when writing
+  the locking stuff.
+
+- selecting in getstring no longer stops when you leave the text area. But
+  still it does not scroll (but with patches/querymouse.diffs it is now
+  possible to implement this).
+
+- buttons are no longer released when you leave the button area.
+
+- slider is no longer released if you leave the scrollbar area.
+
+- increased the initial timer value for the scrollbar to fix the "slider
+  moves twice" phenomen.
+
+- added WT_ICON_STRING options (to set the icon string) to the shell widget
+  and updated docs.
+
+- labels have now by default no border, getstring now has by default a border
+
+- changed shell, buttons and label to return pointer to strings instead of
+  copying the strings to a user supplied buffer.
+
+- added topwindow.doc.
+
+- added eero's wt_topwindow_class.
+
+- defer vertical moves of the html widget if is "locked" until we leave
+  parse_html().
+
+- added a locking mechanism to the html widget so that you cannot change the
+  html code from within one of the img_* callbacks.
+
+- when changing the text in a getstring widget reposition the cursor if
+  necessary.
+
+- made some fields in the viewport widget long (instead of short) so it
+  still works for very large childs.
+
+- added german umlauts and sz ligature to special character table. If someone
+  has a complete table somewhere, please send it to me.
+
+- fixed a bug in the html widget's marker placing code.
+
+- fixed a problem with dangling pointers in the input handling.
+
+- added wt_dispatch_event() that takes a WEVENT pointer and dispatches the
+  event to the appropriate widgets.
+
+- added wt_do_event() to process a single event and then return. wt_run()
+  now just sits in a loop calling wt_do_event() repeatedly.
+
+- added wt_chginput() to change the fd_set masks for an already installed
+  input/output handler.
+
+- changed shell, buttons and label to dynamically allocate the memory for
+  the strings (saves quite some memory).
+
+- switch off the cursor in getstring_setopt() when redrawing.
+
+- added missing WT_ALIGNMENT (oops!) option for buttons and label.
+
+- added AlignFill for the pane widget. This "pseudo-alignment" makes the pane
+  stretch its childs to the size of the biggest child.
+
+- fixed a bug in the html widget that caused WT_POSITION to fail always.
+
+- fixed a bug in the viewport slider positioning code.
+
+- added clickable keyboard focus. The widget that receives keypresses is set
+  with wt_getfocus(widget). As long as the pointer is over one of the
+  application's windows that widget will receive all EVENT_KEY events.
+  changed getstring widget to use this.

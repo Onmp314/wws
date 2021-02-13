@@ -1,0 +1,75 @@
+This directory will contain:
+	- tileble P8M format images for use as W background images.
+	- icons for W applications in monochrome PBM and color P8M[1]
+	  formats.
+	- IMG format pictures for `wpuzzle' ;-)
+
+With wbm you can use them thus:
+
+	(image has less colors than server)
+		$ wbm -r -t image.p8m
+	or (otherwise)
+		$ wbm -c 1 -r -t image.p8m
+
+to tile the given image onto W background.  With '-s' instead of '-t'
+'wbm' scales to image to root window ('-r') size instead of tiling.
+
+
+[1] Wlib P8M format is like PBM/PGM/PPM Portable Bitmap formats, it just
+contains palette and pixel color indeces instead of pixel (1-) bit,
+(8-bit) grayscale or (24-bit) truecolor values.
+
+
+You can check the amount of colors on server with 'wstatus' program and
+the number of colors in image with 'wbm -i image'.
+
+
+Wlib nor 'wbm' do color reduction.  The versatility of unix comes from
+many interacting utilities doing only 'one thing', but doing it well.
+Same applies here.  If you want to show images using more than 256
+colors, you have to quantize them first.  One such program is `ppmquant'
+filter from the PBM toolkit.  For example to quantize an existing P8M
+image to fewer colors, you could do something like:
+
+	cat 200.p8m | ppm8to24 | ppmquant -fs 14 | ppm24to8 > 14.p8m
+
+This would quantize '200.p8m' with Floyd-Steinberg dithering into 14
+colors and save it as '14.p8m' ('ppm8to24' and 'ppm24to8' just convert
+between palettized and non-paletized image representations).  If you
+want a group of images to share a common colormap, you could use the
+'ppmquantall' program.
+
+
+For JPEG images you could do the quantisizing with the 'djpeg' utility:
+
+(8-bit color server)
+	djpeg -colors 254 | ppm24to8 | wbm -r
+or (monochrome server)
+	djpeg -grayscale | wbm -c 1 -r
+
+And for GIF images you could use 'giftopnm' from PBM toolkit:
+	giftopnm image.gif | ppm24to8 | wbm -r
+
+
+For more information see the `wbm', `ppm24to8', `djpeg', `giftopnm',
+`ppmquant' and `ppmquantall' manual pages.
+
+
+If you want to add color quantization to `wbm,' a good places to start
+could be `djpeg' sources.  `ppm2fli' manual page has also a nice intro
+on the way it implements quantization.  Then there are also number of
+books and papers on the subject...
+
+
+	- Eero
+
+
+IMAGE		AUTHOR		TOOLS USED
+--------------------------------------------------------------------
+blip.pbm	Eero Tamminen	text editor (this is from wyrms game)
+wmono.img	Eero Tamminen	MGIF (Atari) image manipulation program
+copper.p8m	Eero Tamminen	Turing's Differentials (DDJ article)
+heart.p8m	Eero Tamminen	POV raytracer
+mrsplodge.p8m	Warwick Allison	POV raytracer
+
+++Eero: Color images have been touched up with Linux Gimp.

@@ -1,0 +1,19 @@
+.TH w_move 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_move() \- move window to a new position
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_move(WWIN *" win ", short " x0 ", short " y0 ");"
+.fi
+.SH DESCRIPTION
+.I w_move()
+moves a window to a new position.  This will work only if the window was
+created with the \fIW_MOVE\fP flag.
+.SH RETURNS
+0 if everything is OK or something negative if any error occurred.
+.SH SEE ALSO
+.IR w_create (3)
+.SH LAST CHANGED
+13th. Feb. 1996 by TeSche

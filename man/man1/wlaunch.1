@@ -1,0 +1,66 @@
+.TH WLAUNCH 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wlaunch \- W command launchbar
+.SH SYNOPSIS
+.B wlaunch
+[OPTIONS]
+.SH DESCRIPTION
+.B wlaunch
+is a configurable command launchbar. Every command is represented
+by an icon in the launchbar window, which is aligned vertically
+or horizontally and normally bound to the border of the screen.
+To start a command just click on the icon belonging to it.
+.SH CONFIGURATION
+For its configuration it first looks for a personal configuration file
+in
+.I $(HOME)/.wlaunchrc
+and if this fails it takes the global configuration file in
+.I $(DATADIR)/wlaunchrc.
+If neither file is found, program exits with an error.
+.PP
+This is an example configuration file:
+.PP
+.nf
+# This is a comment
+Alignment    BottomRight
+Look         3D
+Swallow      weyes
+wterm.icon   wterm -g 42,666,0815,4711 -f lucidat -s 11
+exit.icon    killall wlaunch
+.fi
+.PP
+Comment lines are started with a `#'. A normal entry in a configuration
+files consists of a icon file name and a command, both seperated by
+whitespaces. Additional options can be given after the command, but
+must be on the same line. You can't split lines by a `\\' at the end of
+the line.
+.PP
+If the icon file name is not a absolute file name, the icon is searched
+in
+.I $(ICONDIR).
+This path can be overwritten with the enviroment variable
+.I iconpath
+or with the option of the same name (see OPTIONS).
+.SH OPTIONS
+.IP "\-h, --help"
+Display a short overview for the possible options.
+.IP "\-i PATH, --iconpath=PATH"
+Overwrite default icon search path.  If icons are in current directory,
+you could use something like this:
+.nf
+wlaunch -i $PWD
+.fi
+.IP "\-v, --version"
+Output version number of
+.B wlaunch
+and exit.
+.SH BUGS
+The number of commands are currently limited to ten. A line of the
+configuration file can't be longer than 255 characters at the moment.
+.SH FILES
+.nf
+.I $(HOME)/.wlaunchrc
+.I $(DATADIR)/wlaunchrc
+.fi
+.SH AUTHOR
+Jan Paul Schmidt <Jan.P.Schmidt@mni.fh-giessen.de>

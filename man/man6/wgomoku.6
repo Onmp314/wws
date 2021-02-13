@@ -1,0 +1,34 @@
+.TH WGOMOKU 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wgomoku \- Gomoku board game client for W
+.SH SYNOPSIS
+.nf
+wgomoku
+.fi
+.SH DESCRIPTION
+\fIWGomoku\fP is a W version of Gomoku board game clients for the networked
+turn based, two player game framework by Eero Tamminen.
+.SH STARTING GAME
+Before starting a game one has to contact another game client.  This
+happens either by setting up a server and accepting a connection or by
+connecting yourself to another game server.    You can do this from
+the configuration dialog.
+.PP
+After connecting another player, you can start the game and begin to
+play.  Note that continuing (for clients that support board editing
+before play) asks confirmation from the other player before proceeding.
+.SH GOMOKU RULES
+Players position a stone at the time and the game is won by the person
+who first gets five of his/her stones onto a row, either horizontally,
+vertically or diagonally.
+.PP
+It's proven that the starter can always win the game, but with amateur
+players that's not an issue (mainly concerns players on inter/national
+level, who will play the Pente/Renju variant which sets some limitations
+to the starting player).
+.SH SEE ALSO
+.IR cgomoku (6),
+.IR wgo (6),
+.IR wpente (6)
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

@@ -1,0 +1,24 @@
+.TH w_hline 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_hline(), w_dhline() \- draw a horizontal line
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_hline(WWIN *" win ", short " x0 ", short " y0 ", short " xe ");"
+.sp
+.BI "short w_dhline(WWIN *" win ", short " x0 ", short " y0 ", short " xe ");"
+.fi
+.SH DESCRIPTION
+.I w_hline()
+draws a horizontal line, using the current mode.
+.PP
+.I wdhline()
+draws a dashed horizontal line, using the current mode and pattern.
+.PP
+Both of them are substantially faster than the generic line functions.
+.SH SEE ALSO
+.IR w_line (3),
+.IR w_vline (3)
+.SH LAST CHANGED
+14th. Feb. 1996 by TeSche

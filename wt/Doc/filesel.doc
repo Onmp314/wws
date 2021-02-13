@@ -1,0 +1,90 @@
+
+ The `filesel' widget class
+ ----------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *filesel  = wt_create (wt_filesel_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+The filesel widget can be used when asking user for a filepath/name.
+
+Currently fileselector offers functionality provided by getstring and
+listbox (that contains the dir/filenames) widgets coupled with an
+autolocator utility and file name masking.
+
+
+ 3 Configuration Options
+ -----------------------
+
+Here are the options that can be set or queried with setopt() and
+getopt() functions.
+
+
+ WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a pointer
+	to it) in the widget. This is useful if you have to associate some
+	extra data with a widget.
+
+
+ WT_XPOS   (long *)
+ WT_YPOS   (long *)
+ WT_WIDTH  (long *)
+ WT_HEIGHT (long *)
+ WT_LABEL  (char *)
+
+	These options are referred to the shell widget that acts as
+	container for the widgets that fileselector is composed of.
+	See shell widget manual for more info.
+
+
+ WT_FONT (char *)
+
+	Not available.  If there's a demand I can add an option for
+	setting the font for all the fileselector compoments using one
+	(shell, buttons, label, getstrings and listbox).  Now all those
+	use their own defaults.
+
+
+ WT_LIST_LENGHT (long *)
+
+	Set / get how many directories / filenames are shown on the
+	listboxes.  See listbox widget manual for more info.
+
+
+ WT_FILESEL_PATH (char *)
+ 
+	Set / get the path filesector will use for reading the files from.
+	Default is current directory.
+
+
+ WT_FILESEL_FILE (char *)
+ 
+	Set / get the default file name, default is "".
+
+
+ WT_FILESEL_MASK (char *)
+ 
+	Set / get the mask used to filter the shown filenames.
+	Mask understands the normal 'glob' symbols (*, ?, [])
+	used by shells. For example "*.html" or "[a-k]*.??".
+
+
+ WT_ACTION_CB (void *) (widget_t *, char *filename)
+
+	Set / get the function that will be called when user presses the
+	'OK' button in the fileselector. The function will get the
+	absolute filename of the selected file. Clicking 'Cancel' or
+	the fileselector close gadget, will invoke the callback with
+	filename set to NULL. Note that if you'll need the filename
+	later you'll have to copy it elsewhere. Argument string will
+	be free when the function returns.
+

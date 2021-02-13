@@ -1,0 +1,220 @@
+.TH WSTART 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wstart \- a program launcher bar for W
+.SH SYNOPSIS
+.nf
+wstart [\fI-f font\fP] [\fI-q\fP] [\fI-t\fP] [\fI-e\fP] [\fI-v\fP|\fI-h\fP] [\fI-l\fP|\fI-c\fP|\fI-r\fP] [\fI"root"\fP]
+.fi
+.SH DESCRIPTION
+\fIWSTart\fP is a W program launcher bar.  From the popup(s) under
+the leftmost button(s) you can execute programs that WSTart found in
+the given directory.
+.PP
+As WSTart is intended to be running all the time, it will
+re-read directories before opening a popup representing
+directory contents.  WSTart will show you only executables and
+subdirectories.  If directory contains neither ones, submenu
+popup will be canceled!  All files starting with a `.'
+character are understood to be either `system' or `hidden' files
+and therefore ignored.
+.SH OPTIONS
+.TP
+\fI-f\fP \fIfont name\fP
+Changes font used in launch bar and popups.
+.TP
+.I -t
+Remove time show from the launch bar.
+.TP
+.I -q
+Remove quit button from the launch bar.
+.TP
+.I -e
+Report errors (in a dialog).
+.TP
+.I -h
+Extend launch bar horizontally to screen width (default).
+.TP
+.I -v
+Extend launch bar vertically to screen height.
+.TP
+.I -l
+Position launch bar on left / top of the screen (default).
+.TP
+.I -c
+Position launch bar on center of the screen.
+.TP
+.I -r
+Position launch bar on right / bottom of the screen.
+.PP
+Last argument may be a path which WSTart will use as it's `root'
+directory.  If given path doesn't start with `/', it's interpreted as
+being relative to the current work directory, which is the default.
+.PP
+`Root' directory contents are show as buttons in the launch bar.
+.SH RELATED FILES
+There may be icon and option files associated with programs. WSTart
+will check if directory has files with `.icon' and `.options' appended
+to the end of the program name.  Directory could have for example
+files:
+.TP
+wterm
+executable
+.TP
+wterm.icon
+executable icon
+.TP
+wterm.options
+executable options
+.TP
+folder.icon
+default icon for directories
+.TP
+file.icon
+default icon for files
+.PP
+If you have the default icons `folder.icon' and `file.icon', they have
+to reside in the WSTart `root' directory.
+.SH ICON FILES
+Icon format is currently PBM (Portable Bitmap, see `pbm' manual).
+These can be created with `Icone' icon editor or be converted from
+other formats with the free `netpbm' utilities or others (PBM format
+is quite well supported).  Popups look best if icons are all the same
+size and at most as high as popup text (see `-f' option).
+.SH OPTION FILES
+Option file is composed of program arguments (and their values)
+separated with white space.  Use an empty option file if program
+doesn't take any arguments.  If there's no option file WSTart will ask
+you for options.  The command line you type can be saved onto disk
+from the option dialog.
+.PP
+Option file rules:
+.IP "\-" 8
+All characters between values 1 and 32 are regarded as `white space'.
+NULL terminates options, so arguments may not contain them.
+.IP "\-" 8
+If you want to include a string including white space, enclose it
+inside single quote pair (for example "-s 'silly example'"). Single
+quotes cannot be `quoted'. They will always either start or end a
+quote and appear in pairs.
+.IP "\-" 8
+You can use a directive for inquiring a string from the user.
+Directives start with a `%' character and continue to the end of the
+line (= are terminated with newline character).  Directives may have
+arguments.  Some are optional, but if present, they have to be in the
+order described.
+.PP
+At the moment there's only `%f' directive which will present user with
+a fileselector for getting a filename.  The whole directive will be
+replaced with the filename user selects. Directive usage is:
+.nf
+	%f [title] [default mask] [default path] [default file]
+.fi
+.PP
+If user cancels a directive, program won't be run.
+.SH OPTION FILE EXAMPLES
+Normally option files contain nothing or simple one liners to set
+default options to your preferences.  Files can be created just by
+using the `Save arguments' option in the options dialog, which will be
+presented when program doesn't have an option file.
+.nf
+	---- an example for wedit -----
+	-w 78 -h 16 -t 4 -f atari8.wfnt
+	-------------------------------
+.fi
+.PP
+Option files with directive(s) have to be currently created with a
+text editor because directives need more than one line.  Below is an
+example of a fileselector directive use:
+.nf
+	------ misc. program ----------
+	-width  72
+	-height 20
+	-file   %f ' Load file: ' *.doc /home/eero/test/doc/ default.doc
+	-------------------------------
+.fi
+.PP
+If you would want something more elaborate, feel free to implement
+whatever you want to.
+.SH INSTALLING
+Create a directory hierarchy where you'll put your binaries.
+.PP
+Move or link the desired binaries into these directories.  You should
+have in the main directory only subdirectories and possible a couple
+of most important programs and sort rest of the programs into
+subdirectories.
+.PP
+Copy or link desired program icons into same directory with programs
+you'll want to associate them with.  Note that you may *not* use
+_symbolic_ links with icons as those would have execute bit set and
+then WSTart would mistake them for programs.
+.PP
+Copy or link icons that you want to be defaults to files `folder.icon'
+and `file.icon' in the WSTart `root' directory. Program options could
+be later created from the WSTart argument dialog.
+.PP
+Move `wstart' binary into a directory set in your PATH. For example
+into the one where you'll keep the W server binary.
+.PP
+Add WSTart either to `~/.wconfig' or `~/.wrc' W configuration file
+with the main directory of your newly created binary directory
+hierarchy as an argument.  I myself use:
+.nf
+	wstart /home/eero/wstart/ &
+.fi
+.PP
+.SH TECHNICAL INFORMATION
+Before you'll see a subdirectory popup, following things have
+been done:
+.IP "\-" 8
+Directory contents are read to see how many executables and
+directories there are and how much space their names take.
+.IP "\-" 8
+Menu structure is allocated for them, and the directory entries are
+read into it.
+.IP "\-" 8
+Icons are read for programs which have such.
+.IP "\-" 8
+Popup is created for the new submenu.
+.IP "\-" 8
+Popup widget parses menu structure into a graphical representation and
+draws it (icons, text and graphics are sent to W server).
+.PP
+Doing this may take some time if your machine is slow and you
+have lots of files in a directory.  Directory contents aren't
+sorted in any way.  If you absolutely want programs to appear in
+certain order, you might try removing them and then copy / link
+them again in that order.  Depending on how your filesystem
+stores directory entries this either works or not...  WStart
+reads directory entries in the order they are in the directory.
+.SH NOTES
+WStart children use same stdin/out/err streams as WStart (define
+CHILD_REDIRECT in source if you want to disable that).  In case
+WStart is run in background without output redirection, WStart
+(and programs it runs) ignore SIGGTOU, so that background writes
+won't stop them.
+.PP
+Normally WStart doesn't report errors.  If subdirectory isn't
+opened, it either doesn't exist (anymore) or it doesn't contain
+directories or executables.  If program doesn't run either it
+doesn't exist (anymore) or running it failed somehow (usual
+reason being wrong arguments).
+.PP
+Somebody suggested that WStart should use PATH instead of the
+link directory scheme. That's impractical for several reasons:
+.IP "\-" 8
+There would be *lots* of programs on menus which you'd have no
+interest in.
+.IP "\-" 8
+Menus wouldn't fit on screen nor would programs be logically divided
+between them.
+.IP "\-" 8
+You might not have write rights to the directories, so setting up
+option and/or icon files couldn't be done.
+.SH BUGS
+Probably many, but none that I would know right now.  Option
+file parsing would probably be most likely candinate for them.
+.PP
+On slower (like 8Mhz Atari ST) machines this is unusable.
+This depends a bit on how well your disk is cached.
+.SH LAST CHANGED
+11/1997 by Eero Tamminen

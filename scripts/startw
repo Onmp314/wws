@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Nowadays LANG is set to UTF-8 locale...
+echo "Unsetting LANG, neither W-terminal nor fonts support unicode"
+unset LANG
+
+echo 'Starting W... messages are saved to ~/.w-errors'
+wserver > ~/.w-errors 2>&1

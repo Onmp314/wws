@@ -1,0 +1,24 @@
+From uunet!igor!amber!geb Tue Apr 25 01:25:41 1989
+Return-Path: <uunet!igor!amber!geb>
+Date: Mon, 24 Apr 1989 11:46:06 PDT
+From: Gary E. Barnes <uunet!igor!amber!geb>
+To: x-sources@wyse.com
+Subject: Dragon, a game of Mah-Jongg; 01/02
+Message-Id: <CMM.0.88.609446766.geb@amber.Rational.COM>
+Status: OR
+
+Hello,
+	I'd like to submit the Dragon program for distribution.
+
+There is a README file with a quickie blurb, a .man page for documentation,
+an Imakefile for building, a Makefile that only knows how to imake the
+Imakefile to create a real Makefile, and the program source code itself.
+
+I've done one test install with this file so I'm certain that I've included
+all of the source and fairly sure that any site should be able to build
+the game.
+
+There is no copyright or distribution restriction on this program.  I am the
+author.
+
+Gary E. Barnes			geb@rational.com

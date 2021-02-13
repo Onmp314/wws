@@ -1,0 +1,30 @@
+
+	W - Jewel
+
+This is a W variant of the game known as Jewel, Columns or Coloris on
+other systems.  You try to prevent the 'well' in the window from filling
+up by destroying blocks of similar colors (patterns) by lining them
+horizontally, vertically or diagonally.
+
+You guide a column with the keys: 4 - column left, 6 - column
+right, 5 - roll blocks, 0 - drop column.
+
+
+	W/ in 1996 by Eero Tamminen, puujalka@modeemi.cs.tut.fi
+
+
+CHANGES
+
+7.3.1996
+- Uses now _5ms_gettimeofday() function from Kay Roemer's portlib
+  as MiNTlib gettimeofday() has 2ms resolution (ie. broken)...
+- Game pauses when mouse leaves the game area.
+
+7.5.1996
+- Adapted for patterns that follow graphics modes.
+
+14.5.1997
+- Added option for switching W library tracing on.
+
+30.5.1998
+- Uses Wlib w_gettime() instead of gettimeofday().

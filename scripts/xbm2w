@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# xbm2h -- converts XBM images to BM_PACKEDMONO data include.
+# 
+# NOTES
+# - Needs NetPBM tools, pbmbitflip W utility and POSIX shell
+
+if [ -z $1 ]; then
+	echo "usage:	xbm2h <XBM image> <header file>"
+	echo "example:  xbm2h test.xbm test.h"
+	echo
+	echo "Converts monochrome XBM image to a format that can"
+	echo "be included as BM_MONOCHROME image data.  The image"
+	echo "will be aligned to 32 and bits be flipped."
+	exit 0
+fi
+
+# new image width
+wd=$(($(xbmtopbm $1 | pnmfile | awk '{print $4}')+31>>5<<5))
+ht=$(xbmtopbm $1 | pnmfile | awk '{print $4}')
+
+# long align, flip bits & save
+xbmtopbm $1 | pnmmargin 32 | pnmcut 32 32 $wd $ht | pbmbitflip | pbmtoxbm > $2
+
+echo
+echo "Bitmap saved as: $2"
+echo "New bitmap data size: ${wd}x${ht}"
+echo
+echo "Note that you can still use the old *image size*, just remember"
+echo "that 'unitsize' is 4 and 'upl' is $((${wd}>>5))."
+

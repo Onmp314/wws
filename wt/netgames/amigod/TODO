@@ -1,0 +1,14 @@
+The following improvements need to be made to AmiGo:
+
+Ability to Load/Save games.  This should use a standard format if possible.
+
+Automatic scoring.
+
+Ability to take back moves.
+
+Variable board sizes.
+
+Ability to use computer go players running as separate processes.
+This would make it easy to link in many different players.
+
+And, of course, a better Go player.

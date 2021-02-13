@@ -1,0 +1,105 @@
+
+ The `range' widget class
+ ------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *range  = wt_create (wt_range_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+The range widget lets user to pick a value between given minimum and
+maximum values with a slider.
+
+Widget needs the WT_VALUE_MIN, WT_VALUE_MAX and WT_VALUE_STEPS options
+to be set before realization.
+
+
+ 3 Configuration Options
+ -----------------------
+
+Here are the options that can be set or queried with setopt() and
+getopt() functions.
+
+
+WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a
+	pointer to it) in the widget. This is useful if you have to
+	associate some extra data with a widget.
+
+
+WT_XPOS (long *)
+
+	Set / get the X position of the widget, which is relative to the
+	upper left corner of the parent window.
+
+
+WT_YPOS (long *)
+
+	Set / get the Y position of the widget, which is relative to the
+	upper left corner of the parent window.
+
+
+WT_WIDTH (long *)
+
+	Set / get the width of the widget.
+
+
+WT_HEIGHT (long *)
+
+	Set / get the height of the widget.
+
+
+WT_FONT (char *) / (WFONT **)
+
+	Set / get the font used in the value label(s).
+
+
+WT_VALUE_MIN (char *)
+
+	Set / get the `minimum' (shown on left or top of the slider)
+	value represented as a string.  Has to be set before
+	realization.
+
+
+WT_VALUE_MAX (char *)
+
+	Set / get the `maximum' (shown on right or bottom of the slider)
+	value represented as a string.  Has to be set before
+	realization.
+
+
+WT_VALUE (char *)
+
+	Get user selected value or set the default value.  Value should
+	be between minimum and maximum values and represented as a
+	string.  Default value is (minimum + maximum) / 2.
+
+
+WT_VALUE_DECIMALS (long *)
+
+	How many decimals will be used with WT_VALUE.  Default is is
+	zero (ie.  values are expected to be integers).  Numbers given
+	with WT_VALUE_MIN, WT_VALUE_MAX and WT_VALUE option strings
+	should have as many decimals as set here (so that label width
+	for the user selected value can be set to a suitable value).
+
+
+WT_VALUE_STEPS (long *)
+
+	Set / get how many `steps' slider will use between minimum and
+	maximum values.  Has to be set before realization.
+	
+
+WT_ORIENTATION (long *)
+
+	Set / get the slider orientation.  Permitted values are:
+		OrientHorz, horizontal
+		OrientVert, vertical (default)

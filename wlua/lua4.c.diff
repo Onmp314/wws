@@ -1,0 +1,52 @@
+--- lua.c	2003-05-25 15:12:45.000000000 +0300
++++ wlua.c	2003-05-25 13:29:35.000000000 +0300
+@@ -1,4 +1,16 @@
+ /*
++ * This code contains minor W window system and unix specific changes
++ * to the original lua.c code from the Lua 4.0 interpreter:
++ * 	http://www.lua.org/
++ * 
++ * These changes are documented in lua.c.diff.  Copyright of the original
++ * code is a variant of the zlib license (next 5.0 version of Lua has
++ * MIT license).
++ * 
++ * 	- Eero Tamminen 2003
++ */
++/* ------------------------------------------------------------ */
++/*
+ ** $Id: lua4.c.diff,v 1.1 2009-08-29 21:54:15 eero Exp $
+ ** Lua stand-alone interpreter
+ ** See Copyright Notice in lua.h
+@@ -15,10 +27,13 @@
+ #include "luadebug.h"
+ #include "lualib.h"
+ 
++extern int tolua_wlib_open (lua_State* tolua_S);
++extern void tolua_wlib_close (lua_State* tolua_S);
++extern int tolua_wt_open (lua_State* tolua_S);
++extern void tolua_wt_close (lua_State* tolua_S);
+ 
+ static lua_State *L = NULL;
+ 
+-
+ #ifndef PROMPT
+ #define PROMPT		"> "
+ #endif
+@@ -55,6 +70,8 @@
+   lua_mathlibopen(L);
+   lua_dblibopen(L);
+   /* add your libraries here */
++  tolua_wlib_open(L);
++  tolua_wt_open(L);
+ }
+ 
+ 
+@@ -99,7 +116,7 @@
+ 
+ static void print_message (void) {
+   fprintf(stderr,
+-  "usage: lua [options].  Available options are:\n"
++  "usage: W-lua [options].  Available options are:\n"
+   "  -        execute stdin as a file\n"
+   "  -c       close Lua when exiting\n"
+   "  -e stat  execute string `stat'\n"

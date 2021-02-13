@@ -1,0 +1,262 @@
+.TH FONTEDIT 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+fontedit \- batch editing tool for W fonts
+.SH SYNOPSIS
+.nf
+fontedit - [options]
+fontedit <font file> [options]
+.fi
+.SH DESCRIPTION
+.I Fontedit
+reads old and new format W font files, lets certain actions to be
+performed to the font header and data and then outputs the modified font
+in the new W font format.  If you'll replace the font name with '-'
+.I fontedit
+reads the font from standard input.
+.SH OPTIONS
+The actions linked to the following options will be performed in the
+order options appear on the program command line.  Options are divided
+into three main categories:
+.PP
+\(bu options that modify only the font header.
+.br
+\(bu options that manipulate also the font data.
+.br
+\(bu options where the manipulation can be limited to a given range.
+.PP
+Defaults in the descriptions below mean values assigned to the font when
+it's converted from an old to new font format.
+.SH HEADER OPTIONS
+.TP
+\fB-n\fP \fIname\fP
+Set font family name.
+.TP
+\fB-f\fP \fIflags\fP
+Set font flags:
+.RS 12
+.I p
+: proportional font
+.br
+.I l
+: ISO-latin1 font (default)
+.br
+.I a
+: ASCII font
+.br
+.I s
+: symbol font
+.RE
+.IP
+Of the last three (character set) flags only one can be set at the time.
+The character set will limit the range of some operations on fonts.
+.TP
+\fB-b\fP \fIoffset\fP
+Set font baseline offset from the top.  Underline (offset = baseline +
+2), slanting effect `italics correction' and vertical aligning of
+different sized characters can't be done correctly if this value isn't
+properly set.  Default is (height - height/4).
+.TP
+\fB-s\fP \fIstyles\fP
+Set font style flags:
+.RS 12
+.I b
+: bold
+.br
+.I i
+: italic
+.br
+.I l
+: light
+.br
+.I r
+: reverse
+.br
+.I u
+: underline
+.RE
+.IP
+Default is none.
+.TP
+\fB-e\fP \fIstyles\fP
+Set mask for font style effects that can be applied to the font
+`on-the-fly' i.e.  effects that will produce something readable.  Flags
+are same as above except that `i' is slanted pseudo italics, not real
+(hand-crafted) italics.  Default is all for bigger fonts, for smaller
+fonts some effects may be disabled (especially bold and light).
+.TP
+\fB-b\fP \fIthickness\fP
+Set bold effect `thickness'.  Note that this affects only fontedit and
+font server.  Due to `on-the-fly' bitstream -> bitmap font conversion in
+the W server and associated difficulties, W server will do only
+thickness of 1.  Default is 1.
+.TP
+\fB-i\fP \fIpattern\fP
+Set 16-bit skew pattern for slanting.  A set bit in the pattern means
+that line will be moved left.  Counting of pattern bits starts from bit
+0 upwards and counting of lines from the topmost line of the font.
+0xffff pattern would mean 45 degree slanting, 0x0 would mean no
+slanting.  If font is higher than the pattern is long, the pattern will
+be rolled.  On very small fonts it's worth the trouble to try out
+different patterns.
+.TP
+\fB-x\fP \fIstring\fP
+Add an informative string to the font header.  String could be something
+like font author, purpose, copyright etc.
+.SH FONT DATA OPTIONS
+.TP
+\fB-a\fP \fIstyles\fP
+Apply style effects to the font.  Flags are same as for `-s'.  Only
+styles mentioned in the effect mask can be applied.  `italics' is better
+leaved for the `on-the-fly' generating because that way the font width
+will not have to be increased.  Underline best to leave for server too
+(it will be put to offset of baseline + 2).  Font flags are used to set
+the range of characters for which the effects will be applied:
+.RS 12
+symbol:		0-255
+.br
+ASCII:		32-127
+.br
+ISO-latin1:	32-255
+.RE
+.TP
+\fB-p\fP \fIpattern file\fP
+Load 16x16 bit pattern (=32 bytes) to use when applying the light style
+to a font.
+\fB-h\fP \fIheight\fP
+Set font height to given value.  Space will be added to / removed from
+the bottom of characters.
+.TP
+\fB-m\fP \fImap file\fP
+Remap characters in the font according to given 256 byte character set
+order mapping file.  Until W library implements OS specific character
+mapping, this option can be used to correlate user keyboard with W
+fonts.  There are also special applications for terminals and games.
+.SH RANGE OPTIONS
+.TP
+\fB-r\fP \fIfirst last\fP
+Set range of characters upon which the following actions will work.  -r
+0 255 will be the whole font and is the default.
+.TP
+\fB-c\fP \fIdirections\fP
+Scrolls the characters in the range by given amounts.  The scroll flags
+are:
+.RS 12
+.I u
+: up
+.br
+.I d
+: down
+.br
+.I l
+: left
+.br
+.I r
+: right
+.RE
+.IP
+For example -c ddddrr would scroll the character four times upwards and
+two times to the right.
+.TP
+\fB-d\fP \fIdifference\fP
+change character widths by the given value.  Use a positive value if you
+want more space between the characters and negative value if you want
+less space.  This option will add space to / remove it from the right
+side of the characters.  You might want to scroll characters after or
+before this operation.
+.IP
+Giving zero for a value will shift the characters and recalculate the
+font widths so that there will be no empty pixel columns on either side
+of the character.  This followed with a little width addition will be an
+excellent way to make proportional fonts.	
+.TP
+\fB-w\fP \fIwidth\fP
+Set character widths to given value.  If you'll do the operation for the
+whole font, the font will be (of course) monospaced after this
+operation.  The bits in the characters will be centered to the new
+width.
+.IP
+If your range is the whole font and you'll give zero for width, an
+`empty' font will be created.  In an empty font all widths are zero and
+there's no data.  That might be handy input font for the next option...
+.TP
+\fB-y\fP \fIfile\fP
+Insert raw data from the file into the range.  If file is smaller than
+the range, then only characters that can be filled completely will be
+modified.
+.IP
+\fBMake sure that the input font will have the same height as the font
+from which you output the raw data.\fP
+.TP
+\fB-o\fP
+Output range as raw data for the option above.  With this option the
+font itself will not be output.  The raw data isn't exchangeable between
+machines of different endianess or long size.
+.IP
+You can use the above two options for copying characters from a font to
+another or changing the character order around (alternative for option
+`-o').
+.SH OTHER OPTIONS
+.TP
+\fB-v\fP \fIlevel\fP
+Set fontedit verbosity level:
+.RS 12
+.I 0
+: report only errors (default)
+.br
+.I 1
+: describe actions
+.br
+.I 2
+: show resulting font attributes
+.br
+.I 3
+: show character widths
+.RE
+Values 2 and 3 will disable the font saving and are meant for checking
+the font values before comitting the changes.
+.TP
+\fB-u\fP
+Calculate and show the slanting variables and character cell size:
+minimum empty space around top, bottom, left and right sides of the
+characters in the font.  Ranges depend from the font flags like with -a.
+.SH INSIDE INFORMATION
+When fontedit loads a font, it first converts the font character
+bitstreams into an ulong map[height * 256] bitmap.  Having the bitmap
+always as longs will limit the allowed font width to 32 pixels, but as
+this simplifies the program a lot and there currently aren't fonts wider
+than 24 pixels, I don't consider this (yet) a problem.  All the font
+data operations are performed in/to this bitmap.  After program has
+completed, the bitmap will be converted back to a font bitstream and
+font is output.
+.PP
+The raw data is just a dump of this bitmap i.e.  32 pixels wide
+monochrome bitmap.  It should be fairly easy to construct programs that
+convert fonts from other sources to this format for further processing
+with fontedit.  The dump format is also handy when debugging fontedit
+(add PBM header and view the bitmap).
+.PP
+The font loading, bitstream<->bitmap conversions and effect applying can
+be used on the 'forthcoming' font GUI editor and font server almost
+without changes.
+.SH TODO
+Construct font re-mapping tables and add light style pattern loading.
+.SH AUTHOR
+(w) 11/1996 by Eero Tamminen
+.SH SEE ALSO
+.IR bdf2wfnt (1),
+.IR wchars (1),
+.IR wfont (1),
+.IR wfontdemo (1)
+.SH CHANGES
+10.2.1997
+.br
+\(bu Fixed a bug in font family name acquisition from file name.
+.br
+\(bu Fixed a bug in the font map to stream conversion.
+.br
+23.2.1998
+.br
+\(bu Fontedit will now save the font to file itself to ensure that the
+font file names correspond to what W server (attribute->name mapper)
+expects.
+

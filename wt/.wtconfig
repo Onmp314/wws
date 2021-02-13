@@ -1,0 +1,32 @@
+# Other compilation settings are in ../.config (W configuration) file.
+# This defines just the libraries W toolkit applications use.
+#
+# Wt programs use WTLIBS instead of CLIENTLIBS so that it's easier
+# to compile them for X, with trace/debug libs etc.
+#
+# TEXTLIBS is intended for text based (networked) programs used
+# in connection with Wt programs like the ones in 'netgames'.
+
+ifeq ($(ARCH),MiNT)
+
+# set jpeg library name to something  linker understands
+ifeq ($(WLIB),bW.olb)
+JPEGLIB = bjpeg.olb
+else
+JPEGLIB = libjpeg.a
+endif
+WTLIBS = -lWt -lW -lsocket
+
+TEXTLIBS = -lcurses -lsocket
+
+else	# not MiNT
+
+#JPEGLIB=libjpeg.a
+WTLIBS = -lWt -lW
+
+TEXTLIBS = -lncurses
+
+#WTLIBS = -lWt -lW2X -L/usr/X11R6/lib -lX11
+#WTLIBS = -lWtg -L../../w2xlib -lW2Xg -L/usr/X11R6/lib -lX11 -lefence
+
+endif

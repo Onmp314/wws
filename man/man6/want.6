@@ -1,0 +1,37 @@
+.TH WANT 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+want \- Toy for W using the Ant-walk chaotic algorithm
+.SH SYNOPSIS
+want [\fImovement sequence string\fP] [w\fIwindow width\fP]
+[h\fIwindow height\fP]
+.SH DESCRIPTION
+\fIW-Ant\fP shows the traces of an imaginary ant walking on a grid.
+.PP
+The movement string can be composed of two characters; \fIR\fP and
+\fIL\fP which tell the Ant onto which direction to turn (\fIR\fPight or
+\fIL\fPeft), based on the value of the grid position, modulo movement
+string length (value % length).
+.PP
+The value on the grid position is used as an index to the movement string, and
+it's increased at the every passing of the imagined ant. Originally the values
+are zero (Ant hasn't passed through any of them).
+.PP
+The arguments w# and h# (where '#' denotes a number) can be used to specify
+the window size in blocks that the grid is composed of.
+.PP
+When the value of a grid position changes, the block symbolizing it will
+change it's color (on the case of W, differently dithered 'grayscale' patterns
+are used to emulate colors) on screen.
+.PP
+\fIW-Ant\fP 'ant-walk' could be described as 'chaotic'.  In mathematics,
+a very complex behavior / results produced by iteration and interaction
+of very simple rules is called chaotic even though it 'predictable'.
+.SH EXAMPLES
+The simplest rule is 'rl', i.e. Ant turns to right when the value of grid
+position modulo length, is zero (value % 2 == 0) and to left when the value
+modulo length is one (value % 2 == 1).
+.SH LITERATURE
+For more info on the Ant formula, see 1995 volumes of the 'Mathematical
+Intelligencer' magazine.
+.SH AUTHOR
+w/ Feb 1996 by Eero Tamminen

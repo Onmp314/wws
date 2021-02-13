@@ -1,0 +1,350 @@
+ W1R3 - README
+ =============
+
+ This is the README for W1R3, my increasingly popular <grin> window manager
+for MiNT, Linux68k & SunOS4. Lots of things are improved in this release, for
+a detailed list see CHANGES. The most important news are:
+
+- unlimited number of windows and rectangles (whether this leads to memory
+  problems under MiNT is an open question)
+
+- clipping for all graphic calls
+
+- and again some speedups for some graphics ops, notably bitblk() and friends.
+
+ The rest of this README is structured in the following items:
+
+ 1) COPYING / WARRANTY
+ 2) INTRODUCTION / DISCLAIMER
+ 3) REQUIREMENTS / PROMISES
+ 4) HOW TO MAKE/INSTALL
+ 5) HOW TO USE
+ 6) NETWORKING
+ 7) BUGS / FEATURES
+ 8) OTHER NOTES
+ 9) THANKS
+
+ And now to the first item:
+
+
+ 1) COPYING / WARRANTY
+ =====================
+
+ W is/was written by me (uuh I got by with a little * help from my friends, see
+section 9 :), Torsten Scherer, itschere@techfak.uni-bielefeld.de (TeSche) and
+I've been sitting at it for over two years now, measured from the first
+attempts to compile some primitive graphic routines. That is why I'm quite a
+bit proud about it.
+
+ *) I should really omit the 'little', see CHANGES... :)
+
+ The exact copying license for this version (W1R3) is:
+
+- you MUST accept that there is no warranty whatsoever, including, but not
+  limited or restricted to any details you and your lawyer can possibly
+  imagine or not! everything which may accidentally or incidentally happen,
+  either directly caused or indirectly triggered by the use of this program is
+  only your problem! everything you do you're doing at your own risk!
+
+- you MAY use W free of charge as long as you don't follow any commercial
+  targets with it. commercial use requires my written agreement.
+
+- you MAY give away copies of it as long as you don't take money for it
+
+- you MAY change the code for your private purpose as you like it. If you
+  should give away copies of your modified versions you must clearly mark
+  the changes as yours and leave my original copyright notes and comments 
+  unchanged. If you make substantial changes I would also very much like it
+  if you give it a different name
+
+- you SHOULD send me the diffs if you think you've changed something nice or
+  important
+
+- you CAN send me programs you've written for W which I will include in the
+  next release if I like them
+
+- you CAN also drop me a mail if you're using W because I'd like to know how
+  far it's spread
+
+
+ 2) INTRODUCTION / DISCLAIMER
+ ============================
+
+ This chapter is here mainly to calm you down from expecting miracles... :)
+
+ W is mainly the result of me trying to do some graphic routines, so it
+almost only follows my ideas about graphic and window managers. You may
+derive a certain influence by X11 from the style the server or its programs
+are named, but that's in fact already the biggest common feature. Everything
+else is only an attempt to satisfy *my* needs, and these do not include X11
+compatibility. In fact, they don't include *any* compatibility at all.
+
+ There's now also a port of X11R5 available for MiNT. It definitely has got
+some problems - like memory problems - but if you're interested in X11 features
+you should better keep an eye on that one than expecting these from W. The only
+advantage W really has it the amount of memory it uses - a lot less than X11!
+Sorry to say this, but my time is somehow limited and I'd like to keep W as
+simple and small as possible to fulfill some needs which can only implement
+a very rude subset of X11 functionality.
+
+ At the beginning I was already quite happy that it has got some advantages
+over GEM/TOSWIN (or MINIWIN) and, not dare to mention MGR, but as time floats
+by more and more features are included into W and so by now it's really
+beginning to get serious.
+
+ If you're reading this for Linux68k or SunOS forget about the whole thing
+(except you like playing with weird software) and use X11.
+
+
+ 3) REQUIREMENTS / PROMISES
+ ==========================
+
+ Now that I've tried to keep you cool about YOUR expectations it's probably
+the time to talk about W's expectations. :)
+
+ W is known to run on the following machines:
+
+ 1) an Atari ST/TT/Falcon running MiNT from the KGMD distribution
+
+ 2) an Atari ST/TT/Falcon running Linux68k 1.2.13pl4-6
+
+ 3) a Sun Sparc2 with CG6 graphic running SunOS 4.1.4
+
+ But nobody can deny that its needs are growing... Here they are in detail:
+
+ what it needs:
+ --------------
+
+- on a Falcon it will only run in an ST/TT compatible screen mode, there's a
+  8 bit driver for the CG6 which may serve as generic VGA driver, but it lacks
+  the init code and will probably be too slow
+
+- probably at least 4 megs of memory for MiNT. Contrary to other window
+  managers it really runs with 4 megs, but according to them you'll have the
+  more fun the more memory you've got
+
+ For MiNT the KGMD (Knarf's German MiNT Distribution) is recommended. This
+one includes all the other things you'll need like MiNTOS/MiNTNet and so on.
+You should be able to find KGMD on quite a lot of ftp-servers as it seems to
+be quite popular, but I don't use MiNT any more, so I can't give you further
+advice on that.
+
+ what it offers you:
+ -------------------
+
+- a monochrome graphic window environment with some tools (wterm to run
+  shells or other text programs plus some other nice things, but by far not
+  the big variety you might know from X)
+
+- a library with some (as I think) easy to use calls to write your own
+  (monochrome) graphic programs if you should like to do so :)
+
+ what it does *not* claim:
+ -------------------------
+
+- any compatibility to anything
+
+- real color support
+
+ That's probably the most important thing you should know about. If you've
+actually decided to compile it, here's the next item:
+
+
+ 4) HOW TO MAKE/INSTALL?
+ =======================
+
+ Well, that's simple (I think :). You seem to have already extracted the
+archive to somewhere, good. :) First of all you should remove all traces of
+previous versions if you're upgrading because there have been so many changes
+that old programs won't run, old libraries and header files won't fit and old
+docs won't be correct. Then you should do the following steps:
+
+- edit the system definition in 'Makevars'
+
+- edit the graphic driver to be include in 'Makevars'
+
+- uncomment the proper set of compile time flags in 'Makevars'
+
+- edit the target directories in `Makevars' to meet your taste
+
+***********************************
+
+- if you really know what you're doing you may also edit server/config.h to
+  tune some parameters, but be careful with them! there's one option you may
+  want to try: REFRESH mode. normally the server directly writes to the screen
+  if possible and only to the window bitmap if necessary. But if the screen got
+  trashed by any means there's no way to refresh it if the window bitmap is
+  not up to date. If you want it to always be up to date define REFRESH in
+  server/config.h - but that'll slow things down a bit.
+
+ If you're sure everything is fine then type:
+
+ `make'
+
+ and lean back for a while... (~30 min. on a TT, ~8 min. on a Sparc2)
+
+ That's part one. Note that you must no longer give any server options in
+`Makevars' because the single important one, -DMONOCHROME, is no longer used.
+Instead  the server includes both a 'color' and a monochrome driver and selects
+the better one at run-time.
+
+ If the compilation ran through without errors (it really should! :) you should
+install the whole stuff to the directories you've chosen in `Makevars' by
+typing:
+
+ `make install'
+
+ That's part two. All the stuff will be copied to the directories given in
+`Makevars' and the file modes will be set up correctly. In theory you must be
+'root' to do so because wterm needs to be installed as setuid-root. There
+hopefully isn't very much of a security risk, it just needs to be able to
+create links from /dev to /pipe and the /etc/utmp mustn't any longer be
+writable by everybody. However, this will work under MiNT only at all and
+so I don't care very much about this at the moment.
+
+ If you type `make clean' all object files will be erased, but not the
+binaries. If you type `make veryclean' binaries will also be erased. There is
+no specific make command to uninstall the binaries because I haven't felt the
+need for it so far...
+
+ For MiNT, The compiling procedure should have created a device driver
+xconout2.xdd and the install procedure should have copied it to /c/mint. This
+driver enables *one* wterm to catch output being written to the console by
+programs which were started before W, including MiNT and its debugging output.
+You mustn't install it, but if you don't do it some programs may trash your
+screen. There's no equivalent for this for Linux68k or SunOS so far.
+
+ If you've successfully compiled and installed everything and made sure the
+binary directory is in your $PATH you may start it by typing:
+
+ `startw'
+
+ You'll then see what happens next... :)
+
+
+ 5) HOW TO USE
+ =============
+
+ If you haven't done anything else but `make install' you'll get some default
+programs started. You can customize the startup procedure, but that's explained
+in the manpage at greater extend, so you should better have a look at them.
+
+ The library should give you an easy-to-use interface to the server functions
+if you want to write your own programs. From W1R1 on there's also a -mbaserel
+version for MiNT again. For Linux68k/ELF it would be easily possible to write
+a shared lib, but that not worth it and since all my releases are more or less
+incompatible that's not a good idea. Sorry, but this is probably not the right
+place to explain how to use libraries and such. If you want to know how to use
+the calls take a look at the manpages, or the sample programs if you like.
+
+
+ 6) NETWORKING
+ =============
+
+ Well, W1 uses sockets for client <> server communication, so you may think
+you can run it over a network. I've tried to think about host/network byte
+order wherever possible, but then I haven't tested this because I lack a
+second ST, but it should run. Much slower, of course - if we're speaking
+about a serial link...
+
+ The library looks for an environment variable WDISPLAY to get a server to
+connect to. This variable must either directly hold an IP address or the name
+of the server if it can be resolved to an address. The server binds to any
+local address, so you should at least be able to use the loopback interface
+at 127.0.0.1.
+
+
+ 7) BUGS / FEATURES
+ ==================
+
+ Most of the technical apologies are redundant now as the dirty tricks only
+dealt with semaphore problems when you can't assure that only one process is
+using the code and variables at the time. Socket communication should
+eliminate these problems, and hopefully it doesn't introduce too many new
+ones. :)
+
+ This versions seems to run stable for me. At least I'm running it without
+greater problems - maybe there're some 'features' left (in fact I'm currency
+typing this README in a wterm :). What remains are the smaller problems:
+
+- due to socket overhead events may get lost if they come too quick and the
+  client is busy. I've only seen this in wterm when it's busy scrolling and
+  it doesn't offend me very much. A possible hack would be to increase the
+  number of events the library can buffer, but completely avoiding this
+  problem would involve major changes
+
+- server exit should also be protected by an alert box to force the user to
+  confirm it
+
+- no range checks are done for the graphic operations, so the thing lives
+  from polite clients. In fact some minimal clipping is implemented now, but
+  you shouldn't rely on that.
+
+
+ 8) OTHER NOTES
+ ==============
+
+ The `wterm' terminal emulator uses its own terminal type, which is based on
+VT52, but has got some extensions for additional attributes. The versions so
+far supplied a sample termcap entry, but from W1R2 on wterm sets the
+environment variables TERM and TERMCAP to directly contain its capabilities.
+This way you don't need to have write permission on /etc/termcap. I'm a bit
+uncertain about ncurses, but there should be a way to make them work with
+this method too.
+
+|  I think from this release on I can assure that the communication won't
+| change that much that you must recompile your clients for each new release,
+| but one can never be sure. If I decide that introducing some new feature
+| would make a change necessary I probably won't hesitate to do it, so keep
+| your code!
+
+ Har har, that paragraph was from the last release, and obviously it wasn't
+true. Anyone wants to bet on if this will be true in future? ;)
+
+
+ 9) THANKS
+ =========
+
+ to my famous testers:
+
+Benjamin Lorenz (benni@phil15.uni-sb.de, benni@schlunz.dfki.uni-sb.de <- TT!)
+for being the first one to really `use' W, spending an enormous amount of
+time tracking down bugs, his `wload' client and always encouraging me,
+although he now seems to be drifting off into the Linux68k edge... ;)
+
+| That's the way life goes, now this has happened to me too... :)
+
+Kay Roemer (roemer@informatik.uni-frankfurt.de)
+for more and more bug fixes, but mainly for the great speedups he's done to
+the bitblk routine and wapfel. Not to mention his MiNTNet without which the
+whole thing wouldn't exist the way it is now...
+
+Torsten Will (itwill@techfak.uni-bielefeld.de)
+who hasn't got anything to do with Atari, MiNT or W at all, but who happens to
+share a flat with me and has really beared lots of discussions about what
+features would be implementable with reasonable effort. and then he's written
+a second module for the screen saver...
+
+Eero Tamminen (t150315@proffa.cc.tut.fi)
+for his wmines, wsolitaire, giving me the final kick in the back to pull
+myself together and do this release after having done almost nothing for
+almost a year and the discussions about things that will come in a future
+release like (and more) better dashed functions...
+
+ ... and some others (see CHANGES)
+
+
+ ?) QUESTIONS
+ ============
+
+ Did I forget something important? Then ask me.
+
+
+that's it,
+enjoy it,
+ciao,
+and a happy new year,
+TeSche, Bielefeld, the 20th December 1995
+--
+Torsten Scherer (TeSche, Schiller...), itschere@techfak.uni-bielefeld.de
+Faculty of Technology, University of Bielefeld, Germany, Europe, Earth...

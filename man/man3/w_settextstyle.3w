@@ -1,0 +1,61 @@
+.TH w_settextstyle 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_settextstyle() \- set text style
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_settextstyle(WWIN *" win ", ushort " flags ");"
+.fi
+.SH DESCRIPTION
+.I w_settextstyle()
+sets the textstyle for all coming
+.I w_printchar()
+and
+.I w_printstring()
+calls. The
+.B flags
+parameter may be any combination of:
+.TP
+.B F_NORMAL
+for plain printing
+.TP
+.B F_REVERSE
+for inverted printing
+.TP
+.B F_UNDERLINE
+for underlined printing
+.TP
+.B F_BOLD
+for bold printing (could be better)
+.TP
+.B F_ITALIC
+for slanted printing
+or
+.TP
+.B F_LIGHT
+for light (current window pattern is used to clear pixels off the
+characters) printing.
+.PP
+.SH RETURNS
+the previously set text style
+.SH NOTES
+If your program changes text styles, it's best to always explicitly set
+one before printing anything.  Wlib won't forward redundant attribute
+requests to W server.
+.PP
+If you're using the ROOT window you
+.B have to
+set everything explicitly as other programs may also change the window
+attributes.
+.PP
+Handcrafted bold, italics and light fonts look of course much better and
+are more readable than computer generated emulations.  Therefore it's
+advised that programs which don't need fonts to have same widths, would
+use separate fonts for bold and italics styles instead of the emulation
+effects.
+.SH SEE ALSO
+.IR w_printchar (3),
+.IR w_printstring (3)
+.SH LAST CHANGED
+Oct. 1997 by Eero Tamminen

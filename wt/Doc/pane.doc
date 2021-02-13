@@ -1,0 +1,113 @@
+
+ The `pane' widget class
+ ----------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *pane = wt_create (wt_pane_class, <parent widget>);
+	/*
+	 * add childs to pane ...
+	 */
+
+
+ 2 Description
+ -------------
+
+ The box widget is a composite widget. It arranges its childs in stack-from
+(ignoring the positions you set for the childs using WT_XPOS and WT_YPOS).
+
+ The default behavior for a pane is to place childs in a column beginning
+at the top with a configureable vetrical distance between childs. The childs
+can be left, right or center aligned in horizontal direction.
+
+ But the pane can be configured to place childs in a row instead beginning
+at the left, aligning them in vertial direction.
+
+
+ 3 Configuration Options
+ -----------------------
+
+ For each configuration option the widget supports the name of the
+configuration option (WT_<something>), the type of the argument (eg. long *)
+you pass to wt_setopt()/wt_getopt() for this option, possible values, their
+meaning and a description of what the option does is given.
+
+
+ WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a pointer
+	to it) in the widget. This is useful if you have to associate some
+	extra data with a widget.
+
+
+ WT_XPOS (long *)
+
+	Set the X position of the pane widget, which is relative to the
+	upper left corner of the parent window. The X position is ignored if
+	the parent widget places the childs (like box and pane widget).
+	Default is 0.
+
+
+ WT_YPOS (long *)
+
+	Set the Y position of the pane widget, which is relative to the
+	upper left corner of the parent window. The Y position is ignored if
+	the parent widget places the childs (like box and pane widget).
+	Default is 0.
+
+
+ WT_WIDTH (long *)
+
+	Set the width of the pane widget. If the width is == 0 (which is the
+	default) then the pane will make itself wide enough so that all childs
+	fit into it.
+
+
+ WT_HEIGHT (long *)
+
+	Set the height of the pane widget. If the width is == 0 (which is the
+	default) then the pane will make itself high enough so that all childs
+	fit into it.
+
+
+ WT_ORIENTATION (long *)
+
+	Select the orientation of the pane widget. Possible values are:
+	- OrientHorz: place childs in a row.
+	- OrientVert (default): place childs in a column.
+
+
+ WT_HDIST (long *)
+ WT_VDIST (long *)
+
+	Set the distance between childs. Default is 6 pixels. For horizontal
+	widgets WT_HDIST must be used, otherwise WT_VDIST.
+
+
+ WT_ALIGNMENT (long *)
+
+	Select the alignment of the childs in vertial direction (for
+	OrientHorz orientation) or horizontal direction (for OrientVert
+	orientation). Possible values are:
+
+	for OrientHorz orientation:
+	- AlignTop
+	- AlignCenter (default)
+	- AlignBottom
+	- AlignFill
+
+	for OrientVert orientation:
+	- AlignLeft
+	- AlignCenter (default)
+	- AlignRight
+	- AlignFill
+
+	The only value that needs an explanation is AlignFill. It will cause
+	the pane widget to stretch all its childern in X (for OrientVert) or
+	Y (for OrientHorz) to the size of the biggest child. If a child cannot
+	be stretched for some reason if will appear left or top aligned
+	depending on WT_ORIENTATION.

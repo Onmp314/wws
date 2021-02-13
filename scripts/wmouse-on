@@ -1,0 +1,4 @@
+#!/bin/sh
+echo 'X11 xterm style mouse button reports on'
+echo '[?1000h'
+

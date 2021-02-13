@@ -1,0 +1,219 @@
+<html>
+<head>
+<title>Blast! Where's the W Doom?</title>
+</head>
+<body>
+
+<h3>Available W clients applications</h3>
+
+With the latest <a href="../">W sources</a> you'll get <a
+href="../server/">W server</a>, <a href="../lib/">library</a>
+and it's <a href="../man/">documentation</a>, several <a
+href="../fonts/">fonts</a> and the following programs:
+
+<ul>
+<i><a href="../apps/">Applications:</a></i>
+  <li>Fontedit,	utility for editing font headers and data.
+  <li>Ring/d,	client and daemon for sending/receiving little text notes.
+  <li>WBiff,	informs you about incoming mail.
+  <li>Wbm,	PBM image viewer, can also set background picture.
+  <li>WChars,	shows the characters in the given font.
+  <li>WClock,	an analog clock.
+  <li>WEyes,	eyes that follow the mouse pointer.
+  <li>WGone,	locks the screen while you're away.
+  <li>WLaunch,	program launch bar.
+  <li>WLoad,	system 'load' monitor.
+  <li>WSaver,	a screen saver with several different 'modules'.
+  <li>WSetbg,	sets the W background pattern.
+  <li>WStatus,	gives information about the server.
+  <li>WTerm,	a VT52 (enhanced) terminal emulator.
+<br><br><i><a href="../games/">Games and amusements:</a></i>
+  <li>Lsys,	simple L-system parser.
+  <li>WAnt,	'an ant simulator'.
+  <li>WApfel,	simple Mandelbrot generator.
+  <li>WDragon,	Mah-jongg tile game.
+  <li>WJewel,	Columns game.
+  <li>WLife,	Conway's Game of Life.
+  <li>WMines,	Minesweeper game.
+  <li>WPuzzle,	a 'sliding' puzzle game of numbers or of a specified IMG.
+  <li>WReversi,	Othello game.
+  <li>WRobots,	simple unix robots game clone.
+  <li>WSolitaire, simple board game.
+  <li>WWyrms,	two-player worm game.
+<br><br><i><a href="../benchmarks/">W benchmarks:</a></i>
+  <li>WEngine,	server performance meter ('engine' RPMs).
+  <li>WPerfmon,	times the performance of your W server.
+<br><br><i><a href="../wlua/">Lua interpreter with W bindings:</a></i>
+  <li>test-wlib.lua, script demonstrating Wlib usage from Lua.
+  <li>test-wt.lua,   script demonstrating W toolkit usage from Lua.
+<br><br><i><a href="../scripts/">Some W utility scripts:</a></i>
+  <li>wjpeg,    show JPEG images (-r -s puts image to rootwindow)
+  <li>won,      start W programs remotely
+</ul>
+
+
+<h3>Available W toolkit applications</h3>
+
+<i>Kay R&ouml;mer</i> has programmed <a href="../wt/">W toolkit</a>
+(hence referred as Wt) which contains <a href="#widgets">widgets</a>
+with which more complex W programs can be done.  W toolkit works also
+on top of my <a href="#W2Xlib">W2X library</a>.<p>
+
+With W toolkit come the following programs done by me and Kay:
+
+<ul>
+<i><a href="../wt/">Applications:</a></i>
+  <li><a href="../wt/wetscape/">WetScape</a>, almost HTML v1
+      conforming WWW-browser with additional JPEG support.  Program has
+      a popup for saving documents to a local file.  This comes also
+      with a version of the Independent JPEG group's libjpeg source, but
+      for example on linux you most likely already have this.
+  <li><a href="../wt/wvt/">Wvt</a> is like WTerm, an
+      enhanced VT52 terminal emulator. In addition this offers also
+      cut/paste and history buffer.
+  <li><a href="../wt/waudio/">WAudio</a>, a (ATM 8-bit,
+      mono) sample editor that on MiNT uses Kay's MiNT audio device
+      and on other platforms /dev/audio for sound output.
+  <li><a href="../wt/wchat/">WChat</a>, a program for
+      discussing with others over the network.
+  <li><a href="../wt/wdraft/">WDraft</a>, a simple drawing
+      program.  Currently it's main use is testing out the server
+      graphics functionality :-).
+  <li><a href="../wt/wedit/">WEdit</a>, a simple text
+      editor with <em>fixed line lenght</em> (edittext widget
+      limitation).  Contains some goodies like copy/paste support,
+      auto-indent, word wrap, paragraph format, search/replace and
+      abbreviation expansion.  Buggy.
+  <li><a href="../wt/wicone/">WIcone</a> is a slightly
+      enhanced version of the iconeditor example in the toolkit Test/
+      directory. You could use it to make icons for WStart menus.
+  <li><a href="../wt/wstart/">WStart</a>, a program launch
+      menu with nested popups. Corresponding directory is (re-)read when
+      popup is opened, so if you have a slow disk you might be happier
+      with Wlib based Wlaunch.  Programs may have icon and option files.
+<br><br><i><a href="../games/">Games and amusements:</a></i>
+  <li><a href="../wt/netgames/">Networked board games</a>
+      packet includes W and curses interfaces for Gobang, Go, Pente and
+      Othello games, a W interface for Chess and servers for Pente, Go
+      and Othello games.  You can play games against a server or another
+      player across the network.
+  <li><a href="../wt/math/">Wt-ant and Wt-hop</a>, "ant" and "hopalong"
+      hopalong algorithms with Wt interfaces.
+  <li><a href="../wt/warzone/">WarZone</a> is a start for a game like
+      DOS Scorched Earth or Amiga Scorched Tanks (or any other of the
+      multitude of games like these, the old Atari Ballerburg was a
+      bit more original though...). Would somebody like to pick up
+      this and continue?
+</ul>
+<p>
+
+
+<hr>
+
+<h3><a name="widgets"></a>Available W toolkit widgets</h3>
+
+<ul>
+<em>Containers:</em>
+  <li>Top, The root widget
+  <li>Shell, a window widget
+  <li>Box, arranges children in a grid
+  <li>Pane, arranges chilren vertically or horizontally
+  <li>Packer, arrangement 'parser' like TCL 'packer' widget
+  <li>Form, no arranging
+<br><br><em>Scrollers:</em>
+  <li>Arrow
+  <li>Scrollbar
+<br><br><em>Buttons</em>, can have both text and an image:
+  <li>Pushbutton
+  <li>Radiobutton
+  <li>Checkbutton
+  <li>Label
+<br><br><em>Lists:</em>
+  <li>Text list
+  <li>Popup, hierachical, items can include an image or checkmark
+  <li>Menu, composed of Pushbuttons
+<br><br><em>Text output:</em>
+  <li>Text
+  <li>Html, almost v1.0 conforming
+  <li>Vt, enhanced vt52 terminal emulation
+<br><br><em>Text input:</em>
+  <li>Getstring, with scrolling and cut/paste
+  <li>Edittext, with cut/paste and some text formatting
+<br><br><em>scrollable lists:</em>
+  <li>Listbox, text list with scrollbar
+  <li>Select, getstring, arrow and pop-up listbox
+  <li>Filselector, Include an autolocator, file mask and sorting options
+<br><br><em>Range selection:</em>
+  <li>Range, select a value between given min and max values
+  <li>Dial, same as above but with dial
+<br><br><em>Others:</em>
+  <li>Iconedit
+  <li>Editable, could be drawn onto and transfers events
+  <li>Topwindow, could be used as the icon window
+</ul>
+<p>
+
+A typical widget hierarchy would be something like this:
+<ul><li><em>Top</em>, Widget root
+    <ul><li><em>Shell</em>, The window
+        <ul><li><em>Pane</em>, vertical
+            <ul><li><em>Getstring</em>, "Text"
+	    </ul>
+	    <li><em>Pane</em>, horizontal
+	    <ul><li><em>Pushbutton</em>, "OK"
+	        <li><em>Pushbutton</em>, "Cancel"
+            </ul>
+        </ul>
+    </ul>
+</ul>
+<p>
+
+<hr>
+
+<h3>Other projects</h3>
+
+<a name="W2Xlib" href="../w2xlib/">W2X library</a> implements W
+library/server functionality on top of X11 library and server.  It's
+complete enough so that you can compile and use all the W library and
+toolkit programs (except wsaver and wgone for which you should use your
+X counterparts).  It implements only monochrome W server function /
+functionality.  You should unpack the tar-ball to W directory so that
+symlinks into W library sources will get right.<p>
+
+<a href="http://koti.welho.com/kmattil4/">Mortar</a> is a simple 2-4
+player game where players shoot each other with cannons one player at
+the time. It has raytraced graphics and works on Linux (framebuffer,
+SDL, GGI), Atari (MiNT) or Amiga and DOS.<p>
+
+There are also <a href="../diffs/">diffs</a> for some programs
+(Heretic, Xmountains) to get them to work with W window system.<p>
+
+
+<hr>
+
+<h3>Obsolete Notes</h3>
+
+I have earlier made a <i>MiNT FLI Player</i> from x86-linux SVGAlib
+FLI player sources.  It doesn't work on x86-linux anymore, so I
+suspect that I have introduced some bugs to the (v0.3 <em>flip</em>)
+code, but it seems to works well (haven't got memory protection on
+with MiNT...).  I even added scaling to it which worked reasonably
+fast.<p>
+
+I had also implemented Basic W1R3-pl2 W Library functionality in <a
+href="http://www.modeemi.cs.tut.fi/~puujalka/python.html#wlib">Python</a>.
+There was also Python version of my L-system parser which could output
+the grammar also either into W window or POV scene.<p>
+
+Other programs of interest with W and non-GEM MiNT usage in general
+were J&uuml;rgen Lock's <em>virtual consoles</em> and Johan Klockars'
+<a href="http://rand.thn.htu.se">MGIF</a>.  Linux has builtin virtual
+consoles and for image manipulation I recommend <a
+href="http://www.gimp.org">Gimp</a>. <p>
+
+
+<hr>
+<a href="mailto:oak@welho.com">oak@welho.com</a>
+
+</body>
+</html>

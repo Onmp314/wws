@@ -1,0 +1,501 @@
+
+ The W Toolkit - Introduction and Reference
+ ------------------------------------------
+
+ The W Toolkit (Wt) is a widget library to be used with the W windowing
+system. It sits on top of the Wlib. Programs using Wt must include the
+header file Wt.h and link in the library libWt.a.
+
+
+ 1. Getting started
+ ------------------
+
+ To get you started I show you a simple example first and explain the
+Wt functionality it uses. The example program displays a main window
+that contains a pressable pushbutton with the label "Hello world!". Here
+is the code (the error checking is left to the user):
+
+	#include <stdio.h>
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	int
+	main (int argc, char *argv[])
+	{
+		widget_t *top, *shell, *button;
+
+		top = wt_init ();
+		shell = wt_create (wt_shell_class, top);
+
+		button = wt_create (wt_pushbutton_class, shell);
+		wt_setopt (shell,
+			WT_LABEL, "Hello, world!",
+			WT_EOL);
+
+		wt_realize (top);
+		wt_run ();
+		return 0;
+	}
+
+ Compile, link and run the program with (you may have to add -lsocket):
+
+	gcc whello.c -o whello -lWt -lW
+	./whello
+
+ Now lets look at the code and what it does. First you will notice the
+new type "widget_t" that is introduced by Wt. These are the so-called widgets
+(window gadgets) Wt-based user interfaces are made of. You may imagine these as
+entities that have a special look and perform a special task. For instance
+pushbuttons are widgets. You don't need to know what is inside the widget_t
+data type unless you want to write your own widgets.
+
+ Some widgets may contain other widgets and are therefore called composite
+widgets. Others (like the pushbutton) are called simple widgets, because
+they cannot contain other widgets. Widgets are organized in widget trees, the
+internal nodes beeing composite widgets and the leaves beeing simple widgets.
+
+ On the screen only the parts of a widget are visible that lie completely
+inside the area of there ancestor-widgets.
+
+ As we will see the widget tree for the above application looks like:
+
+	 top
+	  |
+	shell
+	  |
+	button
+
+
+ 1.1 Initialisation
+ ------------------
+
+ The first thing every Wt application does is to call wt_init(). This function
+initializes internal data structures and connects to the W server. If it
+succedes it returns a pointer to a special widget -- a top widget. You cannot
+see this top widget on the screen later, its only purpose is to serve as the
+root of a widget tree. As you will see later, a Wt application can consist
+of more than one widget tree with each having a top widget at the root.
+
+
+ 1.2 Creating widgets
+ --------------------
+
+ The next thing whello.c does is to create a so called shell widget:
+
+	shell = wt_create (wt_shell_class, top);
+
+ The second argument of wt_create() tells us the newly created shell widget
+will be a child of the top widget returned by wt_init().
+
+ The first argument to wt_create() is the type (or class) of widget you want
+to create. The widgets (widget_t variables) are instances of theses classes
+in terms of OO programming. Widget classes have names like wt_<anything>_class
+and are of type widget_class_t *. You need not be concerned about what is
+inside widget_class_t unless you want to write your own widgets. The available
+widget classes are declared in Wt.h like this:
+
+extern widget_class_t *wt_pushbutton_class;
+extern widget_class_t *wt_radiobutton_class;
+
+ "What is a shell widget?" I hear you ask. Well, it is a main application
+window with a title-bar, iconify and exit gadgets and a border around it.
+
+ Next whello.c creates a pushbutton:
+
+	button = wt_create (wt_pushbutton_class, shell)
+
+ The second argument tells us that the pushbutton will be a child
+of the shell (or main) window we just created.
+
+
+ 1.3 Configuring widgets
+ -----------------------
+
+ We have now created all the widgets we need. We still need to configure
+the widgets to meet our needs. Eg. the pushbutton needs to get the label
+"Hello world!". Configuring widgets is done via wt_setopt(). You may ask
+later for a widget's configuration options using wt_getopt().
+
+ wt_setopt() and wt_getopt() are functions with a variable argument list. This
+way you can set/get serveral configuration options with one function call.
+
+ wt_setopt() expects a pointer to the widget you want to configure as its
+first argument. After that follow Name, Value pairs specifying what
+configuration option you want to set and the value for it. The values are
+always specified via pointers. The configuration option names are defined
+in Wt.h and look like WT_XPOS, WT_WIDTH, WT_LABEL, ... What options are
+supported for which widgets and what they mean is widget specific and is
+described in the documentation for the widget class.
+
+ The list of Name,Value pairs must always be terminated with the special
+option WT_EOL.
+
+ Here is how to set the label for the button:
+
+	wt_setopt (button, WT_LABEL, "Hello world!", WT_EOL);
+
+ If we would want to specify the size of the button along with the label
+we would write:
+
+	long width=200;
+	wt_setopt (button,
+		WT_LABEL, "Hello world!",
+		WT_WIDTH, &width,
+		WT_EOL);
+
+
+ 1.4 Realizing widget trees
+ --------------------------
+
+ One thing to note is that up until now nothing of your application is
+visible on the screen, not even the windows for the widgets have been
+created.
+
+ Creating the windows and putting widgets on the screen is done bye
+"realizing" a widget tree, that is calling wt_realize() on the root of the
+tree (which is a top widget):
+
+	wt_realize (top);
+
+ This will put the main window with the button onto the screen. You may
+notice that the size of the button and the main window is properly sized
+but we have nowhere specified the size for the button or the shell, ie. the
+widgets are "smart" in respect to selecting proper size and position.
+You can of course override this "self-sizing" by specifying explicit values
+for size and position using wt_setopt().
+
+ One thing you need to know is that once widgets are realized wt_setopt()
+configuration changes will show up immediately. Eg. if you change the label
+of a button after it has been realized the label on the screen will change
+immediately.
+
+
+ 1.5 Wt main loop
+ ----------------
+
+ Now we are ready to enter the application main loop that receives events from
+the W server and dispatches them to the widgets. This is done by calling
+
+	wt_run ();
+
+ Now the application comes to life and you can push down the button.
+
+ The function return value is the one with which you called wt_break().
+It should be a positive one for signifying graceful exit as W server
+GADGET_EXIT event will make it return a negative one.
+
+
+ 1.6 Callbacks
+ -------------
+
+ Well, very nice. I can push the button in the example program, but how does
+a real application get notified of user events? This is done using callbacks,
+that is you specify callback functions for a widget (using wt_setopt()) that
+are called when some event occures.
+
+ To show you how this is done we extend our example to exit the application
+when you press the button:
+
+	#include <stdio.h>
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	void
+	button_callback (widget_t *widget, int is_pressed)
+	{
+		if (is_pressed == 0)
+			/*
+			 * the user has just released the button
+			 */
+			wt_break (1);
+	}
+
+	int
+	main (int argc, char *argv[])
+	{
+		widget_t *top, *shell, *button;
+
+		top = wt_init ();
+		shell = wt_create (wt_shell_class, top);
+
+		button = wt_create (wt_pushbutton_class, shell);
+		wt_setopt (shell,
+			WT_LABEL, "Quit",
+			WT_ACTION_CB, button_callback,
+			WT_EOL);
+
+		wt_realize (top);
+		wt_run ();
+		return 0;
+	}
+
+ It should be clear what is done here. The label has be renamed to "Quit"
+and we have told the button widget to call the function button_callback()
+when the button is pressed or released using the WT_ACTION_CB configuration
+option with wt_setopt().
+
+ The first argument to button_callback() is the button-widget which was
+pressed. This way you can use one callback funtion for many widgets...
+The second is the new state of the button (1 == pressed, 0 == released,
+-1 == mouse left button area while button was still pressed). Thus in the
+above example we will call wt_break() if the user releases the button.
+
+ wt_break(r) causes wt_run() to return with return-value r. In our case
+this causes the program to exit.  In a widget the number should be
+negative only in case of a fatal error, which signifies that program
+should exit as soon as possible.
+
+
+ 1.7 Multiple widget trees
+ -------------------------
+
+ If your application needs several widget trees (eg for popups, ...) you
+need to create a new top widget as the root widget for each tree. This is
+accomplished by creating an instance of the widget class wt_top_class just
+like creating any other widget:
+
+	widget_t *top2 = wt_create (wt_top_class, NULL);
+
+except that the parent pointer is NULL. You can now add children to top2
+and finally realize the new widget tree via
+
+	wt_realize (top2);
+
+
+ 2. Timers
+ ---------
+
+ Often you need to do some periodic work (eg. in tetris moving the boxes down
+and so on). Therefore Wt offers you the possibility to set an arbitrary number
+of timeouts. When the timeout expires a callback function will be called.
+
+ Setting timeouts is done like this:
+
+	void
+	timer_callback (long arg)
+	{
+		printf ("timer expired\n");
+	}
+
+	long handle = wt_addtimeout (100, timer_callback, 1234);
+
+ wt_addtimeout() expects the number of milliseconds in which the timer should
+expire, the timer callback and the argument for the timer callback as its
+arguments and returns a non-negative handle for the timeout that can be used
+to cancel the timeout later. If wt_addtimeout() returns something < 0 an
+error occured.
+
+ In the above example timer_callback() will be called with the argument 1234
+in 100 milliseconds.
+
+ If you want to cancel the timer before it has expired (eg. when the users
+pauses a game) you call wt_deltimeout() on the handle:
+
+	wt_deltimeout (handle);
+
+ It is save to call wt_deltimeout() on the handle of a timeout that has already
+expired.
+
+ Every timeout happens only once, ie. you have to establish a new timeout in
+timer_callback() if you need a periodic timer.
+
+
+ 3. Additional input/output
+ --------------------------
+
+ Your application may need to wait for pipes or sockets or tty's to become
+ready for input or output. Normally you use select() to accomplish this. In
+Wt applications this does not work, because if you block in a callback no
+events will be processed, ie. your application is "dead".
+
+ Instead you use wt_addinput() to tell Wt to watch for input/output file
+handles becoming ready for I/O and to invoke a callback when this happens.
+
+	#include <sys/types.h>
+	#include <sys/time.h>
+
+	void
+	input_callback (long arg, fd_set *rd, fd_set *wr, fd_set *ex)
+	{
+		if (FD_ISSET (0, rd))
+			printf ("input ready on stdin\n");
+	}
+
+
+	fd_set rfd;
+
+	FD_ZERO (&rfd);
+	FD_SET (0, &rfd);
+
+	long handle = wt_addinput (&rfd, NULL, NULL, input_callback, 1234);
+
+ This example installs a handler that will be called when stdin becomes ready
+for reading. The first three arguments are pointers to fd_set, just like for
+select(). The first selects for reading, the second for writing, the third for
+exceptional conditions. If you don't need some of them you can pass NULL.
+
+ The fourth argument is the callback function, the last is the argument
+input_callback() will be called with.
+
+ When input/output becomes ready on one of the file handles you selected
+input_callback() will be called with the fd_set masks of the files that are
+ready for I/O. You can then examine them using the FD_* macros to find out
+which of the files you selected have become ready.
+
+ wt_addinput() returns a nonnegative handle if successful. This handle can
+be used later to delete the handler like this:
+
+	wt_delinput (handle);
+
+ In contrast to the timers described in pragraph 2 input handlers stay
+active until you remove them with wt_delinput().
+
+
+ 4. Wt Reference
+ ---------------
+
+ Here is an overview of the Wt functions along with some short explanations.
+
+
+ widget_t *wt_init (void);
+
+	Initializes Wt's internal data structures and connects to the W
+	server. Returns a pointer to a wt_top_class widget if successful,
+	NULL otherwise.
+
+
+ widget_t *wt_create (widget_class_t *class, widget_t *parent);
+
+	Create a new widget instance of widget class 'class' as a child
+	of widget 'parent'. Returns a pointer to the newly created widget
+	if successful, NULL otherwise.
+
+
+ long wt_delete (widget_t *w);
+
+	Delete the widget 'w' and all its childs. This implies removing
+	the widgets from the screen if they have been realized already.
+	Returns 0 on success, a negative value otherwise.
+
+
+ long wt_close (widget_t *w);
+
+	Close widget 'w'. This will only work if the widget has already been
+	realized. It closes the widget 'w', which will make 'w' and all its
+	childs disappear from the screen. Returns 0 on success, a negative
+	value otherwise.
+
+
+ long wt_open (widget_t *w);
+
+	Reopens widget 'w' which has been closed before using wt_close().
+	This will make the widget 'w' and all its childs that were open
+	before you called wt_close(w) appear on the screen. It will only
+	work for widgets that have been realized already. Returns 0 on
+	success, a negative value otherwise.
+
+
+ long wt_realize (widget_t *top);
+
+	Realize the widget tree whose root is 'top'. This will create
+	windows for all the widgets in the tree and select proper size
+	and position for them. It makes the widget tree appear on the
+	screen. Returns 0 on success, a negative value otherwise.
+
+
+ long wt_run (void);
+
+	Enter the application main loop, that is receive events from the
+	W server and dispatch them to the widgets. wt_run() returns only
+	if you call wt_break(retvalue) with 'retvalue' beeing nonzero.
+	'retvalue' will then be the returnvalue of wt_run(). When wt_run()
+	returns you usually exit the program, but you may as well call
+	wt_run() again later unless the return value was negative
+	(signifying W server GADGET_EXIT).
+
+
+ long wt_break (long retvalue);
+
+	Causes wt_run() to return with returnvalue 'retvalue'. 'retvalue'
+	must be nonzero. wt_break() does of course only work if wt_run()
+	is currently active (ie. wt_break() must be called from some
+	callback function). Returns 0 on success.  The used value should
+	positive as a negative one tells program that it should exit
+	as soon as possible (GADGET_EXIT event).
+
+
+ long wt_setopt (widget_t *w, ...);
+
+	Set configuration options on widget 'w'. The argument list of
+	wt_setopt() consists of key,value pairs, terminated by the special
+	key WT_EOL. Keys and values are widget dependent and are described
+	in the widget documentation. The keys are usually named WT_<something>.
+	Here is an example that sets the width and height of widget 'button'
+	to 100 pixels:
+
+		long size=100;
+		wt_setopt (button, WT_WIDTH, &size, WT_HEIGHT, &size, WT_EOL);
+
+	wt_setopt() returns 0 on success or the index of the first
+	configuration option that failed. Eg if in the above example the
+	WT_HEIGHT configuration option failed wt_setopt() would return 2.
+
+	Configuration changes on widgets that have already been realized will
+	show up immediatly.
+
+
+ long wt_getopt (widget_t *w, ...);
+
+	Get the value of some configuration options of widget 'w'. Usage is
+	the same as for wt_setopt().
+
+
+ WWIN *wt_widget2win (widget_t *w);
+
+	For widgets you can draw to (currently only instances of
+	wt_drawable_class) you can use wt_widget2win() to find out the W window
+	you want to draw to. The returnvalue is not defined for widgets you
+	cannot draw to.
+
+
+ long wt_addtimeout (long millisecs, void (*cb) (long), long arg);
+
+	Set a timer that expires in 'millisecs' milliseconds. When the timer
+	expires the callback 'cb' is called with the argument 'arg'. 'cb'
+	is only called once, if you need a periodic timer you have to set
+	another timer in 'cb'.
+	Returns a non-negative handle for the timer on success. This handle
+	is needed if you want to delete the timer using wt_deltimeout().
+
+
+ void wt_deltimeout (long handle);
+
+	Delete the timer whose handle is 'handle'. It is save to call
+	wt_deltimeout() on handles of timers that have already expired.
+
+
+ long wt_addinput (fd_set *rd, fd_set *wr, fd_set *ex,
+		void (*cb) (long arg, fd_set *r, fd_set *w, fd_set *e),
+		long arg);
+
+	Install a callback 'cb' that will be called when one of the
+	descriptors set in 'rd' (wait for reading), 'wr' (wait for writing),
+	'ex' (wait for exceptional conditions) becomes ready for I/O.
+	You can pass NULL for any of 'rd', 'wr', 'ex' as for select(). But
+	contrary to select() this call won't block, it just installs the
+	callback function.
+
+	If I/O becomes possible for one of the descriptors you specified to
+	wt_addinput() the function 'cb' will be called with 'arg' as the
+	first argument and masks of file handles for which I/O is now
+	possible.
+
+	Returns a non-negative handle on success. This handle is needed if
+	you want to deinstall the handler later using wt_delinput().
+
+
+ void wt_delinput (long handle);
+
+	Deinstalls the input handler associated with handle 'handle'. It is
+	save to call wt_delinput() on handles for handlers that have already
+	been deinstalled.

@@ -1,0 +1,26 @@
+.TH WICONE 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wicone \- icon editor for W
+.SH SYNOPSIS
+.nf
+wicone [-s \fI1-6\fP] [\fIicon file\fP]
+.fi
+.SH DESCRIPTION
+\fIWicone\fP is an icon editor.  With it one can load, save and edit
+monochrome PBM*) icons used by other programs like my WStart program
+launcher.
+.PP
+*) PBM is a Portable Bitmap image format.  For more info see the
+\fIpbm\fP manual.
+.SH OPTIONS
+.TP
+\fB-s\fP \fIsize\fP
+Size is one of the `standard' icon sizes in range 1-6
+(width = 4 * 2^size, height = 3 * 2^size).
+.PP
+If \fIwicone\fP is given a PBM file as an argument, it will of
+course use it's size (if it's within limits).
+.SH SEE ALSO
+.IR wstart (1)
+.SH LAST CHANGED
+4/1997 by Eero Tamminen

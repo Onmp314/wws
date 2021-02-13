@@ -1,0 +1,14 @@
+.TH w_beep 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_beep() \- console beep
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_beep(" void ");"
+.fi
+.SH DESCRIPTION
+.I w_beep()
+will print chr$(7) to the system console and thus beep.
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

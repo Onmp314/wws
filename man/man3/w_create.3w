@@ -1,0 +1,116 @@
+.TH w_create 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_create(), w_createChild(), w_delete() \- create/destroy a window
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "WWIN *w_create(short " width ", short " height ", ushort " flags ");"
+.sp
+\fBWWIN *w_createChild(WWIN *\fIparent\fB,
+short\fI width\fB, short\fI height\fB, ushort\fI flags\fB);
+.sp
+.BI "short w_delete(WWIN *" win ");"
+.fi
+.SH DESCRIPTION
+.I w_create()
+creates a new main window of the given size (work area) with the given flags.
+.PP
+.I w_createChild()
+creates a child window for a given parent. Child windows may be greater than
+their parent, but are clipped to it. They will also be moved and closed/re-
+opened with their parent.
+.PP
+.I w_delete()
+deletes a window (and its childs), closing them before if necessary.
+.PP
+Note that a window
+.B WROOT
+denoting the background window exists by default.
+.PP
+The
+.B flags
+parameter is any combination of:
+.TP
+W_MOVE
+if the window should be movable.
+.TP
+W_TOP
+if the window should always stay on top of all other windows. There can only
+be one window of this type at a time, and even that only if the client who
+requested it is local and has the same uid than the wserver.
+.TP
+W_TITLE
+if the window should have a title bar. If a window has no title bar certain
+other flags are not possible.
+.TP
+W_CLOSE
+if the window should have a close gadget (this option is a bit redundant, as
+all windows with title bars have this gadget by default). Clicking this gadget
+will send an EVENT_GADGET / GADGET_CLOSE event.
+.TP
+W_ICON
+if the window should have an iconify gadget.  Clicking this gadget will send
+an EVENT_GADGET / GADGET_ICON event.
+.TP
+W_CONTAINER
+if the window should have no bitmap, i.e. should be a plain container to hold
+child windows. W_CONTAINER windows may save quite a bit of memory because they
+don't need to store a bitmap.
+.TP
+W_NOBORDER
+if the window should have no border at all. Having no border makes several
+other flags impossible and is only useful for very few applications.
+.TP
+W_NOMOUSE
+if the mouse should be globally disabled while this window is open. This option
+is probably only of good use for
+.I wsaver
+and in general a dangerous thing to use.
+.TP
+EV_KEYS
+if the window should want EVENT_KEY events. The default for this and other EV_*
+flags is that this sort of events will not be reported to the window.
+.TP
+EV_MODIFIERS
+if the window should want EVENT_KRELEASE (key release) and modifier key
+EVENT_KEY events.  Applications wanting information about several keys
+being pressed down at the same time (such as games :)), should use this,
+others not.
+.TP
+EV_MOUSE
+if the window should want EVENT_MPRESS, EVENT_MRELEASE and EVENT_BUTTON
+events. Guess what they mean... :)
+.TP
+EV_MMOVE
+whether window wants mouse movement events.  Event package 'x' & 'y'
+values are then mouse movement delta values and 'key' is zero.
+.TP
+EV_ACTIVE
+if the window should want EVENT_ACTIVE and EVENT_INACTIVE events. These events
+will be sent by the wserver when the mouse enters/leaves a window.
+.PP
+Note that a window should expect EVENT_GADGET / GADGET_EXIT events always, as
+they will be send by the wserver when it goes down or the program must
+terminate soon because of any other reason.
+.SH RETURNS
+.I w_create()
+and
+.I w_createChild()
+both return either a non-zero pointer to a WWIN struct or NULL in case of any
+error.
+.PP
+Since the WWIN struct is unlikely to contain any information you should want
+to know and/or are allowed to modify it is left undocumented here.
+.PP
+.I w_delete()
+returns 0 if everything is OK and something negative otherwise.
+.SH BUGS
+none?
+.SH SEE ALSO
+.IR w_move (3),
+.IR w_queryevent (3)
+.SH FIRST VERSION
+13th Feb. 1996 by TeSche
+.SH LAST CHANGED
+26th May 1999 by Eero Tamminen

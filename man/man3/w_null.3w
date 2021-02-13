@@ -1,0 +1,14 @@
+.TH w_null 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_null() \- no-op W call
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_null(" void ");"
+.fi
+.SH DESCRIPTION
+bogus dummy call, only used by
+.I wperfmon
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

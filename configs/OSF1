@@ -1,0 +1,42 @@
+# DEC OSF-1 defines
+#
+# This is intended just for testing 64-bit Wlib and clients
+# and communication between 32<->64 bit server and clients.
+#
+# So there aren't yet any graphics drivers defined
+#
+# ***NOTE***
+# - This hasn't been tested yet.
+# - When trying to connect 32-bit W server, you need either
+#   16-bit shorts and 32-bit longs or some define magic
+#   for the W request packet structure members.
+#
+# make has to be GNU make and C compiler preferably gcc.
+
+ARCH = OSF1
+
+WLIB  = libW.a
+WTLIB = libWt.a
+
+BASECFLAGS = -O
+SERVERLIBS = -ltermcap
+CLIENTLIBS = -lW
+MATHLIB    = -lm
+
+# if wterm/wvt shouldnt' set TERMCAP enviroment variable, comment this out
+EXPORT_TERMCAP = 1
+
+CC = gcc
+MAKE = gmake
+RANLIB = ranlib
+AR = ar r
+CP = cp
+LN = ln
+RM = rm -f
+CHMOD = chmod
+INSTALL = install
+INSTALLBIN = install -s -m 755
+INSTALLDIRS = install -d
+
+# stuff you want to remove with 'make clean'
+JUNK = core *.rej *.orig

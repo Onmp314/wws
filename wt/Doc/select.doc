@@ -1,0 +1,100 @@
+
+ The `select' widget class
+ ------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *select = wt_create (wt_select_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+The select widget lets user to pick a string from a given list using
+string input and a popup list.  Widget needs the WT_LIST_ADDRESS option
+to be set before realization.
+
+Note that popup list is clipped to the dialog window.  So if there's not
+enough space for open list, make more room with the containers.  If you
+need just a little bit of space, you might also use WT_LIST_HEIGHT
+option to limit how many list items are shown at the time.
+
+
+ 3 Configuration Options
+ -----------------------
+
+Here are the options that can be set or queried with setopt() and
+getopt() functions.
+
+
+WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a
+	pointer to it) in the widget. This is useful if you have to
+	associate some extra data with a widget.
+
+
+WT_XPOS (long *)
+
+	Set / get the X position of the widget, which is relative to the
+	upper left corner of the parent window.
+
+
+WT_YPOS (long *)
+
+	Set / get the Y position of the widget, which is relative to the
+	upper left corner of the parent window.
+
+
+WT_WIDTH (long *)
+
+	Set / get the width of the widget.
+
+
+WT_HEIGHT (long *)
+
+	Set / get the height of the widget.
+
+
+WT_FONT (char *) / (WFONT **)
+
+	Set / get the font used by the widget components.
+
+
+WT_LIST_ADDRESS (char **)
+
+	Set / get the list from which user is to select a string.
+	List is a *NULL* terminated array of C-strings. For example:
+		char *list[] = { "one", "two", "three", NULL };
+
+	Has to be set before widget is realized.
+
+
+WT_LIST_CURSOR (long *)
+
+	Set / get the index of the currently selected item in the list.
+
+
+WT_LIST_ONLY (long/NULL)
+
+	Set / get whether the string user selects is limited only to the
+	values on the list.  It's limited as default.
+
+
+WT_LIST_HEIGHT (long *)
+
+	Set / get how many items are visible from the list at the time.
+	Default is all.
+
+
+WT_ACTION_CB ((*)(widget_t *w, char *string, int index))
+
+	Function which will be called when user clicks item on the list
+	or uses <enter> on the string entering line. Arguments are the
+	string on the editing line (see WT_LIST_ONLY) and index to a
+	string in the list that is currently selected.
+

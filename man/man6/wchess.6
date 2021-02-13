@@ -1,0 +1,102 @@
+.TH WCHESS 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wchess \- Chess board game client / server
+.SH SYNOPSIS
+.nf
+wchess [-c \fIaddress\fP]
+.fi
+.SH DESCRIPTION
+\fIWChess\fP is a W Window System Chess board game client for
+the networked turn based, two player game framework by Eero Tamminen.
+.SH STARTING GAME
+Before starting a game one has to contact another game client.  This
+happens either by setting up a server and accepting a connection or by
+connecting yourself to another game server.
+.PP
+With curses versions one needs to use '-c' option to specify the address
+into which to connect (e.g.  'creversi -c saturn.outer.space.org').  If
+this option isn't used, the game will itself setup a server.  Graphical
+user interface version(s) should have a separate configuration dialog
+from which you can perform either of these actions.
+.PP
+After connecting another player, you can start the game and begin to
+play.  Note that continuing (for clients that support board editing
+before play) asks confirmation from the other player before proceeding.
+.SH CHESS RULES
+At the start players' pieces occupy two rows at the both sides of the
+board. There are six different types of pieces (from left to right,
+top to bottom on screen):
+.TP
+.B Rook
+Moves horizontally or vertically.
+.TP
+.B Knight
+Moves two squares forward and one aside horizontally or vertically.
+This is the only piece that may jump over other pieces.
+.TP
+.B Bishop
+Moves diagonally.
+.TP
+.B Queen
+Moves either horizontally, vertically or diagonally.
+.TP
+.B King
+The most important piece in the game.  Moves one square to any
+direction.  If king and the rook on the side where king is moving,
+haven't been moved yet and there are no other pieces between them and
+none of the squares involved are threatened, king may also 'fortificate'
+by moving two squares to either side.  The rook will jump over king to a
+square beside it.
+.TP
+.B Pawn
+Can move only one square forward.  Can capture only by moving one square
+diagonally forward.  Though at the first move, the piece can move two
+squares forward.  However, such a piece can be captured by another pawn
+from the square where it would have been if it would have moved only one
+square forward, if that is done immediately.  Capturing 'in passing' is
+called 'en passant' move.  If pawn reaches the other side of the board,
+it will be immediately promoted to either queen, tower, bishop or knight
+as player selects.
+.PP
+None of the pieces except knight may jump over own or opponent's pieces.
+Capturing happens when piece is moved to square already occupied by a
+piece of another color.  The captured piece is removed from the board.
+.PP
+If king is threatened with capturing, only valid move is one that will
+remove the threat.  If there isn't such a move, the game is lost.  The
+threatening of the king is called 'checking' and capture of opponent's
+king is called chess-mate (victory).  If king isn't 'checked' but all the
+moves would lead to to king being threatened the game will be even.
+That is called 'stalemate'.
+.SH CHESS STRATEGY FOR BEGINNERS
+Chess books have devoted many pages for standard game openings.  These
+involve occupying the own half of the board (mostly with pawns covered
+by the knights) so that one has space for attacks and defense (remember
+that pawns can move only forward and other pieces behind them can't jump
+over them in defense of their king).  In defense it's important that low
+valued pieces are on the front line (so that damages (=pawns) won't be
+too high on case of attack) and that pieces cover each other so that
+attacks can be cut off as soon as possible.
+.PP
+Attacks should be done so that (attacking) pieces cover each other.  Aim
+will be either to capture higher ranking pieces than the attackers
+(forking, threatening more than one piece at the time, is good tactics)
+or to disrupt the opponent's defense line(s) open to further attack.  And
+of course the capture of the opposing king is the ultimate, overriding
+objective.
+.SH THANKS
+For Warwick Allison for allowing me to include the images from his
+Gnu Chess GEM port.  I'd like to thank Warwick here for doing a lot of
+other freeware / GPL programs too (he has also done most of the images
+in the NetHack v3.2 and is nowadays (late 90's) programming on Linux
+with G++ :)).
+.SH TODO
+Convert Gnu Chess to a GameFrame server.  I'm not myself interested as
+I don't play chess, but maybe somebody else might pick up that project?
+.SH SEE ALSO
+.IR wgo (6),
+.IR wgomoku (6),
+.IR wpente (6),
+.IR wreversi (6)
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

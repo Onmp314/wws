@@ -1,0 +1,46 @@
+.TH w_querybuttonevent 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_querybuttonevent() \- wait for W events + handle Wlib buttons
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+\fBWEVENT *w_querybuttonevent(fd_set *\fIrdp\fB,
+fd_set *\fIwdp\fB, fd_set *\fIxdp\fB, long\fI timeout\fB);
+.fi
+.SH DESCRIPTION
+.I w_querybuttonevent()
+is exactly like
+.I w_queryevent()
+function except that you can also get \fBEVENT_BUTTON\fP events.  You
+should use this function (only) when your program uses Wlib buttons
+because this function processes (draws) the button selection and
+unselection.
+.PP
+When the \fIWEVENT\fP (see below) type is \fBEVENT_BUTTON\fP, the
+\fIwin\fP structure member contains window ID for the button window that
+was pressed.
+.RS
+.nf
+typedef struct {
+  WWIN *win;
+  short type, reserved[3];
+  short x, y;
+  long key;
+} WEVENT;
+.fi
+.RE
+Wlib buttons are created with
+.I w_createButton()
+function call.
+.SH NOTE
+W toolkit offers a much better enviroment for more complex applications,
+but your program structure will then need to be call-back based.
+.SH SEE ALSO
+.IR w_queryevent (3),
+.IR w_createButton (3),
+.IR w_showButton (3),
+.IR w_hideButton (3),
+.IR select (2)
+.SH LAST CHANGED
+25th. Oct. 1997 by Eero Tamminen

@@ -1,0 +1,119 @@
+
+ The dial widget class
+ ---------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *dial = wt_create (wt_dial_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+The dial widget lets user to pick a value between given minimum and
+maximum values with a dial `needle'.
+
+Widget needs the WT_VALUE_MIN and WT_VALUE_MAX options to be set before
+realization.
+
+*NOTE*:  Because dial widget width and height are dependent on each
+other, you'll have to set both when changing dial widget size.  Programs
+using the dial widget have to link math library for sin, cos and atan
+functions used by the widget `dial'.
+
+
+ 3 Configuration Options
+ -----------------------
+
+Here are the options that can be set or queried with setopt() and
+getopt() functions.
+
+
+WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a
+	pointer to it) in the widget. This is useful if you have to
+	associate some extra data with a widget.
+
+
+WT_XPOS (long *)
+
+	Set / get the X position of the widget, which is relative to the
+	upper left corner of the parent window.
+
+
+WT_YPOS (long *)
+
+	Set / get the Y position of the widget, which is relative to the
+	upper left corner of the parent window.
+
+
+WT_WIDTH (long *)
+
+	Set / get the width of the widget.
+
+
+WT_HEIGHT (long *)
+
+	Set / get the height of the widget.
+
+
+WT_FONT (char *) / (WFONT **)
+
+	Set the family for font used in the value label(s). Get pointer
+	to the font used.
+
+
+WT_VALUE_MIN (char *)
+
+	Set / get the `minimum' value represented as a string.  Has to
+	be set before realization.
+
+
+WT_VALUE_MAX (char *)
+
+	Set / get the `maximum' value represented as a string.  Has to
+	be set before realization.
+
+
+WT_VALUE (char *)
+
+	Get user selected value or set the default value.  Value should
+	be between minimum and maximum values and represented as a
+	string.  Default value is (minimum + maximum) / 2.
+
+
+WT_VALUE_DECIMALS (long *)
+
+	How many decimals will be used with WT_VALUE.  Default is is
+	zero (ie.  values are expected to be integers).  Numbers given
+	with WT_VALUE_MIN, WT_VALUE_MAX and WT_VALUE option strings
+	should have as many decimals as set here (so that label width
+	for the user selected value can be set to a suitable value).
+
+
+WT_MODE (long *)
+
+	Set / get the dial shape.  Permitted values are:
+		DialHalfCircle
+		DialFullCircle, min / max value at WT_ALIGNMENT position
+
+	With the default DialHalfCircle, minimum value is at right and
+	maximum at left.  With DialFullCircle minimum is at the position
+	set with the WT_ALIGNMENT option.
+
+
+WT_ALIGNMENT (long *)
+
+	Set / get the dial `needle' minimum position in the dial.
+	Permitted values are:
+		AlignTop
+		AlignBottom
+		AlignLeft
+		AlignRight (default)
+
+	For a half circle dial AlignBottom equals AlignTop.

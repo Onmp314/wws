@@ -1,0 +1,760 @@
+W 1 Release 3 PL 2 (also not really a release, 1996)
+====================================================
+
+NOTE: This is meant to be a source-sync version only. I do not plan to add any
+new features to this one, except Eero's font routines to get the drivers back
+to a consistent state. Instead I want to put attention on bug fixes and some
+applications, like redo my gnuplot patch and maybe a wdvi. This together with a
+new bunch of docs and manpages should then become a new full release until
+x-mas.
+
+ALSO NOTE: This version again forces you to recompile all your sources - I hope
+you haven't deleted them. Since even bigger packages like Linux also force you
+to do that from time to time I'm starting to think that's perfectly normal
+behaviour for a program. At least so far nobody complained about it.
+
+LAST NOTE: Hmmm, the PACKEDCOLOR driver seems to be broken, it can't scroll
+correctly. :(
+
+DOING:
+
+- all the font stuff (Eero): currently more text attributes are supported, but
+  only for the packed driver - direct8 driver will follow later. more changes
+  like memory optimization and/or a clever(?) scheme to provide default fonts
+  and/or a font server are planned
+
+DONE:
+
+- resizeable windows: implemented by sending a new event to the client, which
+  then has got to move/resize its window appropriately. this leaves all control
+  of how it should actually be changed at the client. wterm for example will
+  only change the size in multiples of the current font size. you may change
+  the size of any resizeable window by clicking on it's frame (this implies an
+  obvious restriction), but the semantics hasn't settled yet. normally you
+  click the left button to move it and the right button to top/down it, but if
+  it's a resizeable window you'll get the resize routine for both buttons,
+  meaning that you can only move it if it's still got a title box, but then
+  what the heck, we're in beta state... :)
+- more flexible mouse pointer support, i.e. different shapes, needed for
+  resizeable windows
+- fixed several problems with lib/socket.c
+- changed Makefile structure. starting with a 'make config' a configuration
+  file is created in the top directory which you shouldn't need to edit for the
+  different supported versions any more (nice theory...)
+- added M_TRANSP (transparent mode), but only for the packed driver and
+  without proper server support (for now) (Eero)
+- ellipse and bezier functions (Eero)
+- uncounted minor changes (about 2 - 3 times infinify ;)
+
+CONTRIBUTORS (this time):
+
+t150315@proffa.cc.tut.fi (Eero Tamminen)
+roemer@diamant.vsb.informatik.uni-frankfurt.de (Kay Roemer)
+Simon Kagedal (Simon.Kagedal@sdf.luth.se)
+frank@phoenix.owl.de (Frank Wille)
+
+
+W 1 Release 3 PL 1 (not really a release)
+=========================================
+
+TODO:
+
+- include all the patches that I have lost? I must have lost some, as I vaguely
+  remember some stuff but can't find it any more
+- wpuzzle & wsetbg need to be fixed for new w_putblock()
+- allow unlimited fonts per client (it's still limited, but with the reference
+  counter this shouldn't matter very much)
+- update wearth patches, I've scratched my original xearth tree :(
+- update docs
+- the stuff with EVENT_RESIZE? :)
+- buy me some more time for W...
+
+DOING:
+
+- preliminary SVGALIB support for i386-Linux (only very roughly tested, if
+  you don't know about SVGALIB you probably won't get it to work)
+- Amiga @ NetBSD support now is a bit more testet. in fact it should work if
+  I didn't break it when applying the patches.
+- color support (this was the big one:). however, it still lacks testing and
+  minor stuff, like a function to set color palettes under MiNT (only
+  implemented for SunOS and Linux, implemented but untested for NetBSD). the
+  only source for information so far is the wcolor demo program and the source
+  inside wserver. this version does not include everything that Juergen
+  Orschied was working on, but I haven't heard from him a very long time, so I
+  did it my ways (TM). the next official release will surely implement more
+  functionality here
+- change w_getblock/w_putblock semantics. try looking at lib/block.c to see
+  that it should be possible to pass DIRECT8 bitmaps to any server and let
+  the lib automatically convert them. this still needs some testing and
+  further conversion routines, but the ones existing seem to work and are
+  reasonably fast for me. the big point you should notice is that the number
+  of parameters for these two functions has changed, and that the width and
+  height fields in the BITMAP struct now really stand for what they suggest.
+  but you still need to supply all(?) other values in BITMAP. not all
+  combinations are legal at the moment, because not all conversion routines
+  exist yet, but the general user interface shouldn't change from now on.
+  note: converting means that it converts from DIRECT8 to PACKED memory layout
+  and vice versa! it does not care about loosing planes or fancy stuff like
+  dithering!
+
+DONE:
+
+server/lib:
+
+- more (68020) optimizations for packed driver
+- Wlib will now remove buffered events when a window is deleted
+- Wlib uses reference counter for WFONT, so that Wt doesn't need to keep track
+  about how many times a font was already loaded and when to unload it
+- use lineA variables to detect screen size under MiNT (borst@cs.utwente.nl)
+- the handling for arbitrary length strings in the libraray was broken (Kay)
+- before each tercap entry find call the entry buffer has to be initialized to
+  a valid value (Eero)
+
+demos:
+
+- wcolor
+
+
+W 1 Release 3 (1X. Feb. 96)
+===========================
+
+server/lib:
+
+- added two more functions to the SCREEN struct: getblock and putblock to copy
+  data between a BM_PACKEDMONO bitmap and whatever screen format is active.
+  this way all block requests are forced to work on BM_PACKEDMONO bitmaps, i.e.
+  monochrome bit data (big-endian) padded to 32 pixels, but now it also works
+  for the direct8 driver
+- W_TOP windows changed: there can always be only one of them at a time and
+  only if the client is running local (IP-addr == 0) and only if the client
+  has the same UID as the server. this way nobody can make nasty things with
+  wgone and alike. really nobody???
+- only top level windows get solid frames when entered, childs (second or
+  deeper level windows) will be left unchanged, but nevertheless they may
+  get events and/or input
+- if you press the right mouse button on a window which already is on top
+  it will then be moved to the bottom instead
+- the lib was busy polling when waiting for a return paket under != MiNT, fixed
+- w_[d][p]poly() for drawing convex polygons of at least 3 and at most 64
+  points implemented (graphic routines by Kay)
+- implemented W_CONTAINER windows, see wbuttons. these are windows which have
+  no bitmap (and thus save a lot of memory) and may/should be used when you
+  only need some kind of container to put in some child windows
+- yet more optimizations for bitblk() and vscroll() in the packed pixel driver
+- do not w_beep() when catching console output in wterm, this will cause an
+  endless loop
+- w_readimg() from wsetbg and wpuzzle is now part of Wlib
+- grouped together similar calls in the lib and the server, this saves quite
+  some code and thus makes both of them a bit smaller
+- implemented W_CLOSE and W_ICON gadgets, see wbuttons and/or wterm (Kay & me).
+  W_SIZE is still missing - the time, you know...
+- the libgraph.a now uses `global' pointers to GCONTEXT structs (`gc0') as well
+  as clipping rectangles (`clip0' and `clip1'). this way you don't need to pass
+  these pointers at all (should save a lot of time for the generic functions)
+- w_printstring() can now print strings of arbitrary length, splitting them
+  in several chunks of 63 chars each
+- new button concept based on new windows concept (w_createButton()). buttons
+  are now merely like normal windows (with borders) i.e. they are window
+  pointers and can be drawn to. to hide or show a button without remembering
+  the coordinates there're wrapper routines. w_queryevent() still behaves the
+  same on buttons.
+- graphic calls now do proper clipping (Kay)
+- w_setpattern() changed for new pattern scheme
+- integrated a new pattern scheme by Eero (this also involved that he changed
+  the dashed functions as well as writing some new ones). patterns are now a
+  16x16 bitmap instead of a 16 bit linemask
+- the create calls now also pass the libs window pointer to the server so that
+  it can return that one in events rather than a handle; this makes some things
+  a bit easier inside the lib
+- new window opening mode: EV_ACTIVE. you'll then get EVENT_ACTIVE/INACTIVE
+  events when the window is entered or left by the mouse cursor. see wbuttons
+  for example
+- when opening a window at user selectable coordinates, use 'UNDEF' (-32768)
+  instead of -1 as windows may now perpectly legally be opened at that position
+- w_createChild(): new call to create a child for a window. the child is a
+  fully independent window with all possible features, except that it won't
+  get a solid frame when entered by the mouse - this applies to top level
+  windows only (to avoid confusing flickering :)
+- new window and rectangle handling by Kay: windows can now have logical childs
+  which always lay above the parent. child windows are always clipped to the
+  work area of their parent. childs will be moved with their parents. `topping'
+  moves a window to the head of it's parent child list only, not to the head of
+  the global list. in fact everything should be like you've always wanted it :)
+  ah well, and there's no limit on windows and rectangles anymore. (in fact I
+  had already done the unlimited window stuff and was about to do the same for
+  the recs when Kay gave me a program to demonstrate some code which would deal
+  with both of them, so I took that one :)
+- can now switch virtual consoles under Linux68k (at last...)
+- cpyrgt as external program to avoid tfork() problems under MiNT (Kay)
+- a lot of direct8 enhancements (original version was really braindead), but
+  even with some both easy and efficient speedups the Sparc2's CG6 is a bit
+  slower than the TT when scrolling. well, the TT (mono) can move up to 32
+  Pixels with one memaccess, whereas the CG6-Sparc can only do 4, so it would
+  have to be 8 times faster than the TT, and it doesn't seem to be... :(
+- an awful :) lot of bugfixes by an awful ;) lot of people
+
+programs:
+
+- want: a 'mathematical game' simulating an ant (Eero)
+- wreversi: my very old and very dumb program to experiment with complete game
+  trees. it's slow, it's stupid and deterministic, but as long as anyone writes
+  something better I'll nevertheless include it
+- wstatus now displays the number of open/total windows for either the complete
+  system or a particular client, but no rectangle count anymore
+- wpuzzle: new game by Jens Kilian (jensk@hpbeo82.bbn.hp.com) and
+  Simon Kagedal (?), "Inspired by an X client program"
+- wbuttons: demo program for new button management, W_CONTAINER windows and
+  gadget stuff like W_CLOSE and W_ICON
+- wcpyrgt: copyright program to replace the server internal startup window (I
+  was told forking that off could cause problems under MiNT)
+
+man:
+
+- ???
+
+diffs:
+
+- wearth: re-added at least some option parsing (Kay) and changed it to output
+  via w_putblock (me)
+
+others:
+
+- some preliminary support for netbsd@amiga (Frank Wille), only graphic
+  initialization so far, keyboard and mouse don't work yet. keyboard is
+  probably easy to fix, but the mouse may be non-sun-compatible :(
+
+
+W 1 Release 2 (20. Dec. 95)
+===========================
+
+last minute changes:
+
+- I've decided to keep distributing the termcap entry - in case you should
+  need it you'll again find it in the root dir of this package
+- changed cpyrgt.c to draw the logo on a direct8 driver too
+
+ Again lots of things have changed, just take a look at the items below. The
+most important things are that socket transfer and backing-up of (partially)
+hidden windows is a lot quicker now. Other items involved great changes in
+the programs, like the preparation for better fonts or clipping. Fonts, windows
+and the server reply for w_init() are now pointers - that involved changes in
+every program. Also new is the ability to trace calls to the Wlib - this has
+already helped me a lot in debugging.
+
+ And then it now runs under Linux68k (officially supported) and SunOs 4.1.4 on
+a Sparc2 with CG6 graphics (unofficial)!
+
+server/lib:
+
+- w_bitblk2(): new call to bitblk between two windows
+- w_strlen(): new call to calculate the length of a string in pixels for a
+  given (proportional?) font
+- w_fontinfo(): removed, the new way is to load the font and get all the
+  information you want out of the fontpointer
+- many beta-testing fixes by Kay and Eero
+- w_trace(): new call to print some diagnostics for each call to the Wlib,
+  will only work if the lib was compiled with -DTRACE (default)
+- windows now have a 'dirty area' when in background. this way we only need
+  to update that area after all client calls are served instead of the whole
+  window after each call - that's quite a bit faster (idea by Eero)
+- graphic drivers are a bit more abstract and reside in a special directory,
+  this involves that there's again only one server which includes all the
+  drivers it needs for this machine - this only costs a few kb...
+- fonts now use a WFONT pointer instead of an integer handle and are - so to
+  say - shamelessly stolen from X11 by the X-Consortium (take a look into
+  the fonts subdirectory if you want to know how I've done it). the server now
+  manages them in a per-client basis instead of a per-window basis and is
+  prepared for proportional fonts
+- windows now use a WWIN pointer instead of an integer handle. this way the
+  lib can store some information about the window to do (a so far only
+  minimal implemented) clipping or other things to avoid socket transfer if
+  the calls would have no effect anyway. clipping so far means completely
+  discarding a call if it's partially outside the window
+- new style of server internal menu commands (they begin with a '@' and there
+  are two of them: @exit and @refresh) plus a better SIGCHLD routine by Ulrich
+  Kuehn (uk), kuehn@math.uni-muenster.de
+  caution: refresh will need an additional compile-time option that is not
+  yet implemented!
+- w_beep(): new (small) call to do a beep. most programs started may not
+  be able to directly write this to the screen, so why not let the server
+  do it? this involves that the xconout2 device should better not catch it...
+- use hton/ntoh whereever needed, so there's a slight chance that it will
+  run over networks other than MiNTNet
+- w_create(): takes new parameter W_NOMOUSE if the mouse should be disabled
+  while this window is open, used by wsaver and wgone
+- w_flush(): new call to flush the librarys buffer of outgoing calls, which
+  enhances executing speed of `quick' calls a lot because it avoids socket
+  overhead. the buffer will be flushed automatically if a call expects a
+  return code or if you ask for an event, otherwise it's your task to call
+  w_flush() whenever you want output to be done immediately
+- now binds to any AF_INET socket it can resolve as local, so you should have
+  at least the loopback interface set up. since this is the default if you
+  load sockdev.xdd this should hardly fail... :)
+- an awful lot of other things...
+
+programs:
+
+- wlife: rewritten to work on variable sized fields, supports geometry option
+- wclock: improved by Eero
+- wload: rewritten
+- wterm: an awful lot of fixes and changes, partially by Kay Roemer, most
+  important ones include that it now sets TERM and TERMINFO and thus doesn't
+  need an /etc/termcap entry any longer - at least not on my setup
+- wgone: rewritten
+
+games:
+
+- wsolitaire: new program by Eero Tamminen
+- wmines: new program by Eero Tamminen (puujalka@modeemi.cs.tut.fi)
+
+others:
+
+- rehacked makefiles so that they should now finally fit to more setups, for
+  MiNT the KGMD setup is recommended, for Linux68k anything will do
+- still no sign of nroff-ed manpages, but I at least try to keep the ascii
+  versions up-to-date... :)
+
+remaining problems:
+
+- under Linux68k V0.9.13 I had problems with signal handlers aborting and thus
+  garbling the socket communication (even lead to server crashes), under
+  V1.2.13pl4 these problems seem to have gone?
+- F_BOLD is for the moment not supported as fonts again only contain one
+  bitmap. there are bold fonts, and even italic ones, but these come in
+  seperate font files. wterm is not yet prepared for these! :(
+
+
+W 1 Release 1 (30. December 1994)
+=================================
+
+ despite of minor bug fixes and small improvements the big new feature of this
+release is that it now implements a real client <-> server concept using
+sockets! for me it makes dealing with client requests a bit more difficult as
+data might come in chunks not regarding message boundaries at all, but it's
+much cleaner and saver. the ugly hacks to recover from clients being aborted
+during a W operation are no longer needed. for you it means that the basic
+requirements are now implemented to run W programs over a MiNTNet network,
+but support is not yet official as I can't test it. other architectures are
+not yet directly supported as most parts don't yet deal with host/network byte
+order problems and some parts still use MiNT specific calls, but I'm on my way
+eliminating them. this may make the stuff a bit bigger and slower (as socket
+communication already does make it a bit slower), but it should now be quite
+easy to port it to a SunOS machine, at least one with a monochrome graphic
+adaptor, which is *precisely* what I'm currently after... ;)
+
+server/lib:
+
+- w_vscroll(): new call to replace w_scrollup() and w_scrolldown, having these
+  two really was a waste
+- w_getblock(): semantic and syntax changed to something which seems to be more
+  logical to me
+- now displays the non-active windows with a different border, this way you
+  can easily see which window the mouse is above
+- fixed a server bug in dealing with mouse button events, now everything
+  *should* (???) be treated as you'd expect it
+- introduced `gadget' events, there's only one so far: GADGET_EXIT which is
+  send by the server if a client should terminate
+- library now has names which are a bit more UNiX compatible so you should
+  completely erase (or backup?) a previous installation
+- w_queryevent(): semantic has changed non-transparently! sorry about that but
+  it must happen due to portability reasons
+- new calls: w_setpattern() and w_dbox() for dashed graphics, other calls will
+  follow soon
+- w_create() now takes several new values for its third argument: EV_KEYS
+  and/or EV_MOUSE to preselect the type of events the clients will expect
+  (note that a GADGET event must always be expected!) and W_NOBORDER if the
+  window shouldn't have a border (which makes the use of W_TITLE impossible)
+- w_scanconsole() deleted from the lib as it's now obsolete, the xconout2.xdd
+  device driver now does this work
+
+programs:
+
+- wload: now supports at least the position part of the geometry option
+- wperfmon: new program to replace wspeed, this one seems better to me, even
+  if it doesn't yet try to eliminate socket overhead in time measurements
+- wsaver now takes the place of the screen saver as an external program and
+  has two different modules
+- lots of changes due to socket communication, all clients must expect and
+  respect GADGET_EXIT events now
+- wterm: doesn't any longer support LINES/COLUMNS environment variables but
+  TIOCGWINSZ instead. I've finally realized that some of *my* programs were
+  broken
+- wstatus: completely rewritten, now displays different information
+- minor changes: fixed all clients to preselect events
+
+others:
+
+- in fact the socket communication involved so many changes that you should
+  probably look into *ALL* manpages... :)
+
+
+W 0 Release 8 (4. November 1994)
+================================
+
+server/lib:
+
+- now reads a ~/.wconfig file for menu customization and other things,
+  again, see manpage for more
+- mouse routines now use graphic operations similar to the bitblk call.
+  the result is that the server shouldn't any longer suck any free cpu
+  time it can get if you move the mouse a lot
+- changed the way mouse button release events are handled, they now only
+  go to the window where the button was pressed, see manpage for w_query-
+  event() for more details. this also resulted in some changes in the
+  button routines, they should be transparent to the user, but you may
+  take a look at wapfel.c as a demo
+- now the client creates its pipe for events, not the server, this fixes
+  a bug which occured when a client deleted all its windows and later
+  wanted to create one again: in this case the server already destroyed
+  the pipe and so the client couldn't create the window
+- implemented some patches by Kay Roemer (roemer@informatik.uni-frankfurt.de)
+  which make the bitblk and scrollroutines a *bit* faster. at least that's
+  what he said. in fact bitblk is up to 3 times faster now... :)
+- fixed a bug in the `color' versions of graph_hline, sorry for that... ;)
+
+programs:
+
+- wapfel: applied some major speedup patches by Kay Roemer (roemer@
+  informatik.uni-frankfurt.de) and changed the way how to select a
+  rectangle to zoom into
+- wspeed now uses a different method to measure the speed
+- wterm: now does its output in string chunks rather than char-by-char,
+  this doesn't speed up anything now, but probably later in a socket
+  version. also you can now pass any number of arguments to started
+  programs
+
+others:
+
+- included some diffs for GNU-Plot 3.5 to make it display output in
+  a W window! look at the `gnuplot' subdirectory :)
+- again changed the archive layout. there're now seperate `make' and
+  `make install' procedures. both a wmono and a wcolor server will be
+  compiled, which you can start with startw. note also that you must
+  be `root' to compile/install the package because wterm will need it
+
+plus the usual manpage updates... doesn't anyone want to rewrite them
+for nroff?
+
+
+W 0 Release 7 (1. October 1994)
+===============================
+
+wserver:
+
+- argl! the server created only one pipe per client regardless of how many
+  windows it opened, but it didn't ever close it later! :(
+- added the possibility that mouse button releases also get reported as
+  events to clients. there're currently some problems left, so your program
+  should care about release events it didn't expect because there wasn't a
+  previous press event
+- upper left corner now is a `nono' area for the screensaver, maybe it'll
+  later also changes its shape to indicate so
+- fixed another bug in the code for drawing of lines, was this the last one?
+- implemented code to finally really load external fonts, allthough
+  there're not yet any supplied. see README.fonts for how to create such
+  fonts
+- changed the names of some macro constants because they now seem to be
+  more logical to me. take a look at wlib.h
+- switched to an - as I think - nicer screen saver
+- implemented w_circle and w_pcircle
+- can now print underlined text
+- changed the way screen locking and mouse hiding works. they now use
+  a bitmask orientated global variable. this limits the number of windows
+  to 32, but first it makes screen locking and mouse hiding easier and safer,
+  and then 32 windows should be enough :)
+- the -DMONOCHROME server now uses 32 bit access for some routines which
+  enhances them again quite a bit :)
+- implemented funcionality to catch output done to /dev/console. it's
+  a bit tricky and dangerous too: do *NEVER* think about killing the
+  server with SIGKILL!!! if it won't be able to deinstall the xconout
+  handler it uses to catch the output the system will crash completely
+- done a better hack for the lock-bug. the server should now be able
+  to recover from both a client being aborted or suspended while it
+  is in a w-function
+- again lots of internal changes
+
+library:
+
+- defined W_UNDERLINE for text output style
+- changed the way scan_geometry works, see the manpage for more info
+- new call: w_scanconsole() to read data that has been buffered from the
+  console. it only works if you call it on a window which was created
+  with W_CONSOLE. look at wterm.c for how to do it
+
+programs:
+
+- wspeed: completely rewritten so that it now fits on a ST-HIGH screen and
+  checks for all possible alignments. speed calculations will still only work
+  on a TT in TT-TIGH because that's what I compare them to, but at least you
+  can now see what it does in all graphic modes
+- wterm now uses both LINES/COLUMNS environment variables and struct winsize
+  ioctl to report the window wize to clients (as suggested by benni), supports
+  W_UNDERLINE for wterm terminal type, fully supports the geometry option and
+  can catch console output when started with -c
+- wclock now fully supports the geometry option and has a much smarter
+  display: updates every seconds and doesn't any longer always clear the
+  entire window
+- wfontdemo: new program, prints a short string in every available font
+- weyes: new program, guess what it does :)
+- wload: new program from benni@phil15.uni-sb.de, sorry, but there was a
+  small bug in it... ;)
+- wbiff now display a nicer graphic (benni@phil15.uni-sb.de)
+- walert: delete from distribution because it's obsolete, use wterm -c
+  instead
+
+others:
+
+- again changed the makefile layout so that now finally the source can be in
+  a completely independend directory
+- updated the wterm termcap entry
+- updated quite some manpages and/or written new ones
+- all parts must now be compiled without -mbaserel. sorry, but I've had
+  severe problems with the signal handlers when running -mbaserel, don't
+  know how to cope with this, but without -mbaserel it works
+
+
+W 0 Release 6 (11. September 1994)
+==================================
+
+wserver:
+
+- added a quick hack to be able to resume work after the screen was locked
+  due to a client crashing/terminating while being in a `W' function. if you
+  press CTRL-ALT-C or send the server a SIGINT it'll decrement glob_locked
+  by one in the hope to clear what the no longer existing client has left
+- ok, I've finally come to verify that it's true that GCC's optimizer likes
+  32 bit variables more than 16 bit ones. :) this immediately makes its way
+  into another speedup
+- more and more routines now use the bitfield emulation, which makes the
+  non-word-aligned parts up to 15% quicker, but the aligned ones a bit
+  slower (2-3%). hope that won't disturb you. :) I think this is almost
+  maximum speed for 68000'er. maybe R7 or R8 will finally contain 68020
+  code, which will probably the final (major) speedup.
+- fixed a bug in the w_querymousepos routine: it didn't check if the
+  mouse was in a window, but outside of the work area
+- fixed a bug in w_close, sometimes the contents of other windows were
+  destroyed
+- implemented two new functions: w_getblock and w_setblock to read or write
+  images from or into the window
+- the biggest font, wsys32x64, is no longer supplied because it was only a
+  memory consuming magnification of wsys16x32 and probably not good for any-
+  thing. but the others do now support a W_BOLD option! as a side effect,
+  printchar is again 6-7% faster, looks like this is the limit for pure
+  68000 code
+- client pipes are now organized in a per-client form and no longer in a
+  per-window form. this allows one client to open several windows but to
+  use only one pipe, and therefore allows a greater number of open windows.
+  this also involves a change in w_queryevent()
+- fixed a bug in the code for background drawing of lines
+- implemented functionality to lock the screen for wgone
+- windows can now have a title bar if you give the W_TITLE flag to the
+  w_create call. this also makes clicking on the border of a window a
+  bit easier :-)
+- now has got a simple screen saver function which gets activated if
+  no key is pressed, the mouse isn't moved and no window creating/deleting/
+  opening/closing/moving operation is performed for a specified time.
+- added some checks so that you can now savely draw in windows which
+  aren't actually open
+- lots of internal changes...
+
+library:
+
+- implemented w_getblock and w_setblock. definition of BITMAP is now part of
+  the library
+- changed the way w_queryevent() works: WEVENT now has got a field where
+  the handle of the window in which an event occured is reported
+- deleted w_querywinpipe() from the lib because it's obsolete
+
+programs:
+
+- wterm: now sets LINES and COLUMNS to the size you've selected. the
+  termcap entry doesn't define them any more
+- changed the way wsetbg works to w_setblock
+- wterm: now uses it's own termcap type, which is mainly identical to VT52
+  but has extensions for bold mode, look at the file in etc
+- new program: wgone. locks the screen until you enter your password. the
+  server now needs KR's portlib to compile, because of the crypt() function.
+  you can of course also use the original libusers library from SRU
+- changed wterm so that it uses a title bar
+
+games: (hey, new group! :)
+
+- first game: wlife, nothing very optimized at all, but just try it! :)
+  it should show you how to deal with buttons and such things
+
+others:
+
+- again changed the archive layout and the Makefiles, hope it's now easy
+  to compile the whole thing in one bang
+- done a lot of work at the manpages, they're complete now, I think, but
+  probably not very detailed yet... and full of bugs... but better than
+  nothing :)
+
+
+W 0 Release 5 (20. August '94)
+------------------------------
+
+wserver:
+
+- changed the way fonts are stored. the new way is a bit slower, but will
+  save quite some memory for non-byte-aligned fonts later
+- hopefully fixed the bug which sometimes locked the thing. looks like I
+  don't know what `volatile' means. the secret is not to use it, but to not
+  use it!
+- uses a new bitblk routine, which is 50-100% faster (depending on the size
+  of the area to move), so a lot of parts are quicker now
+- the menu routine used to save all unhidden windows before displaying
+  the items and was therefore slow. now it only saves that windows which
+  will be overlapped and is therefore faster
+- implemented W_MOVE and W_TOP flags for w_create() to determine if the
+  window really should be moveable or should always stay on top
+- give some more information in `wstatus' output
+- fixed a bug in the routine for determining the window of a mouse click
+- speed up line drawing algorithm by 40%
+- lots of minor changes and bugfixes
+
+library:
+
+- changed the way w_queryevent() works: it now uses Fselect(3) with timeouts
+  and you can give it pointers to bitmasks of other filehandles to watch out
+  for, just the way you do it with Fselect
+- implemented W_MOVE and W_TOP flags
+
+programs:
+
+- wterm: now has got a `visual bell'
+- wterm couldn't ping if started from the ~/.wrc because the output was
+  redirected to /dev/null: now fixed
+- new program: wbiff, guess what it makes... :-)
+- new program: walert, to catch MiNT's alert output
+- wterm now supports an option to select the terminal size
+- deleted wmenu from the distribution, as wapfel is a far better example
+  for how to use buttons and mouse events
+
+others:
+
+- some more manpages written
+
+
+W 0 Release 4 (10. August '94)
+------------------------------
+
+wserver:
+
+- now automatically closes orphaned windows
+- now respects hidden parts of windows, for the price of a big loss of speed,
+  but still: hamdulliah!
+- now reads a ~/.wrc file at startup and executes all commands in it. since
+  this is the preferred way to customize the startup procedure and you can
+  start anything you want using the menu later, there is no default action
+  any longer
+- now has got a menu. you'll get it if you press the left mouse button on
+  the background
+- added a check so that only that user is allowed to run wclients who
+  initially started the server
+- lots of small changes and reorganizations
+
+library:
+
+- started implementing clickable buttons, look at wapfel.c for an example
+
+programs:
+
+- wapfel: major rehack to implement buttons to zoom into picture
+- wsetbg: can now load any monochrome IMG picture, centering or clipping it
+  if it's necessary
+- wterm: fixed a bug in the VT52 ESC-J code
+- wterm: fixed a bug in the wrap code
+- wterm: read tty pipe for greater chunks, if possible, and use the time gain
+  for a quicker update of the cursor, which can even blink if you like it.
+  all in all it's now 20% faster :-)
+
+others:
+
+- deleted background picture from the distribution, because you should now
+  be able to load any IMG picture
+
+
+W 0 Release 3 (1. August '94)
+-----------------------------
+
+wserver:
+
+- moved code to read a background picture from server to an external
+  program, I think it's better this way
+- all routines now also draw into the specific window bitmap, so if you
+  now move a window, it won't be empty then. you can also let two windows
+  overlap, in which case the screen will be messed, but as soon as you move
+  them apart everything will be ok again. you should even be able to close
+  a window and open it again without losing its contents
+- speed up text output by 12%
+- moved mouse intersecting code from the graph_*() functions to the w_*()
+  functions in order to get a smaller graph code to have a better chance to
+  optimize it later in pure assembler
+- implemented functionality of reporting mouse button events as well as
+  keyboard events
+- fixed a bug: when deleting a window, also delete the server pipe, otherwise
+  the next window which gets this handle won't be able to create a pipe...
+
+library:
+
+- implemented new call: w_queryevent()
+
+programs:
+
+- two new programs: wmenu and wstatus, one for showing you how to use the
+  event function, and the other for giving you some debug output
+- yet another new program: wsetbg, to load the background picture from
+  /usr/w/background.raw, maybe this will load any IMG picture in future
+
+others:
+
+- changed Makefile layout
+- updated the `manpages'
+
+
+W 0 Release 2 (21. July '94)
+----------------------------
+
+wserver:
+
+- can now only be started at console
+- switched to MiNTs internal mouse driver, it's quite slower and needs
+  more complicate handling, but allows us to distinguish between button
+  presses and releases, which immediately makes its way into a different
+  handling of window moves
+- added two routines for scrolling in one bitmap with word aligned copy if
+  possible, they are *much* faster than the `old' bitblk routine
+- slightly improved routines for text output
+
+programs:
+
+- new program: wapfel, just for fun
+- fixed a small bug in wterm's VT52 emulation
+- wterm now makes entries in /etc/utmp, can select fonts and shells to start
+- wterm now uses the new scrolling routines instead of the bitblk routine,
+  this improves scrolling speed by a factor of 10
+
+others:
+
+- started something which could end up one time in a set of manpages
+
+
+W 0 Release 1 (July 94)
+-----------------------
+
+- speed up printchar() routines by 45% and bitblk() routines by 6%, using
+  the same trick, but why is the result so different?
+- added a compiling option MONOCHROME which should make some arithmetics
+  obsolete, pity it doesn't have any effect... :-(
+- completed VT52 emulation in wterm
+- wserver now can print invers text, wterm immediately uses it
+- keyboard input no longer goes to the top window - which still isn't that
+  easy to be recognized at all - but the one the mouse is above instead
+- added a nice copyright info... :)
+
+
+W 0 Release 0 (July 94)
+-----------------------
+
+- initial (non-public) version, really not worth to be called ready at all.. ;)

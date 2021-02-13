@@ -1,0 +1,19 @@
+.TH w_resize 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_resize() \- resize window
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_resize(WWIN *" win ", short " width ", short " height ");"
+.fi
+.SH DESCRIPTION
+.I w_resize()
+resizes window to given size.  This will work only if the window was
+created with the \fIW_RESIZE\fP flag.
+.SH RETURNS
+0 if everything is OK or something negative if any error occurred.
+.SH SEE ALSO
+.IR w_create (3)
+.SH LAST CHANGED
+30th May 1998 by Eero Tamminen

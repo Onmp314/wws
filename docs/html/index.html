@@ -1,0 +1,92 @@
+<html>
+<head>
+<title>W98+ --- Plug'n Pray...</title>
+</head>
+<body>
+
+<h3><img src="w-small.png" alt="[W]">window system</h3>
+
+<p>W is a simple, socket based, mainly two-color window system created
+originally by <em>Torsten Scherer</em> and currently "maintained" by
+<em>Eero Tamminen</em>.  W has no relation to that X's predecessor with
+a same name.  W 1 release 4 main features are:<p>
+
+<ul>
+  <li>Uses sockets for communicating with client applications. Works
+      either locally or remotely (assumes both ends have same int size).
+  <li>Terminal emulator (wterm) with color and mouse support. Wvt
+      terminal supports also history and copy / paste.
+  <li>Supports line, box, circle, ellipse, pie, polygon and bezier
+      graphics functions in solid and patterned modes.  Most support
+      only line width of one.
+  <li>Replace, clear, invert and transparent graphics modes (block
+      and text functions use only replace mode).
+  <li>Supports both monospaced and proportional <i>bitmap</i> fonts.
+      Different font styles can be achieved either by setting the
+      desired font style for the window or by loading an appropiate
+      font.  There's a converter for converting X BDF fonts to W
+      fonts.
+  <li>Graphics primitives are offset to a window and window contents
+      are stored by the server (redraws are also performed by the server).
+  <li>Server has window manager builtin (focus follows mouse).  Windows
+      can have title, close and iconization gadgets.  Windows can be
+      resized from any of their borders.
+  <li>Windows can have subwindows.  Every window has it's own graphics
+      context (graphics mode, pattern, font, color).
+  <li>A widget toolkit for easing up user interface creation.  There's
+      also an X11 version of the W <i>libary</i> called W2Xlib, so you
+      can run and debug your W apps under X too.  Alternatively you can
+      run the W <i>server</i> in an X11 window using e.g. the SDL
+      backend.
+  <li>W window system was mostly designed to be two color (monochome)
+      but has also support for 8-bit palettized colors.
+  <li>Smallish. W server and applications take about 1/4 of the RAM and
+      disk space needed by X11<b>R5</b> (when comparing statically linked
+      binaries). Using W server on color mode may increase it's memory
+      use over that of X because of the window backup bitmaps though.
+  <li>Has been reported at times to work on m68k/x86 Linux, Atari MiNT,
+      MacMiNT, SunOS, Amiga NetBSD, Agenda VR at least with one
+      graphics device / on some graphics mode.  On Linux there are
+      backends for SDL, framebuffer, GGI and SVGAlib. See for
+      technical info to see what graphics modes W supports.
+</ul>
+<p>
+
+<strong>To compile and use W you'll need a small unix like setup (GNU C,
+make and linker + unix C-library) with networking (sockets), some
+method to access graphics memory linearly, at least 4MB of RAM and
+10MB of free disk space.</strong>
+<p>
+
+<h4>Other information:</h4>
+<p>
+
+<ul>
+<a name="clients"></a>
+  <li>Currently available <a href="clients.html">W clients</a>.
+  <li><a href="insiders.html">Technical information</a> about the
+      W window system.
+  <li>A <a href="versus.html">comparison</a> between W1R4 and X11R5.
+  <li>A short W <a href="history.html">history</a>.
+  <li>Things <a href="todo.html">TODO</a>.
+</ul>
+<p>
+
+<h4>Obsolete information:</h4>
+<ul>
+  <li>W inter-client <a href="iccp.html">protocol draft</a>.
+  <li>W <a href="fserver.html">font server</a> draft.
+</ul>
+
+<hr>
+<p>
+
+W1R4 sources are currently available available from
+<a href="http://koti.welho.com/kmattil4/">my WWW-page</a>.
+
+<div align="right"><a href="http://koti.welho.com/kmattil4/">Eero
+Tamminen</a><br>
+<a href="mailto:oak@welho.com">oak@welho.com</a></div>
+
+</body>
+</html>

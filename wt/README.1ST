@@ -1,0 +1,89 @@
+******************************************************************
+Before compiling you'll need correct W `.config' file in parent W
+directory and check that `.wtconfig' file in this directory is OK.
+******************************************************************
+
+
+NOTES
+
+Edit and copy 'wtrc' to your home directory as '.wtrc'. W toolkit reads
+it at initialization and widgets use then the fonts defined there or
+server default font if '.wtrc' doesn't define any.
+
+*** If Wt programs don't work properly (buttons without text,
+chrashes), font settings should be first thing to check. ***
+
+If text widgets don't understand your arrow/delete/backspace keys,
+change them from Wt/wt_keys.h and recompile.  They are single character
+(short) ones as that's what W server cursor etc.  events are for
+platforms where special keys are mapped.  If your terminal uses more
+characters / key, redefine them (either in 'startw' script or in W
+startup script '~/wrc').  At least Linux and MiNT have utilities for
+this.
+
+If you think wvt takes too much memory, disable color support from
+Wt/vt.c and recompile Wt and wvt.
+
+Kay's wetscape doesn't understand plain, local filenames without
+a protocol name.  You can load local files with URLs like this:
+	file://localhost/file-path/file-name
+
+Right click will give you a popup from which you can save documents.
+
+
+For changes from the Kay Roemer's original toolkit, see the beginning of
+the CHANGES file.
+
+
+BUGS
+
+Most of the programs coming with Wt are in some way(s) incomplete.
+They are included so that you would have some examples on how to
+use the widgets in addition to the meagre documentation provided.
+
+I made some slight fixes to button, scrollbar, listbox, pane and
+fileselect widgets.  I had accidentally deleted my own working version
+of Wt sources and I hadn't taken diffs to all the changes I had made, so
+these fixes might still be buggy (for example fileselector/listbox won't
+resize properly anymore).
+
+In general toolkit is a bit unsafe as there's no typechecking for the
+widget setopt/getopt arguments.  These can sometimes produce confusing
+effects, especially if there's some error in the widget documentation
+(doc file or Wt.h header file ;-)).  If you want an example on how to
+implement type checking for widgets in C language, see for example the
+Gtk (http://www.gtk.org/) documentation.
+
+
+TODO (don't know by whom though...)
+
+* Make (nroff) manual pages for the Wt programs and add their installing.
+* Convert toolkit documentation to HTML format.
+* Write a style-guide on widget programming.
+* Add window, not widget based focus.
+* Add shortcuts (first for focus change).
+* Add support for property popups.
+* Add 'balloon' help support.
+* Add some global color options.
+* Add new widgets:
+  - Listbox with horizontal scrolling and multiple selections.
+  - Selection 'widget' for container widgets so that one or more
+    of the contained widgets can be selected.  New listbox and
+    radiobutton containers using this.
+  - Socket communication 'widget'.
+* Improve HTML widget:
+  - Have separate 'dictionaries' for HEAD and BODY.
+  - Use different font sizes for headers.
+  - Implement tag ALIGN attributes.
+  - Implement CENTER tag.
+  - Implement image maps.
+  - Implement logical font size changes (SUB, SUP, SMALL, BIG).
+  - Use colors for images on color servers.
+  - Implement tables and forms.
+
+
+	- Eero
+
+PS.  In case you're interested, the Wt applications I 'use' most are:
+Kay's Wvt and my Wt interface to my port of William Schubert's Pente
+game (under netgames).

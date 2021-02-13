@@ -1,0 +1,35 @@
+.TH w_arc 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_arc(), w_darc(), w_pie(), w_dpie() \- draw an arc/pie
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+\fBshort w_arc(WWIN *\fIwin\fB, short\fI x0\fB, short\fI y0\fB,
+short\fI rx\fB, short\fI ry\fB, float\fI a\fB, float\fI b\fB);
+.sp
+\fBshort w_darc(WWIN *\fIwin\fB, short\fI x0\fB, short\fI y0\fB,
+short\fI rx\fB, short\fI ry\fB, float\fI a\fB, float\fI b\fB);
+.sp
+\fBshort w_pie(WWIN *\fIwin\fB, short\fI x0\fB, short\fI y0\fB,
+short\fI rx\fB, short \fIry\fB, float \fIa\fB, float \fIb\fB);
+.sp
+\fBshort w_dpie(WWIN *\fIwin\fB, short\fI x0\fB, short\fI y0\fB,
+short\fI rx\fB, short\fI ry\fB, float\fI a\fB, float\fI b\fB);
+.fi
+.SH DESCRIPTION
+.I w_arc()
+draws an arc with x-radius 'rx' and y-radius 'ry', centered at (x,y) in
+the given window, using the current mode.  'a' and 'b' are arc starting
+and ending angles angles in degrees.
+.PP
+.I w_darc()
+draws a dashed arc, using the current mode and pattern.
+.PP
+.I w_pie()
+draws a pie (filled sector), using the current mode.
+.PP
+.I w_dpie()
+draws a dashed pie, using the current mode and pattern.
+.SH LAST CHANGED
+3rd Feb 1998 by Eero Tamminen

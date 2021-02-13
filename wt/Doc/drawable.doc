@@ -1,0 +1,101 @@
+
+ The `drawable' widget classe
+ ----------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *drawable  = wt_create (wt_drawable_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+ The drawable widget is a "simple" widget. It is used to implement some
+functionality you don't have a suitable other widget for. The alternate
+way would be to write a new widget class that fits your needs.
+
+ The name drawable was used because you can "draw" into this widget yourself.
+The user is responsible for handling W events for the drawable's window itself.
+
+ For example you would use this widget in a drawing program as the area the
+user can draw into.
+
+
+ 3 Configuration Options
+ -----------------------
+
+ For each configuration option the widget supports the name of the
+configuration option (WT_<something>), the type of the argument (eg. long *)
+you pass to wt_setopt()/wt_getopt() for this option, possible values, their
+meaning and a description of what the option does is given.
+
+
+ WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a pointer
+	to it) in the widget. This is useful if you have to associate some
+	extra data with a widget.
+
+
+ WT_XPOS (long *)
+
+	Set the X position of the drawable widget, which is relative
+	to the upper left corner of the parent window. The X position is
+	ignored if the parent widget is a composite widget that places its
+	childs (like box or pane). Default is 0.
+
+
+ WT_YPOS (long *)
+
+	Set the Y position of the drawable widget, which is relative
+	to the upper left corner of the parent window. The Y position is
+	ignored if the parent widget is a composite widget that places its
+	childs (like box or pane). Default is 0.
+
+
+ WT_WIDTH (long *)
+
+	Set the width of the drawable widget. Default is 16.
+
+
+ WT_HEIGHT (long *)
+
+	Set the height of the drawable widget. Default is 16.
+
+
+ WT_DRAW_FN (void (*fn) (widget_t *w, int x, int y, int wd, int ht))
+
+	Install a "drawing function" that is invoked when the drawable
+	is beeing created (eg. to draw a border around the widget).
+
+	The task of 'fn' is to decorate the area of the widget specified
+	via 'x', 'y', 'wd' and 'ht' with some drawing or an icon or whatever
+	you want. The W window you must draw to can be found out using
+	wt_widget2win(w).
+
+	Default is now NULL (ie no drawing function).
+
+
+ WT_EVENT_MASK (long *)
+
+	Select the W events you want to receive for the drawable. This is
+	a mask of event flags like EV_MOUSE, EV_ACTIVE, ... (or'ed together).
+	You must do this before the widget is realized. Default is no
+	events.
+
+
+ WT_EVENT_CB (WEVENT * (*cb) (widget_t *w, WEVENT *ev))
+
+	Install a callback function 'cb' that is invoked when a W event is
+	received for the drawable's window. 'w' will be set to the widget
+	the event happend on and 'ev' is a pointer to the W event structure.
+	The W window the event happend on is ev->win or wt_widget2win(w).
+	Default is NULL (ie no event callback).
+
+	If callback doesn't process the given event, it should return
+	it, otherwise NULL.
+

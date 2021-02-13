@@ -1,0 +1,64 @@
+#!/bin/sh --
+# Shows a random image from given directory in the W root window
+# with necessary color and image size reductions.
+# Recognices following image types:
+# gif,png,jpg,p8m,bmp and anything anytopnm can convert
+
+## Apparently, there's a hard width limit for for images...
+sw_hard=1020
+
+if [ $# = 0 ]
+then
+   set /usr/share/images/desktop-base/*.{jpg,png,gif}
+fi
+
+b=${0##*/}  # basename
+f="${TMPDIR:-/tmp}/${b:-wrootpic}$$"
+
+trap 'rm -f "$f".*' 0
+
+clean=no
+
+eval set '"${'$(echo $RANDOM $# '%' 1 + p | dc)'}"'
+case "$(echo :"$1" | tr A-Z a-z)" in
+:*.p8m) ppm8to24 < "$1" > "$f".ppm; clean=yes;;
+:*.gif) giftopnm < "$1" > "$f".ppm; clean=yes;;
+:*.png) pngtopnm < "$1" > "$f".ppm; clean=no;;
+:*.jpg|:.*jpeg) djpeg -dct float -ppm -colors 240 < "$1" > "$f".ppm; clean=yes;;
+:*.bmp) cjpeg -quality 100 < "$1" |
+        djpeg -dct float -ppm -colors 240 > "$f".ppm; clean=yes;;
+:*|:.*) anytopnm "$1" > "$f".ppm;;
+esac
+eval $(wstatus |
+       sed -ne '1 s/.* \([0-9]\+\)\*\([0-9]\+\).*/sw=\1; sh=\2/p')
+eval $(pnmfile < "$f".ppm |
+       sed -ne 's/.* \([0-9]\+\) by \([0-9]\+\).*/iw=\1; ih=\2/p')
+if [ $(( $sw_hard < ${sw:-640} )) = 1 ]
+then
+   sw=$sw_hard
+fi
+if [ $(( ${sw:-640} < ${iw:-0} || ${sh:-480} < ${ih:-0} )) = 1 ]
+then
+   pnmscale -xysize "${sw:-640}" "${sh:-480}" < "$f".ppm |
+   ppmquant -fs 240 |
+   pnmdepth 255 |
+   ppm24to8 > "$f".p8m
+else
+   if [ "$clean" = yes ]
+   then
+      pnmdepth 255 < "$f".ppm |
+      ppm24to8 > "$f".p8m
+   else
+      ppmquant -fs 240 < "$f".ppm |
+      pnmdepth 255 |
+      ppm24to8 > "$f".p8m
+   fi
+fi
+wsetbg 1
+wbm -r < "$f".p8m
+status=$?
+if [ $status != 0 ]
+then
+   echo "$b: can't display: $1" >&2
+   exit $status
+fi

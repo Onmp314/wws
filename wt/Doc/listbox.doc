@@ -1,0 +1,113 @@
+
+ The `listbox' widget class
+ ----------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *listbox  = wt_create (wt_listbox_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+The listbox widget can be used to to present user with a list of strings
+of which one item can be selected.
+
+For the user listbox offers scrollbar and keyboard shortcuts for
+viewing the list in case it doesn't fit totally into the listbox window.
+The movement shortcuts are Wt defaults (^p up, ^n down, ^< page up, ^>
+page down, ^a start, ^e end).
+
+
+ 3 Configuration Options
+ -----------------------
+
+Here are the options that can be set or queried with setopt() and
+getopt() functions.
+
+
+ WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a pointer
+	to it) in the widget. This is useful if you have to associate some
+	extra data with a widget.
+
+
+ WT_XPOS (long *)
+
+	Set / get the X position of the listbox widget, which is relative
+	to the upper left corner of the parent window.
+
+
+ WT_YPOS (long *)
+
+	Set / get the Y position of the listbox widget, which is relative
+	to the upper left corner of the parent window.
+
+
+ WT_WIDTH (long *)
+
+	Set / get the width of the listbox widget.
+
+
+ WT_HEIGHT (long *)
+
+	Set / get the height of the listbox widget.
+
+
+ WT_FONT (char *) / (WFONT **)
+
+	Set / get the font used.
+
+
+ WT_LIST_ADDRESS (char **)
+
+	Set / get the list address. The list is a NULL terminated array
+	of C string pointers. The list and the strings it points to have
+	to be valid while the widget exists so you should malloc them
+	before realizing the widget and free afterwards...
+
+
+ WT_LIST_WIDTH (long *)
+ 
+	Set / get the width to which strings on lists you give to widget
+	are supposed to fit into.
+
+
+ WT_LIST_HEIGHT (long *)
+
+	Set / get how many list items are shown in the window at maximum.
+
+
+ WT_LIST_CURSOR (long *)
+ 
+	Set / get the list cursor position. Does not call WT_CHANGE_CB.
+
+
+ WT_ACTION_CB (void (*cb) (widget_t *, char *item, int item_index))
+
+	Set / get the function that will be called when user presses
+	<enter> or clicks an item. 'item' is the selected string and
+	'item_index' is it's index in the list.
+
+
+ WT_CHANGE_CB (void (*cb) (widget_t *, char *item, int item_index))
+
+	Set / get the function that will be called when user changes the
+	cursor position with keyboard.  Mainly of use when implementing
+	an autolocator (see examples).
+
+
+
+ WT_INKEY_CB (WEVENT * (*cb) (widget_t *w, WEVENT *ev))
+
+	Set / get the function that will be called when listbox gets
+	from the user a key that it doesn't recognize as shortcut.
+	Default is no callback. If callback doesn't process the given
+	event, it should return it, otherwise NULL.
+
+	Mainly of use when implementing an autolocator (see examples).

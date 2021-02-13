@@ -1,0 +1,43 @@
+.TH w_allocMap 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_allocMap(), w_mapData() \- color palette manipulation
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "uchar *w_allocMap(WWIN *" win ", short " colors ", rgb_t *" palette ", uchar *" oldmap ");"
+.sp
+.BI "short w_mapData(BITMAP *" bm ", uchar *" oldmap ");"
+.fi
+.SH DESCRIPTION
+.TP
+\fBw_allocMap\fP()
+will free, change and allocate colors of \fIwin\fP to match those of the
+given \fIpalette\fP and then returns a color index mapping from
+\fIpalette\fP to the \fIwin\fP colortable.  If you'll supply the
+function with \fIoldmap\fP, an earlier acquired mapping for the
+\fBsame\fP window, function changes the earlier mapped \fIwin\fP colors
+instead of freeing and re-allocating \fIall\fP the required new colors
+(This will only work if there have been \fIno\fP intervening color
+operations!).  \fIcolors\fP naturally tells the function how many
+entries the \fIpalette\fP and \fIoldmap\fP have.
+.TP
+\fBw_mapData\fP()
+will map the \fIbm\fP data according to the color mapping you got from
+\fIw_allocMap\fP().  If you have many images with with a same palette,
+you can naturally call \fBw_mapData\fP() for them with the same color
+mapping.  BITMAP \fIpalette isn't valid after mapping\fP so you can't do
+further conversions for it or save it.  You can use \fBw_copybm\fP() to
+make a copy of the bitmap before mapping if this is an issue.
+.PP
+After you have mapped all the images you want to, you can \fBfree\fP()
+the color mapping.  Colormap will/should always have as many entries as
+W server has colors regardless of how many colors were changed/allocated.
+.SH NOTES
+Mapping works only with BM_DIRECT8 bitmap formats as they are the only
+user supplied formats with a palette.
+.SH RETURNS
+\fBw_allocMap\fP() returns the color mapping or NULL for error.
+\fBw_mapData\fP() returns 0 or a negative value to signify an error.
+.SH AUTHOR
+14th June 1998 by Eero Tamminen

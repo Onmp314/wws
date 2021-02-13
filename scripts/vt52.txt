@@ -1,0 +1,57 @@
+Standard VT52 ESC-codes:
+
+A	cursor up
+B	cursor down
+C	cursor right
+D	cursor left
+E	clear screen & home
+H	cursor home
+I	reverse index
+J	erase to end of page
+K	erase to end of line
+L	insert line
+M	delete line
+Y%+ %+	position cursor
+b%	foreground color
+c%	background color
+d	erase to beginning of page
+e	enable cursor
+f	disable cursor
+j	save cursor position
+k	restore cursor position
+l	erase whole line
+o	erase beginning of line
+p	reverse video on
+q	reverse video off
+v	line wrap on
+w	line wrap off
+
+Non-standard ESC-codes for text attributes:
+
+G	clear all attributes
+g	bold on
+h	bold off
+i	underline on
+m	underline off
+n	italics on
+r	italics off
+s	dim on
+t	dim off
+
+
+If you'll concatenate this file in wterm, examples below should show up
+in different styles:
+
+	p reverse q  g bold h  s dim t  n italics r  i underline m
+
+Some combined effects:
+
+	pn reverse italics rq	gs bold dim th
+
+	ni italics underline mr	pg reverse bold hq
+
+	pgs reverse bold dim rtq	ng italics bold
+G
+If any of the effects was missing, most likely your terminal uses a (too
+small) font for which that effect had been disabled for readability's
+sake.

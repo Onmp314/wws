@@ -1,0 +1,130 @@
+.TH w_putblock 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_getblock(), w_putblock() \- get/put image blocks
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+\fBBITMAP *w_getblock(WWIN *\fIwin\fB,
+short\fI x0\fB, short\fI y0\fB, short\fI width\fB, short\fI height\fB);
+.sp
+.BI "short w_putblock(BITMAP *" bm ", WWIN *" win ", short " x1 ", short " y1 ");"
+.fi
+.SH DESCRIPTION
+.I w_getblock()
+requests a rectangle from a window to be copied to a BITMAP struct for further
+manipulation, whereas
+.PP
+.I w_putblock()
+will convert and transfer given BITMAP into the argument window.  If
+BITMAP format differs from the W server format, it's automatically
+converted.  This won't touch the palette, nor set the window colors.  If
+server is monochrome, ordered dithering will be used.  Normally if
+you'll need only parts of the BITMAP, you'll transfer the whole BITMAP
+into a hidden (created, not opened) window and then
+.I bitblk2()
+blocks from it to other windows.
+.PP
+The BITMAP struct is defined as follows:
+.PP
+.nf
+typedef struct {
+  uchar red;
+  uchar green;
+  uchar blue;
+} rgb_t;
+
+typedef struct {
+  short width;
+  short height;
+  short type;
+  short unitsize;
+  short upl;
+  short planes;
+  void *data;
+  short colors;
+  rgb_t *palette;
+} BITMAP;
+.fi
+.PP
+where the fields stand for:
+.TP
+.B width, height
+The width and height of the image.
+.TP
+.B type
+One of the BM_* values mentioned in Wlib.h header file.
+.TP
+.B unitsize
+What type (ulong, ushort, uchar) size (4, 2, 1) is being used for
+manipulating the image. See Wlib.h for more info.
+.TP
+.B upl
+The number of 'unitsize' units per image line. This may be larger
+than image width aligned to the 'unitsize'.
+.TP
+.B planes
+How many bits the image \fIformat\fP uses.
+.TP
+.B data
+Points to the image data.
+.TP
+.B colors
+How many colors the image uses.
+.TP
+.B palette
+The colors that image uses.  This is valid only for PACKEDCOLOR and
+DIRECT8 image types. Conversion functions will use this for dithering.
+.PP
+.I w_getblock()
+will create such a BITMAP for you with all values correctly set, but for
+.I w_putblock()
+it's your task to ensure all values fit Wlib requirements, otherwise
+.I w_putblock()
+will barf at you.
+.PP
+To free a BITMAP struct simply call
+.I w_freebm()
+on it.
+.SH RETURNS
+zero if everything is OK or something negative if any error occurred (BITMAP
+parameters for
+.I w_putblock()
+were not OK).
+.SH NOTES
+You can use
+.I w_convertBitmap()
+to convert BITMAP formats. That does conversion to whole image and
+not line at the time as
+.I w_putblock()
+does.
+.PP
+Before outputting color images to color W server you should either
+convert the image to monochrome or allocate suitable colors for the
+window and then map the color image to these values.
+.I w_allocMap()
+and
+.I w_mapData()
+functions can be used for doing the latter.
+.SH BUGS
+BM_DIRECT24 images cannot be output to a color server without converting
+them first to another format.  BM_DIRECT24 image format was created just
+as an user convenience for loading PPM images with
+.I w_readpbm()
+function.
+.PP
+Doesn't support shared memory (it's implementations differ greatly
+between operating systems...).
+.SH SEE ALSO
+.IR w_convertBitmap (3),
+.IR w_allocColor (3),
+.IR w_allocMap (3),
+.IR w_allocbm (3),
+.IR w_readpbm (3),
+.IR w_readimg (3),
+.IR w_xpm2bm (3),
+.IR w_init (3),
+.IR ppm24to8 (1),
+.IR wbm (1)
+.SH LAST CHANGED
+18th. Oct. 1997 by Eero Tamminen

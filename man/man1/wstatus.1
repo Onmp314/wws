@@ -1,0 +1,47 @@
+.TH WSTATUS 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wstatus \- show W Window System server statistics
+.SH SYNOPSIS
+wstatus
+.SH DESCRIPTION
+.I wstatus
+gives you some global statistic about your W system and specific
+information about each client currently running.  Lets look at a
+demonstration run:
+.PP
+.nf
+> This is W1R4PL1, running on 640*480 PACKED screen with 1 planes.
+> Server has 2 colors of which 2 are shared.
+> 
+> Default server font family and size are: lucidat, 11 pixels
+>
+>There are currently 3 clients running including myself.
+.fi
+.PP
+This is how many windows are allocated and how much data the server has
+received and processed so far:
+.PP
+.nf
+> Server statistics:
+>  - 4 of all the 4 windows are open
+>  - 5910 packets have been processed from the
+>  - 153808 received bytes
+.fi
+.PP
+And these are the currently running clients (all local here):
+.PP
+.nf
+> Client statistics:
+>  1 (local): 0/0 windows, 3 packets / 24 bytes received
+>  2 (local): 4/4 windows, 1691 packets / 32300 bytes received
+>  3 (local): 0/0 windows, 2 packets / 16 bytes received
+.fi
+.PP
+Obviously this was only a very short run of wserver, in fact only to produce
+some output for wstatus...
+.SH SEE ALSO
+.IR w_querystatus (3)
+.SH AUTHOR
+15th Feb. 1996 by TeSche
+.SH LAST CHANGED
+13th June 1998 by Eero Tamminen

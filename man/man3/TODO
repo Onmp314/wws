@@ -1,0 +1,17 @@
+MISSING MANUAL PAGES
+
+	fs_direct2mono		FS-dither direct8/24 image to mono
+
+	qsin/qcos		lookup table functions for sin/cos (degrees)
+	isqrt			integer square root
+	w_fill			slow&silly flood fill
+
+	generic Wt manual page	(rest could be in HTML format)
+
+
+Btw.  which would be better, explicitly linking manual pages with same
+content to each other, or using the `.so man3/manual.3w' manual page
+redirection syntax like I currently do?
+
+
+	- Eero

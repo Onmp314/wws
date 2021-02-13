@@ -1,0 +1,32 @@
+.TH WROBOTS 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wrobots \- Robots game for W
+.SH SYNOPSIS
+.nf
+wrobots [-w <width>] [-h <height>]
+.fi
+.SH DESCRIPTION
+.I WRobots
+is a W version of game Daleks on Atari or Robots on unix.  In the game
+you need to avoid the robots that 'zoom' onto you and to try to get them
+to collision into each other (they are pretty stupid :-) or into an
+already collapsed heap of robots instead.  You'll get onto next level
+when you have collided all of the robots.  Game ends when one of the
+robots caughts you.
+.SH ARGUMENTS
+.TP
+.B -w
+Lets you specify the play area width in blocks.
+.TP
+.B -h
+Lets you specify the play area height in blocks.
+.SH CONTROLS
+You can guide your character either by clicking on a direction you want
+him to move or by using the keypad numbers (1-9).  Key 't' teleports and
+key 'l' can be used for 'last stand' (when you think that remaining
+robots will not get you).  Note that teleporting is chancy, you can land
+next to a robot...
+.SH TODO
+Some graphics would be nice. Currently the game looks fairly boring.
+.SH LAST CHANGED
+8/1996 by Eero Tamminen

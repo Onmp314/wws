@@ -1,0 +1,49 @@
+.TH w_changeColor 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_changeColor(), w_getColor() \- change/get color
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_changeColor(WWIN *" win ", short " color ","
+.BI "uchar " red ", uchar " green ", uchar " blue ");"
+.sp
+.BI "short w_getColor(WWIN *" win ", short " color ","
+.BI "uchar *" red ", uchar *" green ", uchar *" blue ");"
+.fi
+.SH DESCRIPTION
+.TP
+.B w_changeColor()
+will change the RGB values of a previously allocated or a shared color
+with given handle.
+.PP
+If window doesn't have a color map of it's own, one is created.  W
+server tries then to find the least used color index for the new color
+so that palette would change as little as possible when changing
+focus to another window with different palette.
+.TP
+.B w_getColor()
+will return RGB values for the color index (handle) in the
+.I red,
+.I green
+and
+.I blue
+arguments.  You could use this to query shared color
+properties.
+.SH NOTES
+.B w_changeColor()
+will change the palette entry also on screen if given window has the focus.
+.PP
+.I Previously allocated color
+could mean also a color that the program allocated for one the window's
+parents as W windows inherit their parents' colors.
+.SH RETURNS
+Functions return either 0 or negative value for an error.
+.SH SEE ALSO
+.IR w_allocColor (3),
+.IR w_setForegroundColor (3),
+.IR w_convertBitmap (3),
+.IR w_allocbm (3),
+.IR w_init (3)
+.SH LAST CHANGED
+5/1998 by Eero Tamminen

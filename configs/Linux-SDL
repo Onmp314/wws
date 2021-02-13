@@ -1,0 +1,57 @@
+# Linux (SDL/glibc) defines
+
+ARCH = Linux
+SDL  = 1
+
+# SDL is already dynamic, so why not let Wlibs be that too.
+# NOTE: you need to run ldconfig for the libs so that the linker
+# finds the libraries when apps ask for them...
+# if you want static libraries, change names below to libW.a and
+# libWt.a, recompile and install.
+WLIB  = libW.so
+WTLIB = libWt.so
+
+# included graphics drivers
+BMONO   = 1
+DIRECT8 = 1
+
+# Additional options
+# 486: -m486
+# 586: -mpentium (egcs)
+#
+# If you don't mind less debuggable applications, you can move
+# -fomit-frame-pointer option from SERVERCFLAGS to BASECFLAGS.
+
+BASECFLAGS	= -pipe -Wall -Wmissing-prototypes -O2 -g
+# some SDL configs seem to leave out the required X11 include path
+SERVERCFLAGS   := -DSDL=SDL -fomit-frame-pointer $(shell sdl-config --cflags) -I /usr/X11R6/include
+SERVERLDFLAGS	=
+SERVERLIBS     := $(shell sdl-config --libs) 
+CLIENTLIBS	= -lW
+
+#CLIENTLIBS	= -lWg -lefence
+#CLIENTLIBS	= -L../w2xlib -lW2X -L/usr/X11R6/lib -lX11
+#MATHCFLAGS	=
+MATHLIB		= -lm
+
+# This is needed for glibc as it doesn't seem to include crypt() anymore
+CRYPTLIB	= -lcrypt
+
+# whether wterm/wvt should set TERMCAP enviroment variable
+#EXPORT_TERMCAP = 1
+
+CC = gcc
+MAKE = make
+RANLIB = ranlib
+AR = ar r
+CP = cp
+LN = ln
+RM = rm -f
+CHMOD = chmod
+INSTALL = install
+# no stripping with -s, packaging should split debug syms to another package
+INSTALLBIN = install -m 755
+INSTALLDIRS = install -d
+
+# stuff you want to remove with 'make clean'
+JUNK = core *.rej *.orig *~

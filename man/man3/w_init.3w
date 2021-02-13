@@ -1,0 +1,97 @@
+.TH w_init 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_init(), w_exit() \- init/exit W server connection
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "WSERVER *w_init(" void ");"
+.sp
+.BI "void w_exit(" void ");"
+.fi
+.SH DESCRIPTION
+.B w_init()
+establishes a connection to a wserver, and should therefore be done before
+any other calls to W server are done.
+.PP
+If an environment variable
+.B WDISPLAY
+exists its contents is interpreted as the name of a host to connect to
+(for remote wservers).  This implies that Wlib must be able to convert
+that name into an IP address and that this IP address must be
+accessible.  It also implies that the remote server must have IP support
+compiled in (AF_UNIX_ONLY was not defined at compilation time).
+.PP
+If such a variable does not exist a local connection is attempted.
+.PP
+This call will also initialize static variables in W library.  Note that
+the WROOT window graphics attributes are not valid until you have
+changed them!
+.PP
+.I w_exit()
+gracefully ends a connection.  You should call this and quit when you'll
+receive EVENT_GADGET event with GADGET_EXIT value.
+.SH RETURNS
+.I w_init()
+either returns a non-zero pointer to a WSERVER struct (if the connection
+attempt succeeded) or NULL in case of any error (no wserver running on
+requested machine?).
+.PP
+The WSERVER struct is currently defined as:
+.PP
+.nf
+typedef struct {
+  short vmaj, vmin, pl;
+  short type;
+  short width, height;
+  short sharedcolors;
+  short planes;
+  ushort flags;
+  short fsize;
+  char *fname;
+} WSERVER;
+.fi
+.PP
+where the fields stand for:
+.TP
+.B vmaj
+- major version number of the W server.
+.TP
+.B vmin
+- minor version number.
+.TP
+.B pl
+- patchlevel.
+.TP
+.B width
+- W screen width in pixels.
+.TP
+.B height
+- screen height.
+.TP
+.B sharedcolors
+- the number of shared colors read, set and allocated for W applications
+from the wconfig file.  These can be used without further allocations.
+.TP
+.B planes
+- screen bitdepth ('1<<planes' screen colors).
+.TP
+.B flags
+- bitmask of other server capabilities. WSERVER_KEY_MAPPING tells that
+server maps special keys and WSERVER_SHM that it implements shared
+memory for (put/getblock) packet sending.
+.TP
+.B fsize
+- default font size
+.TP
+.B fname
+- default font family
+.PP
+.SH BUGS
+Connection data is stored statically, so one
+.I Wlib
+program can't have more than one connection at a time.
+.SH SEE ALSO
+.IR Wlib (3)
+.SH LAST CHANGED
+12th. Feb. 1996 by TeSche

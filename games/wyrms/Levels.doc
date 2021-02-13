@@ -1,0 +1,60 @@
+
+THE WYRMS LEVEL EDITOR
+
+With the level editor (start wyrms with '-e' option), you can edit level
+files or make your own ones.  '+' and '-' keys will scroll through the
+bonuses and the mouse or the keypad number keys (if mouse isn't
+available) can be used to position the the selected items/bonuses.
+
+The wyrms starting positions can be defined by setting one body piece
+(ie. either black or white) on the the level and the initial heading by
+pressing 'h' and giving the direction with the game controls ('button'
+gets back to editing).
+
+'s' key saves the level and loads next. 'q' loads next level.
+ESC exits the editor. If there are no levels, program quits.
+
+
+BINARY LEVEL FILES
+
+Binary level files are saved by the built-in Wyrms editor. The format is:
+
+- "WYRMS-B" id string.
+- Initial wyrm headings.
+- The level map.
+
+
+ASCII LEVEL FILES
+
+I made the ascii format so that levels can be edited with normal
+texteditors too.  The format of the level files is:
+
+- One line with the id string "WYRMS-A" (without '"'s).
+
+- One line with two characters specifying the Initial wyrm direction.
+  The characters are either 'U', 'D', 'R' or 'L'.
+
+- One line of map conversion information.
+  The translation array for the characters on the level map.  The
+  characters are in the following order:  background ('gray' dither),
+  wall, the home, a door, a key, explosives, a leaf, a turd, a flash,
+  a worm head (or a stone) and the player one and player two starting
+  places indicators.
+
+  For example this:
+    WYRMS-A
+    LR
+    .#^%=&$?|@<>
+
+  Would mean that '.'  on the map is gray (where the wyrms can move on),
+  '#' are walls,,, player one heads left from the position indicated with
+  '<' on the map and player two starts right from the position of '>' on
+  map.
+
+- The rest of the level file is the map composed of the above characters
+  and text.
+
+For further examples see the help level file.
+
+
+Wyrms (C) 1995, 1996 by Eero Tamminen.

@@ -1,0 +1,133 @@
+URGENT TODOS (support GGI version features also on other platforms)
+
+* Add special (arrow etc) key mapping also to other than GGI ports.
+  There are two choices:  a) using something like ncurses/slang to
+  interpret the keys or b) doing lots of OS/console specific code.
+  Which is better?  Currently W just delegates the key sequences, the
+  underlying OS outputs, expecting programs to be able to interpret them,
+  but that won't work over network (underlying OS/terminal might not be
+  the same) and is no good for GUI applications (W toolkit widgets).
+
+* Add separate key press and release events and key events for modifier
+  keys like alt, shift and control also to other than GGI ports.
+  These are needed for app/widget shortcuts (and for games like Doom ;-)).
+
+
+OTHER TODOS (tweaking)
+
+* Check why window title change is delayed until the window focus
+  changes and fix it.
+
+* Move mouse/kbd init, event handling and exit code from main server
+  to platform specific files in graph/ subdirectory.
+
+* Make W server map 8-bit keys to their ISO-latin1 equivivalents (most
+  W's X fonts use latin1 mapping).  This concerns mainly Atari as most
+  other platforms already use ISO-latin1 as default.
+
+* Investigate the best font values (width, effect values and
+  restrictions) for all the fonts.  After you've done this, send me a
+  shell script that sets those values with 'fontedit'.
+
+* Add GADGET_CLOSE handling even to apps which don't have the
+  close widget so that close gadgets work under W2X emulation
+  (easiest to implement by removing the GADGET_EXIT check from
+  the EVENT_GADGET processing)...
+
+* Make GGI (Generic Graphics Interface, originally a Linux project)
+  port use libGGI accelerated functions instead of doing all graphics
+  functions itself on top of DirectBuffer 'framebuffer'.  This allows
+  also use of 'palemu' translation layers for different bitdepth.
+
+* Test W with server and clients running on different endian machines.
+* Recruit testers for other (I got now 2.2 x86-Linux) platforms.
+
+
+WOULD BE NICE...
+
+* Color support to W2Xlib.
+
+* Add to all programs an option with which one can select the background
+  color of windows with color server.
+
+* Shared memory using get/putblock functions.  This would be very
+  good for W2Xlib (Xlib emulation of Wlib) too, which at the moment
+  has very inefficient implementation of those routines.
+
+* User selectable clip rectangles.  Would need two new RECs into the
+  server window structure for the window bitmap and screen relative
+  clip co-ordinates.
+
+* W client registration and message routing in server.  Would be needed
+  for Drag an' Drop.  See my old html/iccp.html notes.
+
+* Call window positioning/moving/sizing rectangle code from the main
+  loop so that client connections can be accepted while user is
+  interacting.  Now the rectangle functions just check mouse events
+  until operation is done.
+
+* Graphics modes to bitblk.  This would be great for graphics programs
+  (like games <g>).  Text functions won't probably need graphics modes
+  (except transparent), but if they do, IMHO bitblk and text mode(s)
+  should be separate from line drawing mode at least for backwards
+  compatibility if nothing else...
+
+* Check in server packet parsing that packet size is correct for the type
+  so that corrupt clients can't chrash the server.
+
+* W toolkit widget programming style guide.
+
+* Convert W toolkit ASCII docs to HTML.
+
+* More applications:
+  - GUI font editor.
+  - Wt GUI builder.
+  - File manager.
+  - W dvi-viewer.
+  - W gnuplot.
+
+
+CONFIGURING
+
+Why I don't use configure:
+	A)  It doesn't work well enough on all systems (Mac/MiNT)
+	B)  Configure scripts are unreadable compared to Makefiles (see A)
+	C)  Configure scripts are bloated <200% wink>
+
+
+THREADING
+
+W server will never be multithreaded, and changing Wlib to be thread
+safe would also be of some work.
+
+I'm intrigued about idea re-implementing W library and some of W toolkit
+in Java though.  Java is multithreading supporting, object oriented
+language with thread-safe libraries and also easier to program with than
+C++, so it might be a good candinate for this, depending on how easy
+it is to send C structs to socket with it.
+
+
+IINTERACTIVITY
+
+If you want to use W interactively (from an interpreter), you can always
+get my source for interfacing Python with W server v1r3.  If you want to
+use the source with a newer W server, you'll have to fix it first though.
+
+Lua is one of the smallest interpreted languages and especially designed
+for embedding, so it might be a nice companion for Wlib.  There's also a
+utility that does most of the work needed for wrapping a library for
+Lua.  Anybody interested?
+
+<a href="http://www.javasoft.com/">Java</a>,
+<a href="http://www.python.org/">Python</a>,
+<a href="http://www.tecgraf.puc-rio.br/lua/">Lua</a>.
+
+For Lua you might also try ftp://csg.uwaterloo.ca/pub/lhf/lua/ as
+the Brasilian home page seems to be unreachable fairly often.
+
+
+	- Eero
+
+Btw.  'Electric Fence' was quite helpful in debugging the image
+conversion routines on Linux.  Recommended.
+

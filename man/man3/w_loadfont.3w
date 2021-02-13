@@ -1,0 +1,77 @@
+.TH w_loadfont 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_loadfont(), w_fonttype(), w_unloadfont() \- font manipulation functionality
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "WFONT *w_loadfont(char *" family ", short " size ", ushort " stylemask ");"
+.sp
+.BI "char *w_fonttype(char *" filename ", short *" size ", ushort *" styles ");"
+.sp
+.BI "short w_unloadfont(WFONT *" font ");"
+.fi
+.SH DESCRIPTION
+.I w_loadfont()
+loads a font (what did you expect it to do?).  If an argument is zero, W
+server will use it's default for that instead.  \fIstylemask\fP argument
+should be ORed with flags of the desired font styles.
+.PP
+Fonts are loaded to clients, not windows and currently there's a fairly
+small static limit of fonts per client.
+.PP
+.I w_fonttype()
+is a backwards compatibility function.  Earlier fonts were specified by
+their filename, this will decompose such to size, style and family name
+values.
+.PP
+.I w_unloadfont()
+unloads a font.
+.SH RETURNS
+.I w_loadfont
+returns a non-zero pointer to a WFONT struct or NULL if any error occurred.
+This struct contains amongst others the following fields:
+.TP
+char *\fIfamily\fP:
+The font family name for the loaded font.
+.TP
+short \fIheight\fP;
+Full font height in pixels.
+.TP
+short \fIstyles\fP;
+Any combination of \fBF_BOLD\fP, \fBF_ITALIC\fP, \fBF_LIGHT\fP,
+\fBF_REVERSE\fP and \fBF_UNDERLINE\fP.
+.TP
+short \fIflags\fP;
+A combination of \fBF_PROP\fP (set if font is proportional) and one of
+the font character set flags:  \fBF_LATIN1\fP, \fBF_ASCII\fP,
+\fBF_SYMBOL\fP.
+.TP
+short \fIbaseline\fP;
+The offset from font top to baseline along which fonts of differing sizes
+should be aligned vertically.
+.TP
+short \fImaxwidth\fP;
+The width of widest character in the font.
+.TP
+uchar \fIwidths\fP[256];
+the width of each of the chars in pixel, only for F_PROP fonts
+.PP
+Other WFONT structure members should be ignored. They are internal to
+Wlib workings.
+.PP
+.I w_fonttype()
+returns the font family name of the given font filename or NULL.
+.PP
+.I w_unloadfont()
+returns 0 if everything is OK or something negative if any error occurred.
+.SH SEE ALSO
+.IR w_setfont (3),
+.IR w_settextstyle (3),
+.IR w_printstring (3),
+.IR w_strlen (3),
+.IR wfontdemo (1),
+.IR wfonts (1),
+.IR wchars (1)
+.SH LAST CHANGED
+31th. Oct. 1997 by Eero Tamminen

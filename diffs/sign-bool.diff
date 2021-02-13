@@ -1,0 +1,337 @@
+Some changes that fix GCC 4.x uchar* vs. char* pointer warnings
+(on x86) and changing to use C99 "bool" instead of uchar for
+boolean values.  This is as a patch because I haven't tested
+whether the sign changes will actually work when using a compiler
+which by default has signed char (GCC uses unsigned char by default)
+and I'm not sure how portable the C99 bool is currently.
+
+Currently GCC 4.x signedness warnings are shut off with
+"-Wno-pointer-sign" in Makefiles where appropriate
+(Wt/vt.c, wvt/, wedit/ wetscape/).
+
+
+--- apps/wchars.c	16 May 1999 13:09:23 -0000	1.2
++++ apps/wchars.c	17 Aug 2008 10:41:53 -0000
+@@ -45,7 +45,7 @@
+   WFONT *font;
+   WEVENT *ev;
+   WWIN *win;
+-  uchar msg;
++  char msg;
+  
+   if((argc != 3 && argc != 4) || argv[1][0] == '-')
+   {
+--- apps/wterm.c	11 Oct 2004 18:17:08 -0000	1.8
++++ apps/wterm.c	17 Aug 2008 10:44:26 -0000
+@@ -1048,7 +1048,7 @@
+ 
+ static void term (void)
+ {
+-  uchar buf[LARGEBUFFER];
++  char buf[LARGEBUFFER];
+   long in, l;
+   WEVENT *ev;
+   fd_set rfd;
+--- server/graph/monochrome/bitblit.c	25 May 2003 08:14:07 -0000	1.3
++++ server/graph/monochrome/bitblit.c	24 Aug 2008 18:51:57 -0000
+@@ -41,7 +41,7 @@
+     if ((todo = 8 - dbit) > width) {
+       todo = width;
+     }
+-    mask = bfmask8[dbit][todo-1];
++    mask = bfmask8[(unsigned)dbit][todo-1];
+     if (sbit) {
+       if (sbit + todo > 8) {
+ 	/* this will shift for positive arguments only when 'sbit > dbit',
+@@ -149,7 +149,7 @@
+      * dbit is 0, allthough that's what we want to achieve, but there may be
+      * not enough pixels. this part is exactly like in bitline2right.
+      */
+-    mask = bfmask8[dbit][todo-1];
++    mask = bfmask8[(unsigned)dbit][todo-1];
+     if (sbit) {
+       if (sbit + todo > 8) {
+ 	*dptr = (*dptr & ~mask) | (((sptr[0] << (sbit - dbit)) | (sptr[1] >> (8 - sbit + dbit))) & mask);
+@@ -195,7 +195,7 @@
+     sbit += 8;
+     sptr--;
+   }
+-  mask = bfmask8[dbit][width-1];
++  mask = bfmask8[(unsigned)dbit][width-1];
+   if (sbit) {
+     if (sbit + width > 8) {
+       *dptr = (*dptr & ~mask) | (((sptr[0] << (sbit - dbit)) | (sptr[1] >> (8 - sbit + dbit))) & mask);
+--- server/client_noret.c	8 Apr 2003 22:01:28 -0000	1.2
++++ server/client_noret.c	17 Aug 2008 10:27:43 -0000
+@@ -519,7 +519,7 @@
+ }
+ 
+ 
+-void client_prints(CLIENT *cptr, ushort handle, short x0, short y0, uchar *s)
++void client_prints(CLIENT *cptr, ushort handle, short x0, short y0, char *s)
+ {
+   WINDOW *win;
+   FONT *f;
+--- server/pakets.h	16 Apr 2003 20:19:28 -0000	1.6
++++ server/pakets.h	17 Aug 2008 10:23:51 -0000
+@@ -432,7 +432,7 @@
+   short len, type;
+   ushort handle;
+   short x0, y0, res;
+-  uchar s[MAXPRINTS];
++  char s[MAXPRINTS];
+ } PRINTSP;
+ 
+ typedef struct {
+--- server/proto.h	22 May 2003 20:43:01 -0000	1.17
++++ server/proto.h	17 Aug 2008 10:28:21 -0000
+@@ -101,7 +101,7 @@
+ extern void client_printc(CLIENT *cptr, ushort handle, short x0, short y0,
+ 			  ushort c);
+ extern void client_prints(CLIENT *cptr, ushort handle, short x0, short y0,
+-			  uchar *s);
++			  char *s);
+ extern void client_circle(CLIENT *cptr, ushort handle, short x0, short y0,
+ 			  short r);
+ extern void client_ellipse(CLIENT *cptr, ushort handle, short x0, short y0,
+--- server/types.h	16 May 1999 13:10:29 -0000	1.3
++++ server/types.h	17 Aug 2008 10:29:52 -0000
+@@ -359,7 +359,7 @@
+   BITMAP * (*createbm)(BITMAP *to_fill, short width, short height, short alloc_data);
+   void (*bitblk) (BITMAP *bm, long x0, long y0, long width, long height, BITMAP *bm1, long x1, long y1);
+   void (*scroll) (BITMAP *bm, long x0, long y0, long width, long height, long y1);
+-  void (*prints) (BITMAP *bm, long x0, long y0, uchar *s);
++  void (*prints) (BITMAP *bm, long x0, long y0, char *s);
+   long (*test)   (BITMAP *bm, long x0, long y0);
+   void (*plot)   (BITMAP *bm, long x0, long y0);
+   void (*line)   (BITMAP *bm, long x0, long y0, long xe, long ye);
+--- wt/wvt/wvt.c	11 Oct 2004 18:17:09 -0000	1.8
++++ wt/wvt/wvt.c	17 Aug 2008 11:16:56 -0000
+@@ -121,7 +121,7 @@
+ }
+ 
+ static void
+-send_chars (uchar *cp, long len)
++send_chars (char *cp, long len)
+ {
+   long r;
+   if (cp && len > 0) {
+@@ -132,7 +132,7 @@
+ static void
+ input_cb (long arg, fd_set *r, fd_set *w, fd_set *e)
+ {
+-  uchar buf[LARGEBUF];
++  char buf[LARGEBUF];
+   long in;
+ 
+   /* is there tty data to be printed? */
+@@ -173,7 +173,7 @@
+ static WEVENT *
+ key_cb (widget_t *w, WEVENT *ev)
+ {
+-  uchar buf[4];
++  char buf[4];
+   int len;
+ 
+   if (ev->type == EVENT_KEY) {
+--- wt/Wt/vt.c	10 Sep 2000 10:16:16 -0000	1.2
++++ wt/Wt/vt.c	24 Aug 2008 18:41:38 -0000
+@@ -49,6 +49,7 @@
+ #include <time.h>
+ #include <sys/time.h>
+ #include <assert.h>
++#include <stdbool.h>
+ #include <Wlib.h>
+ #include "Wt.h"
+ #include "toolkit.h"
+@@ -119,7 +120,7 @@
+ 
+   unsigned mode:2;		/* background mode */
+   unsigned attr:6;		/* font attributes */
+-  u_char c;			/* character */
++  char c;			/* character */
+ 
+ } vtchar_t;
+ 
+@@ -128,13 +129,14 @@
+ 
+ typedef struct _vt_widget_t {
+   widget_t w;
+-  short    is_open;
+-  short    is_realized;
+ 
+-  ulong    clicktime;	/* time of last mouse click */
++  bool     is_open;
++  bool     is_realized;
++
+   short	   nclicks;	/* # mouse clicks since clicktime */
++  ulong    clicktime;	/* time of last mouse click */
+ 
+-  short	   inselect;	/* selection valid */
++  bool     inselect;	/* selection valid */
+   long	   selx0,sely0; /* selection start */
+   long	   selx1,sely1; /* selection end */
+   long	   seltimer;	/* selection timer */
+@@ -153,18 +155,18 @@
+ 
+   long     curx, cury;	/* cursor pos */
+   long     savx, savy;	/* saved cursor pos */
+-  u_char   curvis;	/* cursor currently shown */
+-  u_char   curon;	/* cursor on/off */
+-  u_char   curblink;	/* cursor blinking on/off */
+-  u_char   autowrap;	/* autowrap on/off */
+-  u_char   visbell;	/* visual bell on/off */
+   u_char   curattr;	/* display attributes */
++  bool     curvis;	/* cursor currently shown */
++  bool     curon;	/* cursor on/off */
++  bool     curblink;	/* cursor blinking on/off */
++  bool     autowrap;	/* autowrap on/off */
++  bool     visbell;	/* visual bell on/off */
++  bool     reversed;	/* for WT_VT_REVERSE option */
++  u_char   bgmode;	/* background mode (M_CLEAR/M_DRAW) */
+   unsigned curbg:4;	/* bg color index */
+   unsigned curfg:4;	/* fg color index */
+   u_char   style_mask;	/* attribute mask for style effects / read fonts */
+   u_char   font_mask;	/* attribute mask for real styles */
+-  u_char   reversed;	/* for WT_VT_REVERSE option */
+-  u_char   bgmode;	/* background mode (M_CLEAR/M_DRAW) */
+   short	   fontht;	/* font infos */
+   short    fontwd;
+   char     *fontfamily;	/* font familyname */
+@@ -182,10 +184,10 @@
+ #endif
+ 
+   long     outx, outy;
+-  u_char   outbuf[BUFSIZE+1];
+-  u_char   *outbufp;	/* output buffering */
++  char   outbuf[BUFSIZE+1];
++  char   *outbufp;	/* output buffering */
+ 
+-  void     (*outfn) (struct _vt_widget_t *, u_char c);
++  void     (*outfn) (struct _vt_widget_t *, char c);
+ 
+   void	   (*hist_cb) (widget_t *w, long histpos, long histsize,
+   		       long rows, long cols, wt_opaque_t *);
+@@ -193,12 +195,12 @@
+ } vt_widget_t;
+ 
+ 
+-static void putc_normal (vt_widget_t *, u_char c);
+-static void putc_esc    (vt_widget_t *, u_char c);
+-static void putc_esc_y1 (vt_widget_t *, u_char c);
+-static void putc_esc_y2 (vt_widget_t *, u_char c);
+-static void putc_esc_c  (vt_widget_t *, u_char c);
+-static void putc_esc_b  (vt_widget_t *, u_char c);
++static void putc_normal (vt_widget_t *, char c);
++static void putc_esc    (vt_widget_t *, char c);
++static void putc_esc_y1 (vt_widget_t *, char c);
++static void putc_esc_y2 (vt_widget_t *, char c);
++static void putc_esc_c  (vt_widget_t *, char c);
++static void putc_esc_b  (vt_widget_t *, char c);
+ 
+ 
+ /**********************************************************************/
+@@ -247,7 +249,7 @@
+ }
+ 
+ static inline void
+-vt_addchar (vt_widget_t *w, u_char c)
++vt_addchar (vt_widget_t *w, char c)
+ {
+   if (w->outbufp - w->outbuf >= BUFSIZE)
+     vt_flush (w);
+@@ -301,7 +303,7 @@
+ }
+ 
+ static void
+-vt_change_bgmode(vt_widget_t *w, u_char reverse)
++vt_change_bgmode(vt_widget_t *w, bool reverse)
+ {
+   if (reverse) {
+     if (w->bgmode != M_DRAW) {
+@@ -656,7 +658,7 @@
+ }
+ 
+ static void
+-vt_output (vt_widget_t *w, u_char *cp, long len)
++vt_output (vt_widget_t *w, char *cp, long len)
+ {
+   long ohistsize = w->curhistsize;
+ 
+@@ -1240,7 +1242,7 @@
+ }
+ 
+ static inline void
+-vt_print (vt_widget_t *w, u_char c)
++vt_print (vt_widget_t *w, char c)
+ {
+   vt_addchar (w, c);
+   if (++w->curx >= w->wd) {
+@@ -1269,7 +1271,7 @@
+  * It would be easy to add here more.
+  */
+ static void
+-putc_xparam(vt_widget_t *w, u_char c)
++putc_xparam(vt_widget_t *w, char c)
+ {
+   int value, i;
+ 
+@@ -1361,7 +1363,7 @@
+  * compatible functionality).
+  */
+ static void
+-putc_xterm(vt_widget_t *w, u_char c)
++putc_xterm(vt_widget_t *w, char c)
+ {
+   if (c >= '0' && c <= '9') {
+     w->parameter[w->params] = c - '0';
+@@ -1392,35 +1394,35 @@
+ /***************************** VT52 emulator *******************************/
+ 
+ static void
+-putc_esc_c (vt_widget_t *w, u_char c)
++putc_esc_c (vt_widget_t *w, char c)
+ {
+   w->outfn = putc_normal;
+   vt_set_bgcol (w, c);
+ }
+ 
+ static void
+-putc_esc_b (vt_widget_t *w, u_char c)
++putc_esc_b (vt_widget_t *w, char c)
+ {
+   w->outfn = putc_normal;
+   vt_set_fgcol (w, c);
+ }
+ 
+ static void
+-putc_esc_y2 (vt_widget_t *w, u_char c)
++putc_esc_y2 (vt_widget_t *w, char c)
+ {
+   w->outfn = putc_normal;
+   vt_cursor_xpos (w, c);
+ }
+ 
+ static void
+-putc_esc_y1 (vt_widget_t *w, u_char c)
++putc_esc_y1 (vt_widget_t *w, char c)
+ {
+   w->outfn = putc_esc_y2;
+   vt_cursor_ypos (w, c);
+ }
+ 
+ static void
+-putc_esc (vt_widget_t *w, u_char c)
++putc_esc (vt_widget_t *w, char c)
+ {
+   w->outfn = putc_normal;
+   switch (c) {
+@@ -1535,7 +1537,7 @@
+ }
+ 
+ static void
+-putc_normal (vt_widget_t *w, u_char c)
++putc_normal (vt_widget_t *w, char c)
+ {
+   switch (c) {
+     case 0:

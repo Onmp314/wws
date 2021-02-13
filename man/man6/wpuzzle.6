@@ -1,0 +1,72 @@
+.TH WPUZZLE 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wpuzzle \- sliding puzzle for W
+.SH SYNOPSIS
+.nf
+wpuzzle [-n <size>] [-f <font family>] [-s <font size>]  [<bitmap file>]
+.fi
+.SH DESCRIPTION
+The
+.I wpuzzle
+program displays a puzzle consisting of
+.B N
+times
+.B N
+squares, where
+.B N
+can be set via the
+.B \-n
+command line option.  One of the squares is blank.  The objective of the game
+is to bring the puzzle into the solved state by successively sliding an
+occupied square to the location of the blank one.  The puzzle is always
+solvable.
+.PP
+The puzzle can either display an image (if the
+.I bitmap file
+argument is given; the file must be in GEM \.IMG format) or a sequence of
+numbers (in the font defined via the
+.B \-f
+command line option).
+.PP
+This program was inspired by the
+.I xpuzzle
+client program for the X window system, which in turn was inspired by the
+original "15-puzzle".  However,
+.I wpuzzle
+has been rewritten from scratch and contains no code for solving the puzzle
+automatically.
+.SH OPTIONS
+.I wpuzzle
+accepts the following options:
+.TP
+.B \-n \fIsize\fP
+Sets the size of the puzzle, i.e., the number of squares along an edge.
+.I Size
+must be larger than 1.  The default
+.I size
+is 4.
+.TP
+.B \-f \fIfont\fP
+Sets the font used when no
+.I bitmap file
+argument is given.  The default
+.I font
+is "cour10.wfnt".
+.SH CONTROL
+To slide one of the squares adjacent to the blank into the blank space, just
+click on it.  You can also click on any of the squares in the same row or
+column as the blank; this will move all the intervening squares in the same
+direction.
+.PP
+To exit the program, press the 'q' key.
+.SH AUTHORS
+.I Wpuzzle
+was written by Jens Kilian.  The code for reading \.IMG files was written
+by Torsten Scherer, author of
+.IR W (1).
+The code for sliding multiple squares was written by Simon Kagedal.
+.SH "SEE ALSO"
+.IR wserver (1)
+.SH BUGS
+.I Wpuzzle
+cannot solve the puzzle on its own.

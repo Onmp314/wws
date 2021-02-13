@@ -1,0 +1,16 @@
+.TH w_trace 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_trace() \- toggle tracing of all Wlib calls
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "void w_trace(short " flag ");"
+.fi
+.SH DESCRIPTION
+.I w_trace()
+will enable trace outputs of all calls done to Wlib if passed a flag which
+evaluates to != zero. You can always disable trace output later by calling it 
+again with flag set to zero.
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

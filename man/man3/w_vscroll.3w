@@ -1,0 +1,18 @@
+.TH w_vscroll 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_vscroll() \- scroll a rectangular area vertically
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+\fBshort w_vscroll(WWIN *\fIwin\fB, short\fI x0\fB, short\fI y0\fB,
+short\fI width\fB, short\fI height\fB, short\fI y1\fB);
+.fi
+.SH DESCRIPTION
+.I w_vscroll()
+scrolls a rectangle vertically up or down to a new position. It is
+substantially faster than w_bitblk().
+.SH SEE ALSO
+.IR w_bitblk (3)
+.SH LAST CHANGED
+14th. Feb. 1996 by TeSche

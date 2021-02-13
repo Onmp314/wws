@@ -1,0 +1,228 @@
+
+ The `edittext' widget class
+ ----------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *edittext  = wt_create (wt_edittext_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+The edittext widget can be used for letting a user to view and edit
+texts on the screen.
+
+For the user edittext offers del, backspace, (real) tab, Emacs cursor
+keys (^a home, ^e end, ^f forward, ^b backward, ^p previous line, ^n
+next line), ^> page down, ^< page up, ^t character transpose, ^x cut, ^c
+copy, ^v paste, ^k kill line, ^u undo line edits and ^z format lines.
+Cut / copy / paste operations use the W clipboard.  Cut and copy work
+either on a selection painted with mouse or in case there's no
+selection, drop a `keyboard selection anchor'.
+
+You can position cursor with mouse and paste clipboard clips with a
+right button click. Left button can be used either for `dragging'
+a text selection or for selecting a single word (double click) or
+line (triple click).
+
+Line lenght will always be limited to what's set with WT_VT_WIDTH
+option.  Using dynamic line structures would have added a huge
+amount of code.  IMHO too much for a `simple' program component.
+That has to wait `until' I'll do a W DTP program ;-)))))).
+
+
+ 3 Configuration Options
+ -----------------------
+
+Here are the options that can be set or queried with setopt() and
+getopt() functions.
+
+
+WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a
+	pointer to it) in the widget. This is useful if you have to
+	associate some extra data with a widget.
+
+
+WT_XPOS (long *)
+
+	Set / get the X position of the edittext widget, which is
+	relative to the upper left corner of the parent window.
+
+
+WT_YPOS (long *)
+
+	Set / get the Y position of the edittext widget, which is
+	relative to the upper left corner of the parent window.
+
+
+WT_WIDTH (long *)
+
+	Set / get the width of the edittext widget.  Can be set only
+	before widget is realized.
+
+
+WT_HEIGHT (long *)
+
+	Set / get the height of the edittext widget.  Can be set only
+	before widget is realized.
+
+
+WT_FONT (char *) / (WFONT **)
+
+	Set the font used in the edit field.  The font has to be a fixed
+	width one for the edit field to work correctly and can be set
+	only before the widget is realized. Getopting returns pointer
+	to the font structure.
+
+
+WT_VT_WIDTH (long *)
+
+	Set / get the width of the edittext widget width in characters.
+	This dictates how long the rows can be (too long lines are
+	wrapped to next row).  Can be set only before widget is
+	realized.
+
+
+WT_VT_HEIGHT (long *)
+
+	Set / get the width of the edittext widget height in characters.
+	Can be set only before widget is realized.
+
+
+WT_TEXT_WRAP (long *)
+
+	Set / get the column at which the text is wrapped to a next
+	line. Only values smaller or equal to WT_VT_WIDTH are accepted.
+	WT_VT_WIDTH is the default.
+
+
+WT_TEXT_TAB (long *)
+
+	Set / get text tab size.  If value is 1 or smaller, tabs are
+	converted to spaces (default).  Otherwise tabs work normally
+	(huge job for a minor feature like this...).
+
+
+WT_TEXT_INDENT (long *)
+
+	Set /get whether text should be indented to the level of the
+	previous line. Default is true.
+
+
+WT_TEXT_LINE (long *)
+
+	Set / get cursor line. Returns 0 when succesful, otherwise -1.
+	Has effect only after realization.
+
+
+WT_TEXT_COLUMN (long *)
+
+	Set / get cursor offset.  Returns 0 when succesful, otherwise
+	-1.  Has effect only after realization.  Note that if you'll set
+	both line and column, line has to be set first and that this
+	offset is a normal string offset, not screen one which accounts
+	for tabs too.
+
+
+WT_TEXT_INSERT (char *)
+
+	Insert given C-string *before* cursor.  Tabs and different line
+	breaks are converted and lines are indented and wrapped
+	according to WT_TEXT_TAB, WT_TEXT_INDENT and WT_TEXT_WRAP
+	options.  NOTE:  Given string address has to be valid until
+	widget is realized!!!
+
+	Getopt returns (char *) pointer to the current text line
+	contents, not to the text that was setopted. This could be used
+	with WT_TEXT_LINE setopt as an alternative for WT_OFFSET_CB.
+
+
+WT_TEXT_APPEND (char *)
+
+	Insert given C-string *after* cursor.  Otherwise behaves just
+	like WT_TEXT_INSERT.
+
+
+WT_TEXT_CLEAR (NULL)
+
+	Frees widget text and clears the window.  As this reallocates
+	widget structs, you should abort if this fails (returns < 0).
+
+
+WT_TEXT_SELECT (long *)
+
+	Set the text selection lenght from the cursor position on
+	current line.  Doesn't span lines.  No lenght means that
+	selection should be canceled.  Returns non-zero with getopt if
+	there is a selection.  Has effect only after realization.
+
+
+WT_OFFSET_CB  (short) (widget_t *, uchar *string, short lineno, void *ptr)
+
+	When callback is getopted, text lines are output to the function
+	one at the time, starting from the current line.  The sign of
+	the function return value decides in which direction the lines
+	are traversed (positive = forward, negative = backward).
+	Function should return 0 if it wishes to abort line scanning.
+
+	If function edits the line, it should use WT_TEXT_COLUMN,
+	WT_TEXT_SELECT and WT_TEXT_INSERT/APPEND options as this
+	callback is intended for `interactive' text actions.  Cursor is
+	always on the current line and will be left at the last
+	processed line when done.  You should note however, that if
+	you'll want WT_TEXT_SELECT to be visible in the window, you
+	should getopt and setopt WT_TEXT_LINE beforehand.
+
+	Getopt argument will be passed as is to the callback as `ptr'.
+	Getopt will not change the argument.
+
+	After getopt one should setopt WT_TEXT_LINE so that cursor will
+	be on line visible in the window afterwards.  Window position
+	will not be updated with this function unless you'll call a
+	setopt option that does that.
+
+
+WT_ACTION_CB  (uchar *) (widget_t *, uchar *string, short maxlenght, void *ptr)
+
+	When callback is getopted, all text lines are output one at the
+	time to the function setopted to the callback.  If given string
+	is changed callback should return it, otherwise NULL.  If more
+	than `maxlenght' space is needed for the new string, copy string
+	onto your own buffer and then return that (ATM the strings will
+	be cut to maxlenght, but that may change in the future).
+	
+	Getopt argument will be passed as is (so don't de-reference it
+	with `&') to the callback as `ptr'.  It will not be changed with
+	this call, so you could use it for example passing file handler
+	or something similar.
+	
+	WT_TEXT_INSERT nor other wiget options shouldn't be used by the
+	callback. This is intended mainly for saving and printing of
+	the whole text.
+
+
+ WT_CHANGE_CB (void *) (widget_t *, short x, short y)
+
+	Set / get the function that will be called when cursor position
+	changes.
+
+
+ WT_MAP_CB (uchar) (widget_t *, uchar)
+
+	Set / get the function that will be used for mapping text input
+	characters.  If character (sequence) maps into several chars,
+	they should be output with WT_TEXT_INSERT option and function
+	should return zero.
+
+
+WT_CHAR (long *)
+
+	Insert / get character at current cursor position.
+

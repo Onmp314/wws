@@ -1,0 +1,26 @@
+.TH w_line 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_line(), w_dline() \- draw a line
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_line(WWIN *" win ", short " x0 ", short " y0 ", short " xe ", short " ye ");"
+.sp
+.BI "short w_dline(WWIN *" win ", short " x0 ", short " y0 ", short " xe ", short " ye ");"
+.fi
+.SH DESCRIPTION
+.I w_line()
+draws a line between two points, using the current mode.
+.PP
+.I w_dline()
+draws a dashed line between two points, using the current mode and pattern.
+.SH SEE ALSO
+.IR w_hline (3),
+.IR w_vline (3),
+.IR w_poly (3),
+.IR w_bezier (3),
+.IR w_setmode (3),
+.IR w_setpattern (3)
+.SH LAST CHANGED
+14th. Feb. 1996 by TeSche

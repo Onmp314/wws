@@ -1,0 +1,25 @@
+.TH w_bitblk 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_bitblk(), w_bitblk2() \- copy rectangular area
+.SH SYNOPSIS
+.nf
+.BI #include <Wlib.h>
+.sp
+\fBshort w_bitblk(WWIN *\fIwin\fB, short \fIx0\fB, short\fI y0\fB,
+short\fI width\fB, short\fI height\fB, short\fI x1\fB, short\fI y1\fB);
+.sp
+\fBshort w_bitblk2(WWIN *\fIswin\fB, short\fI x0\fB, short\fI y0\fB,
+short\fI width\fB, short\fI height\fB, WWIN *\fIdwin\fB,
+short\fI x1\fB, short\fI y1\fB);
+.fi
+.SH DESCRIPTION
+.I w_bitblk()
+copies a rectangle from one position in a window to another position, taking
+care about whether they overlap and things like these.
+.PP
+.I w_bitblk2()
+does the same, only that the target lies in a different window.
+.SH SEE ALSO
+.IR w_vscroll (3)
+.SH LAST CHANGED
+14th. Feb. 1996 by TeSche

@@ -1,0 +1,40 @@
+.TH w_poly 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_poly(), w_dpoly(), w_ppoly(), w_dppoly() \- draw a polygon
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_poly(WWIN *" win ", short " numpoints ", short *" points ");"
+.sp
+.BI "short w_dpoly(WWIN *" win ", short " numpoints ", short *" points ");"
+.sp
+.BI "short w_ppoly(WWIN *" win ", short " numpoints ", short *" points ");"
+.sp
+.BI "short w_dppoly(WWIN *" win ", short " numpoints ", short *" points ");"
+.fi
+.SH DESCRIPTION
+.I w_poly()
+draws a polygon, using the current mode.
+.PP
+.I w_dpoly()
+draws a dashed polygon, using the current mode and pattern.
+.PP
+.I w_ppoly()
+draws a filled polygon, using the current mode.
+.PP
+.I w_dppoly()
+draws a dashed filled polygon, using the current mode and pattern.
+.PP
+All the four functions require the polygon to be
+.B closed convex
+and consist of
+.B 3 to 64
+points. Points must be given as a sequence of (x,y) pairs.
+.SH SEE ALSO
+.IR w_line (3),
+.IR w_bezier (3),
+.IR w_setmode (3),
+.IR w_setpattern (3)
+.SH LAST CHANGED
+14th. Feb. 1996 by TeSche

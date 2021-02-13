@@ -1,0 +1,120 @@
+.TH w_queryevent 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_queryevent() \- wait for W events and/or file descriptors
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+\fBWEVENT *w_queryevent(fd_set *\fIrdp\fB,
+fd_set *\fIwdp\fB, fd_set *\fIxdp\fB, long\fI timeout\fB);
+.fi
+.SH DESCRIPTION
+.I w_queryevent()
+is the big function dealing with receiving and/or buffering events. What kind
+of events you should expect depends on what flags you've created the window
+with, but you should always expect EVENT_GADGET / GADGET_EXIT events.
+.PP
+You can also give pointers (or NULL) and a timeout value for additional file
+descriptor sets to watch, just like the way you would do it for the
+.I select
+system call. If the
+.B timeout
+value is negative it means 'wait forever', if it is zero the call will return
+immediately and if it is positive it will wait at most its value in
+milliseconds. This delay is not at all accurate, so you should under no
+circumstances use it for any kind of time measurements.
+.SH RETURNS
+either a non-zero pointer to a WEVENT struct or NULL if no event occurred, plus
+the returned set of file descriptors from select().
+.PP
+The WWIN struct is defined as follows:
+.PP
+.nf
+typedef struct {
+  WWIN *win;
+  short type;
+  short x, y, w, h;
+  long time;
+  long key;
+} WEVENT;
+.fi
+.PP
+where the fields have got the following meaning, depending on the
+.B type
+of the event:
+.TP
+EVENT_KEY
+the key
+.B key
+was pressed in window
+.B win.
+If W server doesn't use some special input library or do console magic
+on your platform, only plain ASCII codes will be reported, special keys
+(function and cursor keys etc)  will be sent as escape sequences native
+to the underlying console.  For special key mappings, see Wlib.h and
+wterm code.  Take also a look at \fIw_create()\fP flags.
+.TP
+EVENT_KRELEASE
+reports release of a previous EVENT_KEY key.
+.TP
+EVENT_MPRESS, EVENT_MRELEASE
+any one mouse button of \fBBUTTON_LEFT\fP, \fBBUTTON_MID\fP or
+\fBBUTTON_RIGHT\fP (see \fIkey\fP) was pressed or released in window
+.B win
+at coordinates
+.B x, y.
+If the release happened while the mouse was actually already again outside of
+the window it was pressed in it will still be reported to this window, but the
+coordinates will be negative.
+.TP
+EVENT_MMOVE
+mouse was moved in the window
+.B win
+to an offset (relative movement)
+.B x, y
+from previous position.
+.TP
+EVENT_GADGET
+a gadget was activated in window
+.B win, key
+will hold any one of GADGET_EXIT, GADGET_CLOSE or GADGET_ICON. How you react
+to the events is your problem, but in case of a GADGET_EXIT you should
+terminate ASAP and not make any more Wlib calls as this one is send when the
+wserver goes down.
+.TP
+EVENT_SAVEON, EVENT_SAVEOFF
+these events are send by the wserver to the screen saver only to tell him when
+to become active or inactive, see
+.I wsaver.
+.TP
+EVENT_ACTIVE, EVENT_INACTIVE
+the window
+.B win
+was entered or left by the mouse pointer.
+.PP
+As a side effect
+.I w_queryevent()
+flushes the internal socket buffer before doing its job. Normally
+this is enough, but sometimes you may want to call
+.I w_flush()
+explicitly.
+.PP
+.B time
+field can be used for comparing how close together successive events
+have occurred.  The difference between times of different events is
+in milliseconds as is the
+.B timeout
+argument for the
+.I w_queryevent()
+function call.
+.SH SEE ALSO
+.IR w_create (3),
+.IR w_gettime (3),
+.IR w_querybuttonevent (3),
+.IR w_querymousepos (3),
+.IR w_flush (3),
+.IR select (2)
+.SH FIRST VERSION
+13th Feb. 1996 by TeSche
+.SH LAST CHANGED
+26th May 1999 by Eero Tamminen

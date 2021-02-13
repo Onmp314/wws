@@ -1,0 +1,19 @@
+.TH WGONE 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wgone \- screen lock for W
+.SH SYNOPSIS
+wgone
+.SH DESCRIPTION
+.I wgone
+locks the screen so that neither any event could be send to any client nor any
+window will be displayed. If you want you may regard this state as `safe' and
+leave your computer without logging out - but I wouldn't bet on that!
+(Although security was enhanced a bit in W1R§) You must enter your password
+to quit wgone.
+.PP
+.SH BUGS
+may fail due to W_TOP window problems, but is this a bug?
+.SH SEE ALSO
+w_create(3)
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

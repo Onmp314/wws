@@ -1,0 +1,37 @@
+.TH AMIGOD 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+amigod \- daemon version of the AmiGo Go board game engine
+.SH SYNOPSIS
+.nf
+amigod [-w <level>] [-h]
+.fi
+.SH DESCRIPTION
+.I Amigod
+(AmiGo daemon) is a server/daemon version of AmiGo for the networked
+turn based, two player game framework by Eero Tamminen.
+.SH OPTIONS
+.TP
+.B -l
+Daemon play level should be 1-7
+.TP
+.B -h
+Help
+.SH GAMEPLAY HINTS
+Good strategies for beating AmiGo are cutting and extending like
+with most other freely available computer Go programs.  Also making
+walls and then driving AmiGo against them works well.
+.SH AUTHORS
+Original Go player was programmed by Stoney Ballard in Pascal.
+C port of that and Amiga interface by Todd R. Johnson.
+Server version of the Amiga version by Eero Tamminen.
+.PP
+Changes included writing glue functions between AmiGo and game
+FrameWork code into amigo.c.
+.SH TODO
+Undo, better AI etc.
+.SH SEE ALSO
+.IR cgo (6),
+.IR pented (6),
+.IR reversid (6)
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

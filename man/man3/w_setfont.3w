@@ -1,0 +1,30 @@
+.TH w_setfont 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_setfont() \- set window text font
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "WFONT *w_setfont(WWIN *" win ", WFONT *" font ");"
+.fi
+.SH DESCRIPTION
+.I w_setfont()
+sets a font for a window for future
+.I w_printchar()
+or
+.I w_printstring()
+calls. If you give NULL as font pointer you'll disable printing, but this
+does not yet unload the font.
+.SH RETURNS
+returns the previously set font for the window or NULL if there wasn't any
+font set yet.
+.SH BUGS
+none?
+.SH SEE ALSO
+.IR w_settextstyle (3),
+.IR w_loadfont (3),
+.IR w_unloadfont (3),
+.IR w_printchar (3),
+.IR w_printstring (3)
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>To-do dabba-duuda do-to to-do...</title>
+</head>
+<body>
+
+<h3>Wish / TODO list for W</h3>
+
+These are features desired for current W version (W1R4).  The ones
+marked with a `*' are considered to be the most important.  Some might
+not get implemented at all.
+
+<ul>
+<p><em>Graphics drivers and backends</em>:
+  <li>Key mapping and special key handling for the Linux framebuffer. *
+  <li>Support for Linux input core mouse (get rid of GPM). *
+  <li>Adding graphics modes for text and bitblit functions. These go
+      together because text clipping is implemented with blitting.
+  <li>Complete different line widths support.
+  <li>Support vector fonts (using freetype2).
+  <li>16-bit framebuffer graphics driver (-> use SDL emulation instead)
+
+<p><em>W server / library</em>:
+  <li>Fix clipboard handling. *
+  <li>Improve palette handling so that there's less flickering when
+       changing window focus.
+  <li>User selectable clip rectangle (graphics drivers already do clipping).
+  <li>Graphics contexts separated from windows.  This would be necessary
+      <em>only</em> in situations where separate clients want to write
+      to the same window (mainly means root window amusements).
+  <li>Using shared memory to transfer application images to server
+      when on the same machine.
+  <li><a href="fserver.html">Font server</a>.  Would take care of font
+      loading, conversion (e.g.  from vector to bitmap), style applying,
+      font substitution and sending of them to server.
+  <li><a href="iccp.html">Client registration and communication with W
+      message events</a>.  Coupled with clipboard this could be used for
+      implementing Drag-an'-Drop.
+  <li>Support unicode strings and fonts (UCS-16 or UTF-8?)
+
+<p><em>W toolkit</em>:
+  <li>A style guide on widget programming. *
+  <li>Listbox widget with horizontal scrolling and multiple selections. *
+  <li>Window based focus to W Toolkit + focus changing shortcuts.
+      Currently focus is app specific. *
+  <li>Properties / help attribute for widgets, of which help would be
+      handled automatically if it's available.
+  <li>Visual grouping / separation of W toolkit components on screen.
+      The trouble is that containers are just that, they can't contain
+      graphics (e.g. box around radio button group).
+  <li>Update HTML widget to interpret at least HTML v2.0 instead of the
+      current ~v1.0.
+
+<p><em>Applications</em>:
+  <li>File manager / file type associated program launcher.
+  <li>Add more HTML features to Wetscape (html widget).
+  <li>Other networked applications like mail and ftp.
+  <li>Different kind of editors (text, font, image, sound, music)...
+  <li>Wt interface builder.
+</ul>
+<p>
+
+<hr>
+<a href="mailto:oak@welho.com">oak@welho.com</a>
+</body>
+</html>

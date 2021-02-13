@@ -1,0 +1,58 @@
+Most of the platform specific gotchas should be mentioned in the
+README.1ST notes.  Here are some extra ones, which don't prevent
+you from running W, but can be otherwise bothersome.  You should
+also take a look at the TODO file.
+
+Q: I have trouble running W or it doesn't work right.
+
+A: See the TROUBLESHOOTING and platform specific notes in README.1ST,
+   and (in case of minor trouble) browse the BUGS and TODO files to
+   see whether your problem/workaround is already known.
+
+
+Q: I can't move windows I created in my W program code!
+
+A: Add W_MOVE flag to window creation attributes (don't know why
+   it's off by default...).
+
+
+Q: Programs don't work properly in WTerm.  Why?
+
+A: Do 'echo $TERM' in wterm (or wvt) window.  If the answer isn't
+   'wterm', it's value has been changed after WTerm was run.  One
+   possible culprit (at least on my RedHat 5.2) is 'SYSTERM' variable
+   which presence will override $TERM.  In that case you could add
+   'SYSTERM=wterm' line to your ~/.wrc configuration file and re-run
+   W server.
+
+
+Q: When I run the fbdev version of W, it's output is partly outside
+   the screen.  How this can be fixed?
+
+A: Pipe W messages (like "can't start wcpyrgt") either to a file
+   or /dev/null.  With Bash-shell you could use something like this:
+   	wserver > ~/.w-errors 2>&1
+
+   This should happen only when your console uses a virtual screen
+   and using GPM to do mouse stuff (It prevents me from fixing this).
+   Outputting text to console instead of W changes the framebuffer
+   virtual screen y-offset.
+
+
+Q: My wterm cursor sometimes disappears in the color mode, why?
+
+A: Atari packed driver inverse graphics mode just inverts the color
+   index, unfortunately in your case it then happens to point to a
+   palette entry whose color doesn't provide enough contrast.  One
+   solution would be to set all color entries in your wrc file to
+   something distinctive.
+
+
+Q: Sometimes there's a slight pause after AltGR key combination, why?
+
+A: It seems that for some reason under STonX emulator we'll then go to
+   mouse reading function...  If somebody could shed some light on this
+   (or test mevent_read() under real Atari), I'd be grateful.
+
+
+	- Eero

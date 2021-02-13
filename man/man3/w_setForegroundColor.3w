@@ -1,0 +1,36 @@
+.TH w_setForegroundColor 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_setForegroundColor(), w_setBackgroundColor() \- set fore/background color
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_setForegroundColor(WWIN *" win ", short " color ");"
+.sp
+.BI "short w_setBackgroundColor(WWIN *" win ", short " color ");"
+.fi
+.SH DESCRIPTION
+.TP
+.B w_setForegroundColor()
+sets the drawing color to the color with given index (handle).
+.TP
+.B w_setForegroundColor()
+sets the background color to the color with given index (handle).
+.SH NOTES
+If your program changes either fore- or background colors, it's best to
+always explicitly set them before drawing anything.  Wlib won't forward
+redundant attribute requests to W server.
+.PP
+If you're using the ROOT window you
+.B have to
+set everything explicitly as other programs may also change the window
+attributes.
+.SH RETURNS
+Both functions return the previous color index or a negative value
+for an error.
+.SH SEE ALSO
+.IR w_allocColor (3),
+.IR w_changeColor (3),
+.IR w_setmode (3)
+.SH LAST CHANGED
+6/1998 by Eero Tamminen

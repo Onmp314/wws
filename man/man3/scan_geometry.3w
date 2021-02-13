@@ -1,0 +1,46 @@
+.TH scan_geometry 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+scan_geometry(), limit2screen() \- window position parsing functions
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+\fBvoid scan_geometry(char *\fIgeometry\fB,
+short *\fIcol\fB, short *\fIlin\fB, short *\fIxp\fB, short *\fIyp\fB);
+.sp
+.BI "void limit2screen(WWIN *" win ", short *" xp ", short *" yp ");"
+.fi
+.SH DESCRIPTION
+\fIscan_geometry()\fP does some simple parsing of a geometry string as
+used by several apps.  It analyses a string of the form
+.PP
+.B "width,height,xpos,ypos"
+.PP
+and fills in the appropriate pointers. It is possible to omit certain values,
+if you should e.g. only want to specify a position by saying:
+.PP
+.B ",,xpos,ypos"
+.PP
+Any omitted value will be reported as \fBUNDEF\fP (-32768).  Negative
+arguments are allowed and reported with 1 subtracted from them (so that
+"-0" is also legal value).
+.PP
+\fIlimit2screen\fP can be used with \fIscan_geometry\fP to interpret
+negative position as window offset from the right/bottom edge of
+the screen.  This function also limits window position fully
+inside the screen if possible.
+.SH EXAMPLES
+.nf
+"320,200" -> 320, 200, UNDEF, UNDEF
+",,0,1" -> UNDEF, UNDEF, 0, 1
+",,0,0" -> UNDEF, UNDEF, 0, 0
+",,-0,-0" -> UNDEF, UNDEF, -1, -1 -> UNDEF, UNDEF, 439, 279
+",,-0,-1" -> UNDEF, UNDEF, -1, -2 -> UNDEF, UNDEF, 438, 278
+.fi
+.PP
+Last two lines would be for example for a W screen size of 640x480
+and window size of 200x200.
+.SH BUGS
+No chance to do any of the complicated option parsing you might know from X11.
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

@@ -1,0 +1,150 @@
+# print package list:
+# awk '/Package/{printf($2)}/Description/{print}' control|sed 's/Description//'
+Source: wws
+Section: utils
+Priority: optional
+Maintainer: Eero Tamminen <eerott@gmail.com>
+# W server uses 'libSDL', libw2x library uses 'libX11',
+# Wlua interpreter uses 'tolua', console games use 'libncurses',
+# Wetscape uses 'libjpeg', 'tic' for terminfo entry creation is in ncurses-bin
+Build-Depends: debhelper (>= 4), libsdl1.2-dev, libx11-dev, libtolua-dev, libjpeg62-dev, libncurses5-dev, ncurses-bin
+Standards-Version: 3.7.2
+
+Package: wws-base
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommends: wws
+# includes things used directly by wserver or wrc
+Description: The W Window System server and basic applications
+ The W Window System server, basic applications (terminal etc) and fonts.
+ Server supports natively 1, 2, 4 and 8-bit graphics drivers.  For testing
+ it can be used also on X11 desktop in any bitdepth with the help of libSDL.
+
+Package: wws-base-dbg
+Architecture: any
+Priority: extra
+Depends: wws-base (=${binary:Version})
+Description: Debug package for wws-base
+ Debug symbols for the W Window System server and basic applications.
+
+Package: libw1.4
+Architecture: any
+Depends: ${shlibs:Depends}
+Suggests: libwt0.9, wws-dev
+Description: The W Window System client library
+ Wlib, W Window System client library.
+
+Package: libw1.4-dbg
+Architecture: any
+Priority: extra
+Depends: libw1.4 (=${binary:Version})
+Description: Debug package for libw1.4
+ Debug symbols for the W Window System client library.
+
+Package: libwt0.9
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: The W Window System GUI toolkit library
+ Wt, W Window System GUI toolkit library.
+
+Package: libwt0.9-dbg
+Architecture: any
+Priority: extra
+Depends: libwt0.9 (=${binary:Version})
+Description: Debug package for libwt0.9
+ Debug symbols for the W Window System GUI toolkit library.
+
+Package: libw2x1.4
+Architecture: any
+Depends: ${shlibs:Depends}
+Suggests: wws-dev
+Description: The Wlib-on-X emulation library
+ Replacement for the Wlib library that allows running W window system
+ applications directly on the X window system.
+
+Package: libw2x1.4-dbg
+Architecture: any
+Priority: extra
+Depends: libw2x1.4 (=${binary:Version})
+Description: Debug package for libw2x1.4
+ Debug symbols for the Wlib-on-X emulation library.
+
+Package: wws-dev
+Section: libdevel
+Architecture: all
+Depends: libw1.4 (=${binary:Version}), libw2x1.4 (=${binary:Version}), libwt0.9 (=${binary:Version})
+Suggests: wws
+Description: The development files for the W Window System libraries
+ Headers and manual pages for the Wlib client libraries and Wt GUI toolkit.
+
+Package: wws-apps
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommends: netpbm, wws
+Description: More advanced W Window System applications
+ Several applications (including HTML v1 browser + color terminal
+ emulator), their manual pages and icons for wlaunch.
+
+Package: wws-apps-dbg
+Architecture: any
+Priority: extra
+Depends: wws-apps (=${binary:Version})
+Description: Debug package for wws-apps
+ Debug symbols for the more advanced W Window System applications.
+
+Package: console-board-games
+Architecture: any
+Depends: ${shlibs:Depends}
+suggests: wws-games
+Description: Some networked, console based board games + daemons
+ Networked curses user interfaces to Reversi, Gomoku, Pente/Renju
+ and Go board games.  Computer daemons to Reversi, Pente and Go.
+
+Package: console-board-games-dbg
+Architecture: any
+Priority: extra
+Depends: console-board-games (=${binary:Version})
+Description: Debug package for console-board-games
+ Debug symbols for the networked console board games.
+
+Package: wws-games
+Architecture: any
+# some manual pages are shared with the console games
+Depends: ${shlibs:Depends}, console-board-games
+Recommends: netpbm, wws
+Description: The W Window System games
+ Many games (including also several networked board games),
+ toys/demos and their manual pages.
+
+Package: wws-games-dbg
+Architecture: any
+Priority: extra
+Depends: wws-games (=${binary:Version})
+Description: Debug package for wws-games
+ Debug symbols for the W Window System games.
+
+Package: wlua
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommends: wws
+Description: A Lua interpreter with W Window System support
+ Wlua is a version of the Lua (a small embedded language) interpreter
+ which provides Lua APIs for (a subset of) the W window system libraries
+ functionality.
+
+Package: wlua-dbg
+Architecture: any
+Priority: extra
+Depends: wlua (=${binary:Version})
+Description: Debug package for wlua
+ Debug symbols for the W Lua interpreter.
+
+Package: wws
+Architecture: all
+# netpbm is needed by the scripts
+Depends: wws-base, wws-apps, wlua, wws-games, netpbm, libjpeg-progs
+Description: Metapackage for the W window system with scripts and docs
+ Metapackage with dependencies to the non-development W window system
+ packages.  Includes also some helper scripts and all the W Window System
+ documentation (release notes, porting instructions, READMEs for everything,
+ design documentation...).

@@ -1,0 +1,178 @@
+
+ The `scrollbar' widget class
+ ----------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *scrollbar  = wt_create (wt_scrollbar_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+ The scrollbar is a "simple" widget that lets the user specify a quantity. Eg.
+for large documents that do not fit fully into a window on the screen a
+scrollbar is used to let the user select the part of the document that is
+visible throu the window.
+
+ A scrollbar consists of a slider with variable size and two arrows for moving
+the slider line by line. But you can as well pick up the slider with the mouse
+and move it around. The slider can be moved page by page by clicking above or
+below the slider.
+
+
+ 3 Configuration Options
+ -----------------------
+
+ For each configuration option the widget supports the name of the
+configuration option (WT_<something>), the type of the argument (eg. long *)
+you pass to wt_setopt()/wt_getopt() for this option, possible values, their
+meaning and a description of what the option does is given.
+
+
+ WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a pointer
+	to it) in the widget. This is useful if you have to associate some
+	extra data with a widget.
+
+
+ WT_XPOS (long *)
+
+	Set the X position of the scrollbar widget, which is relative
+	to the upper left corner of the parent window. The X position is
+	ignored if the parent widget is a composite widget that places its
+	childs (like box or pane). Default is 0.
+
+
+ WT_YPOS (long *)
+
+	Set the Y position of the scrollbar widget, which is relative
+	to the upper left corner of the parent window. The Y position is
+	ignored if the parent widget is a composite widget that places its
+	childs (like box or pane). Default is 0.
+
+
+ WT_WIDTH (long *)
+
+	Set the width of the scrollbar widget. You can set the width only
+	for horizontal sliders. Default is 100 for horizontal sliders.
+
+
+ WT_HEIGHT (long *)
+
+	Set the height of the scrollbar widget. You can set the height only
+	for vertical sliders. Default is 100 for vertical sliders.
+
+
+ WT_ACTION_CB (void (*cb) (widget_t *w, int pos, int pressed))
+
+	Install the callback function 'cb' which will be called whenever
+	the user changes the position of the slider. 'pos' is the new
+	position. Possible values for 'pos' range from 0 (slider at top
+	or left) to WT_TOTAL_SIZE-WT_SIZE (slider at bottom or right) where
+	WT_TOTAL_SIZE and WT_SIZE are the values set with equally named
+	options.
+
+	'pressed' is set to 1 if the user has picked up the slider and the
+	mouse button is still pressed (ie it is likely that the slider
+	will be moved further). It is set to 0 if the mouse button is released
+	(ie the scrollbar will not move further).
+
+	'pressed' can be used to determine when to update the position of the
+	window that is beeing scrolled. When it is expensive to move the window
+	(ie if the window is large) then you should only update the window
+	position when pressed == 0. When moving the window is fast you can
+	move the window whenever 'cb' is called ignoring the value of
+	'pressed'.
+
+	Default is NULL (ie. no callback).
+
+
+ WT_ORIENTATION (long *)
+
+	Specify the orientation of the scrollbar widget. Possible values are:
+	- OrientVert (default): vertical scrollbar.
+	- OrientHorz: horizontal scrollbar.
+
+
+ WT_TOTAL_SIZE (long *)
+
+	Specify the size of the area that is to be scrolled. Default is 1024.
+
+
+ WT_SIZE (long *)
+
+	Specify the size of the visible area. Default is value set for
+	WT_TOTAL_SIZE.
+
+
+ WT_POSITION (long *)
+
+	Specify the position of the visible area within the area that is
+	beeing scrolled. Possible values range from 0 (slider at the top
+	or left) to WT_TOTAL_SIZE-WT_SIZE. Default is 0.
+
+
+ WT_LINE_INC (long *)
+
+	Specify the increment by which the slider is moved when the user
+	clicks on one of the arrows. Possible values range from 0 (no move)
+	to WT_TOTAL_SIZE-WT_SIZE (maximum move). Default is 1.
+
+
+ WT_PAGE_INC (long *)
+
+	Specify the increment by which the slider is moved when the user
+	clicks above or below the slider. Possible values range from 0
+	(no move) to WT_TOTAL_SIZE-WT_SIZE (maximum move). Default is
+	value set for WT_SIZE. This value should always be grater then
+	what you specified for WT_LINE_INC to not confuse the user.
+
+
+ 4. Example
+ ----------
+
+ Imagine you want to use a slider to control a listbox with 100 entries listbox
+shows 10 of them at a time. At the top of the box the 20th entry is currently
+displayed. Now you want to configure the scrollbar to relflect the current
+configuration of the listbox:
+
+	void
+	scrollbar_callback (widget_t *w, int pos, int pressed)
+	{
+		/*
+		 * move entry #pos to the top of the listbox.
+		 * possible values for pos range from 0 to 100-10.
+		 */
+	}
+
+	long total_size   = 100;
+	long visible_size = 10;
+	long pos          = 20-1; /* numbered from 0, so 20th entry is
+				     entry #19 */
+	long line_inc     = 1;
+	long page_inc     = 10;
+
+	wt_setopt (scrollbar,
+		WT_TOTAL_SIZE, &total_size,
+		WT_SIZE, &visible_size,
+		WT_POSITION, &pos,
+		WT_LINE_INC, &line_inc,
+		WT_PAGE_INC, &page_inc,
+		WT_ACTION_CB, scrollbar_callback,
+		WT_EOL);
+
+ The callback will report positions ranging from 0 to 90 (= 100-10), which
+can be directly used to select the entry that has to be displayed on top of
+the listbox.
+
+ WT_LINE_INC and WT_PAGE_INC are set such that clicking on an arrow moves
+the list by one entry and clicking above or below the slider moves the list
+by 10 entries. Because WT_LINE_INC defaults to 1 and WT_PAGE_INC defaults
+to WT_SIZE (which is 10 here) you do not need to set WT_PAGE_INC and
+WT_LINE_INC here.

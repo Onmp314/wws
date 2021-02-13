@@ -1,0 +1,22 @@
+
+	AmiGod	(AmiGo daemon)
+
+This is a server version of AmiGo for the networked turn based, two
+player game framework by Eero Tamminen.
+
+	- Original Go player was programmed by Stoney Ballard in Pascal.
+	- C port of that and Amiga interface by Todd R. Johnson.
+	- Server version by Eero Tamminen.
+
+Changes included writing glue functions between AmiGo and FrameWork
+code into amigo.c.
+
+TODO:
+	- Undo and all the things mentioned in that old readme...
+
+
+	- Eero		http://www.modeemi.cs.tut.fi/~puujalka/
+
+p.s.  Good strategies for beating AmiGo are cutting and extending like
+with other computer Go programs.  Also making walls and then driving
+AmiGo against them works well.

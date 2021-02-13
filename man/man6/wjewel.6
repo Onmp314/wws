@@ -1,0 +1,56 @@
+.TH WJEWEL 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wjewel \- Jewel/Columns/Coloris game for W
+.SH SYNOPSIS
+.nf
+wjewel [options]
+.fi
+.SH DESCRIPTION
+.I WJewel
+is a W variant of the game known as Jewel, Columns or Coloris on other
+systems.  You try to prevent the 'well' in the window from filling up by
+destroying blocks of similar colors (patterns) by lining them
+horizontally, vertically or diagonally.
+.TP
+You guide a column of blocks with the keys:
+4 - column left,
+.br
+6 - column right,
+.br
+5 - roll blocks,
+.br
+0 - drop column,
+.br
+p - pause / iconify,
+.br
+q - quit game.
+.SH OPTIONS
+.TP 10
+\fB-w\fP \fIwidth\fP
+Game window width in column blocks.
+.TP
+\fB-h\fP \fIheight\fP
+Game window height in column blocks.
+.TP
+\fB-f\fP \fIlevel\fP
+From which level the user wants to start.
+.TP
+\fB-r\fP \fIrows\fP
+Number of random rows at the start.
+.TP
+.B -n
+Toggle on/off the window showing next column.
+.TP
+.B -b
+Toggle on/off the border area around the game 'well'.
+.TP
+.B -l
+Use larger (16x16) bitmaps.
+.TP
+.B -s
+Use smaller (8x8) bitmaps.
+.TP
+.B -d
+Switch debugging on.
+.SH AUTHOR
+(w) 1996 by Eero Tamminen.

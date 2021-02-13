@@ -1,0 +1,88 @@
+W COPYRIGHT(S)
+
+Torsten Scherer and Kay Roemer agreed on changing the W copyright to a
+better known/defined ones, in this case GPL and LGPL, the GNU General
+Public Licences for applications and libraries.  Official W version 1,
+revision 4 is the first version with these copyrights.  The licence text
+for Wlib and W2Xlib libraries is in the file 'LGPL' and the licence
+text for other files is in the file 'GPL', unless otherwise noted in
+the actual source file.
+
+Most of the W code will now be under these licences, but there are some
+files where other copyrights apply.  Most notably exceptions are W fonts
+which are converted from fonts coming with the XFree86 X11 server.  If
+you intend to use W package more seriously, please check the respective
+licences and copyrights for those.  W 'cour' family is converted from
+Courier, 'fixed' from Fixed, 'lucidat' from Lucidatypewriter and 'book'
+from New Century Schoolbook X bitmap font family.  'vga16.wfnt' font
+is converted from 'vga.bdf' font coming with GPL Linux Dosemu source.
+
+Other files having copyrights differing from GPL/LGPL are:
+	fonts/bdf2wfnt.c (free)
+	server/xconout2/mint/* (MiNT Copyright)
+	server/graph/generic/generic_bezier.c (free?)
+	w2xlib/bezier.c (free?)
+	lib/isqrt.c (free?)
+	wlua/wlua5.c (MIT)
+	wlua/wlua4.c (zlib)
+
+This list may be incomplete, see the actual source files for more
+accurate information.
+
+
+COPYRIGHT REASONING
+
+There were already some files covered by the (L)GPL licences, so the
+choice was quite obvious.  These files were:
+	apps/basename.c
+	apps/wsaver/bounce.c
+	apps/wsaver/stars.c
+	demos/warp.c
+	games/wdragon/*
+	server/util/*
+
+
+W AUTHORS
+
+Torsten Scherer (TeSche), itschere@techfak.uni-bielefeld.de
+
+	The original W author and maintainer, wrote all of the W code
+	upto W0R8, and most upto W1R3.  Beginning is always the hardest
+	:-).  Resigned from W development during transition to current
+	release 4.  Last seen on the 68k-linux kernel mailing list ;-).
+
+Kay Römer, roemer@diamant.vsb.informatik.uni-frankfurt.de
+
+	Wrote whole TCP/IP networking for MiNT which gave TeSche
+	inspiration to continue with W as long as he did.  Wrote W
+	clipping and polygon graphics routines, rectangle/visibility
+	code, most of nested window hierarchy handling code and of
+	course the W toolkit, Wescape WWW-browser and Wvt.  Resigned
+	from W development during transition to current release 4.
+
+Eero Tamminen, oak@welho.com, http://koti.welho.com/kmattil4/
+
+	Wrote BMONO graphics driver (based on PACKED driver), W pattern
+	functions (code based on the solid ones), added new text styles
+	and better text clipping, finished BITMAP format conversions,
+	color functionality, W library documentation and most of other
+	documentation, rewrote SVGAlib support to use common gfx drivers
+	and linux framebuffer code to work also with x86-linux, added
+	GGI support and more functions to Wlib, wrote W2Xlib, most
+	of (smaller) W applications and several W toolkit widgets.
+
+
+OTHER CONTRIBUTORS
+
+	Simon Kagedal	 <Simon.Kagedal@sdf.luth.se>
+	Jan Paul Schmidt <Jan.P.Schmidt@mni.fh-giessen.de>
+	Torsten Will	 <itwill@techfak.uni-bielefeld.de>
+	Frank Wille	 <frank@phoenix.owl.de>       (Amiga/NetBSD port)
+	Jens Kilian
+	Jonathan Oddie   <oddie@lorien.flatirons.org> (MacMiNT port/drivers)
+	Benjamin C. W. Sittler
+
+
+9th of September 2000,
+
+	- Eero

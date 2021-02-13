@@ -1,0 +1,37 @@
+--- lua.c	2007-12-28 17:32:23.000000000 +0200
++++ wlua5.c	2009-08-30 00:49:14.000000000 +0300
+@@ -1,4 +1,14 @@
+ /*
++ * This code contains trivial changes for W support to the original
++ * Lua v5.1 lua.c interpreter code from:
++ * 	http://www.lua.org/
++ * 
++ * These changes are documented in lua5.c.diff.  Copyright of the original
++ * code is MIT license added below.  My changes are under the same license.
++ * 
++ * 	- Eero Tamminen 2009
++ */
++/*
+ ** $Id: lua5.c.diff,v 1.2 2009-08-30 19:16:47 eero Exp $
+ ** Lua stand-alone interpreter
+ ** See Copyright Notice in lua.h
+@@ -21,7 +53,8 @@
+ 
+ static lua_State *globalL = NULL;
+ 
+-static const char *progname = LUA_PROGNAME;
++#include "wwslua.h"
++static const char *progname = "W-Lua";
+ 
+ 
+ 
+@@ -346,6 +379,9 @@
+   if (argv[0] && argv[0][0]) progname = argv[0];
+   lua_gc(L, LUA_GCSTOP, 0);  /* stop collector during initialization */
+   luaL_openlibs(L);  /* open libraries */
++  tolua_wlib_open(L);
++  tolua_wt_open(L);
++
+   lua_gc(L, LUA_GCRESTART, 0);
+   s->status = handle_luainit(L);
+   if (s->status != 0) return 0;

@@ -1,0 +1,295 @@
+
+CHANGES
+
+
+Changes from R4PL1 to PL2 (-> Jan 1999):
+
+- Moved graphics function structs to a separate include, so that I don't need
+  to change every bloody thing when there's a slight change to SCREEN struct.
+- Separated MiNT and Linux graphics init code.
+- Framebuffers work now also on x86-Linux.
+- GPM mouse library support for (x86) linux with framebuffers (sort of).
+- Updated libGGI and added libGII support (now it actually works, sort of :)).
+- Mouse acceleration wconfig option for platforms where mouse movements
+  are reported relatively.
+- Made termcap exporting optional in wterm & wvt.
+
+Seems that latest linux ncurses will override TERMINFO settings if
+$TERMCAP is present!!!  Therefore if you have ncurses v4, you'll have to
+undefine EXPORT_TERMCAP in .config and you can't use any termcap only
+programs anymore (or the other way round :)).
+
+----------------------------------------------------------------------------
+
+Changes from my unofficial revision 4, patchlevel 0 to patchlevel 1
+(->june 1998):
+
+- Divided largest library sources into separate files to make statically
+  compiled binaries slightly smaller (most linkers can't split object
+  files into functions).
+
+- Wlib writes the request structures now straight to the library socket
+  buffer instead of having _send_paket do it with memcpy().
+
+- Add 'colors' member to WWIN struct.  It keeps count of how many colors
+  are allocated for the window (w_freeColor waits now for server
+  acknowledge, maybe I should add freeAllColors too).  That count is
+  used in the w_allocMap() window color allacations for the created
+  BITMAP->WWIN color mapping table.  Wbm and warp demo support now color
+  mapping if wserver has enough colors for the image.
+
+- Added color interpretation to wterm and wvt.  Both will now let
+  programs use 8 colors on a color servers with sufficiant bit depth.
+  This isn't yet perfect, but most color ncurses programs should work
+  ok.
+
+- Simplified / fixed W color functions (a pain to test as SVGAlib
+  doesn't support my Matrox and therefore for color I have to use
+  320x200 resolution!).  Wbm will now set palette and map a DIRECT8
+  image if server has enough colors available.
+
+- Added XTerm style mouse events to wterm/wvt for Midnight Commander.
+
+- Wterm/wvt can now inverse it's window colors for vt52 fg/bg color
+  attributes.
+
+- Fixed incompatibilities reported by Serg Storojevykh, especially in
+  connection with Linux (RH5) glibc:  Made sigaction.sa_mask setting use
+  sig*set() functions, changed 'errno' struct variable in Wetscape to
+  'errcode' and added a comment about the crypt lib for glibc.
+
+- Added a 'time' field into WEVENT structure.  You can get the time
+  consumed between events in milliseconds (same resolution as with
+  w_queryevent()) by comparing their 'time' fields.  This can be used in
+  implementing double/triple clicks.  For games there's w_gettime() (see
+  wjewel).  Both of these will always have the same resolution (ms).
+
+- Changed the M_INVERSE mode for DIRECT8 driver to use fg-index^bg-index
+  for XORing the color index.  That way inverse mode will always be
+  visible as long as fg and bg colors differ.  This cures the
+  'invisible' cursor problem in color wterm, but depending on colors
+  used on windows, may make seeing the window positioning / resizing
+  rectangle harder.  Maybe this should be done for PACKEDCOLOR driver
+  too?
+
+- Changed the font clipping completely.  Clipping slanted characters
+  should now work much better.
+
+- Started GGI (Generic Graphics Interface) support.  It doesn't work
+  yet.  I also moved the hw/OS specific event functions from loop.c to a
+  file of their own and Makefile configurations into configs/
+  subdirectory.  If you want to test the GGI stuff, copy x86-linux-GGI
+  file from configs/ directory to .config file.
+
+- Wlib attribute settings will now send the request only if the new
+  value differs from the current one.  Therefore this feature could
+  be removed from several W programs...
+
+- Fixed a couple of bugs in window colortables for variables which
+  aren't used yet, a bug I had made to server/events.c, a bug
+  in wdragon and some other minor bugs all over.
+
+- Fixed Wlib manual pages function argument effects and x86-Linux
+  terminfo entries for F9/F10.  Btw.  If you've added keyboard
+  definitions for default keys on your OS console, please send them and
+  I'll add them to wter.terminfo comments.
+
+- Moved 'make' configuration defines into separate files in configs/
+  subdirectory.
+
+- Added directory hierarchy creation to 'make install' stuff needing it.
+
+- Converted GGI warp demo for W.  If you got a fast machine, this looks
+  quite impressive although W socket overhead slows it down quite a bit.
+
+- Added WLaunch program launch bar by Jan Paul Schmidt
+  <Jan.P.Schmidt@mni.fh-giessen.de>.  WBiff, WClock, WEyes and WLoad
+  accept long arguments and can now open themselves as children for the
+  'parent' window given as an argument.
+
+- Jan Paul Schmidt contributed a patch which allows moving of W windows
+  while they are updated and adds functions that allows clients to change
+  the mouse pointer shape too.
+
+- Changed how W composes the rolled (id >= 255) patterns.  You can now
+  get kewl backgrounds with wsetbg!  Background pattern and color and
+  root window options to wclock.  My favorite:	`wclock -b 1511 -r'.
+
+- Wsaver is now in a folder of it's own, has 5 new modules and can
+  demo itself in root window.
+
+- A new BDF to W font format converter.  I would need a little feedback
+  on the W font format.  Would additional font information be needed?
+
+- The READMEs and CHANGEs are now in the docs/ directory.  I put my
+  W related WWW-pages there too.
+
+
+----------------------------------------------------------------------------
+
+Changes from TeSche's W window system v1, revision 3, beta patchlevel 2
+to my unofficial revision 4, patchlevel 0 (->jan 1998):
+
+- server/graph/svga/ source directory is removed.  If sources it
+  contains have any advantage over stuff in DIRECT8 driver, IMHO they
+  should be ifdeffed to DIRECT8 sources.  ATM the differences seemed
+  fairly small except for the *very* card specific ones.  You can get
+  the files from w1r3 package.
+
+- Added graphics modes to dithered routines on all drivers.  (W server
+  will now also use dplot when asked to :-))
+
+- moved server BITMAP creation and all other screen format specific
+  functionality to graphics drivers.
+
+- graph/init.c allocates now the temporary BITMAP used for clipping
+  characters etc.  with the above function.  It also has a new global
+  variable 'FirstPoint', which can be used to tell line function not to
+  draw the first point (needed for polyline and curve line sections in
+  M_INVERS mode).
+
+- A couple of additional text effects:  changed W server printchar
+  function to two functions, normal and style printchar (as text output
+  speed is crucial, a different routine for no styles) and moved
+  printstring from platform dependent drivers to generic.  Adapted
+  server structures and font loading functions to new font header
+  format.
+
+- The generic printstring code is included into other drivers so that it
+  can inline driver specific printchar routines.  Printstring packet
+  string array is now a bit larger so that text lines on normal sized
+  terminals can be printed without packet splitting.
+
+- Window resizing:  resizing can now be done only with left button
+  (right tops/bottoms), and if window size isn't changed, you can move
+  it.  This is especially handy when you got a small screen and very
+  large windows.
+
+- Made a new BMONO monochrome driver that is byte order neutral.  It's
+  converted from the PACKEDMONO driver either by changing long accesses
+  to byte access or using byte order conversion function, whichever
+  seems easier/faster to do.
+
+- Updated SVGAlib initialization code to work with DIRECT8 and BMONO
+  drivers.  Removed old svgacode as it wasn't properly integrated nor
+  supported by anyone.  If you want accelerated graphics, write a GGI
+  driver (make GGI wrappers for functions which you'd like to speed up
+  and for rest use DIRECT8).
+
+- New graphics functions: w_pie(), w_dpie(), w_arc(), w_darc().
+
+- New graphics settings:  w_setlinewidth() for setting line width
+  (ugly hack + needed slight changes all over W lib/server...) and
+  w_setpatterndata() to use a 16x16 bit user given image as the pattern.
+
+- For performance reasons thick lines are implemented on client side
+  (they can be mapped to another graphics primitive), other thick
+  primitives (boxes, circles, ellipses arcs) are done on server side.
+
+- Removed the mouse intersection/hide tests when graphics operations
+  write into the backup bitmap as dirty area redraws will hide the mouse
+  anyway.
+
+- Clients get now more font information and fonts are loaded with
+  family/size/styles instead of font *filename- which is now composed on
+  the server side.  People won't need to know anymore the font filename
+  extension, in which order font style letters are in the filename
+  etc...  This needed changes on most of the programs, so it was a high
+  time to do it.
+
+- Clients can load as many fonts as W server can have.  Their handles
+  are now in a list instead of an array.
+
+- WWIN structure has now more graphics information.  Fore- and
+  background color indeces and line width (you have to recompile
+  everything again).  In case you want to make WWIN structs smaller
+  (e.g.  for Wt), you could allocate/initialize container WWIN structs
+  without the graphics context variables.
+
+- Settextstyle mask is now unsigned on the server side.  I wonder why
+  TeSche originally made drawmode and textstyle flags signed?
+
+- wconfig file can now have 'fontfamily' and 'fontsize' variables for
+  selecting default values for clients which don't specify one.
+  'titlefont' and 'menufont' variables specify filenames for fonts used
+  for server window titles and menu and 'fontpath' the path for the
+  fonts.  For all of these there are of course defaults too.  See
+  'wconfig' for more.
+
+- Root menu item strings are now allocated dynamically.  The maximum
+  number of items is still static, but you can change it from
+  server/config.h.
+
+- Added checks to several places where strings are written to static
+  buffers or made buffers allocated when needed (might take less memory
+  and is definately safer).
+
+- changed W socket filedescriptor type from short to int and moved
+  termination functions from loop.c to main.c and some global variables
+  to files where they are initialized.  I might later tidy them up into
+  a global struct.
+
+- graphics drivers won't include pakets.h and proto.h anymore (required
+  some changes to some include files too).
+
+- fixed get/putblock routines (mostly my own bugs...).
+
+- New w_put/getblock() graphics conversion (line-by-line) routines.
+  Packed format conversions were by TeSche.
+
+- PBM loading and writing functions.
+
+- XPM like **char array reading into BITMAP (adapted from code in
+  wcpyrgt, mostly untested).
+
+- Moved the 'limit window position inside screen' stuff on some programs
+  to a new Wlib function limit2screen().
+
+- Wlib has now isqrt(), qsin() and qcos() utility functions.
+
+- Some local clipboard functions (moved from Kay Roemer's W toolkit).
+
+- fixed man3/*.3w manual page names to correspond to the actual Wlib
+  function names and added quite a few new pages.
+
+- W programs use the new font loading syntax.
+
+- Changed the number on font names to be the font height as the new W
+  server font loading expects it.
+
+- WTerm sets now COLUMNS and LINES variables as xterm does.  I also did
+  a terminfo entry for it.  Terminfo is needed as ncurses programs (like
+  less) don't seem to work properly with plain termcap.  Terminfo entry
+  can also have more terminal attributes.
+
+- Made Weyes and Wclock resizable and changed Weyes to use ellipses
+  instead of circles ;-).  They can now also be run on the root window.
+
+- changed the exit key on several programs from ESC to 'q'.  ESC was an
+  unfortunate choice because many terminals use it in their special key
+  sequences.  Imagine pressing up arrow in the middle of hectic wjewel
+  game...
+
+- changed 'srand(clock())' to 'srand(time(0))' in a couple of games as
+  clock (ticks since program start) can well give the same seed on
+  several occasions.
+
+- wdragon bitmap includes are now byte order neutral.
+
+- Moved wsaver into a separate subdirectory, added a demo mode and
+  several new saver modules.
+
+- included a couple of new Wlib programs:
+	fontedit, lsys, ring/d, wbm, wchars, wjewel,
+	wrobots, wwyrms
+  and wjpeg script.
+
+- Converted docs for above into manual pages and run all manual pages
+  through ispell.
+
+- a W2Xlib (Wlib over Xlib) emulation library.  Now you can use X
+  versions of ddd, Purify, Sentinel etc.  to debug your W library and W
+  toolkit based programs...  :-)
+
+
+	- Eero Tamminen

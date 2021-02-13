@@ -1,0 +1,88 @@
+
+ The `iconedit' widget class
+ ---------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *iconedit  = wt_create (wt_iconedit_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+The iconedit widget is a simple bitmap editor. The widget includes the
+editing area and the icon itself so that you'll see what it will look
+in the real size. ATM the icon position is fixed into the top right
+corner of the widget.
+
+There's no option to get or set the icon bitmap because there are two
+ways to do it; over the socket or from a window to another.  You'll get
+the icon position on the widget with WT_ICON_XPOS and WT_ICON_YPOS
+options and the icon size with WT_ICON_WIDTH and WT_ICON_HEIGHT options.
+Widget window handle can be obtained by wt_widget2win() function.  The
+iconeditor.c file that comes with the toolkit gives an example on what
+to do with them.
+
+
+ 1 Configuration Options
+ -----------------------
+
+Here are the options that can be set or queried with setopt() and
+getopt() functions.
+
+
+ WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a pointer
+	to it) in the widget. This is useful if you have to associate some
+	extra data with a widget.
+
+
+ WT_XPOS (long *)
+
+	Set / get the X position of the iconedit widget, which is relative
+	to the upper left corner of the parent window.
+
+
+ WT_YPOS (long *)
+
+	Set / get the Y position of the iconedit widget, which is relative
+	to the upper left corner of the parent window.
+
+
+ WT_ICON_XPOS (long *)
+
+	Get the X position of icon in the widget.
+
+
+ WT_ICON_YPOS (long *)
+
+	Get the Y position of icon in the widget.
+
+
+ WT_ICON_WIDTH (long *)
+
+	Set / get the icon width in pixels. Default is 16.
+
+
+ WT_ICON_HEIGHT (long *)
+
+	Set / get the icon height in pixels. Default is 16.
+
+
+ WT_REFRESH (NULL)
+
+	Instruct widget to refresh the zoom are from the icon.  This
+	should be used after you have got icon position & size from the
+	widget and put an image there.
+
+
+ WT_UNIT_SIZE (long *)
+ 
+	Set / get the 'zooming' factor for the editing part of
+	the widget.
+

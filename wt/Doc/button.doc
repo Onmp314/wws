@@ -1,0 +1,211 @@
+
+ The `pushbutton', `radiobutton', `checkbutton' and `label' widget classes
+ -------------------------------------------------------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *pushbutton  = wt_create (wt_pushbutton_class, <parent>);
+	widget_t *radiobutton = wt_create (wt_radiobutton_class, <parent>);
+	widget_t *checkbutton = wt_create (wt_checkbutton_class, <parent>);
+	widget_t *label       = wt_create (wt_label_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+ The various button widgets are "simple" widgets.  Pushbuttons are used
+to let the user invoke some action (eg quit an application, save a file
+to disk).  Radiobuttons are used to implement a 1 out of M options,
+whereas checkbuttons are used to implement a N out of M options.
+
+ The three sorts of buttons differ in their visual appearance and how
+they react when you click on them.  Pushbuttons are pushed down when you
+click on them and are released when you release the mouse button.
+Radiobuttons can be pushed down only, they are released when another
+radiobutton belonging to the same button group is pressed.  Checkbuttons
+are pushed when you click on them and stay pushed down (selected) until
+you click on them again.
+
+ The label widget is a passive button which doesn't react to user actions.
+There's an event callback available for application implemented actions
+though.
+
+ Both label and button widgets can have text and / or graphics. The
+text can be aligned in several ways, also in relation to the image.
+
+ For buttons you can install a callback function that is invoked when
+the button is pressed or released.
+
+
+ 3 Configuration Options
+ -----------------------
+
+ For each configuration option the widget supports the name of the
+configuration option (WT_<something>), the type of the argument (eg.
+long *) you pass to wt_setopt()/wt_getopt() for this option, possible
+values, their meaning and a description of what the option does is
+given.
+
+
+ WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a
+	pointer to it) in the widget.  This is useful if you have to
+	associate some extra data with a widget.
+
+
+ WT_XPOS (long *)
+
+	Set the X position of the button or label widget, which is
+	relative to the upper left corner of the parent window.  The X
+	position is ignored if the parent widget is a composite widget
+	that places its childs (like box or pane).  Default is 0.
+
+
+ WT_YPOS (long *)
+
+	Set the Y position of the button or label widget, which is
+	relative to the upper left corner of the parent window.  The Y
+	position is ignored if the parent widget is a composite widget
+	that places its childs (like box or pane).  Default is 0.
+
+
+ WT_WIDTH (long *)
+
+	Set the width of the button or label widget.  The widget will
+	always be wide enough so that the contents fit in.  You can
+	specify a bigger size though.
+
+
+ WT_HEIGHT (long *)
+
+	Set the height of the button or label widget.  The widget will
+	always be high enough so that the contents fit in.  You can
+	specify a bigger size though.
+
+
+ WT_LABEL (char *)
+
+	Set a text label for the widget. Default is an empty string.
+
+
+ WT_FONT (char *) / (WFONT **)
+
+	Set family of the font that is used to draw the text label set
+	with WT_LABEL. getopting this will return WFONT *pointer to the
+	font itself!
+
+
+ WT_ALIGN_HORZ (long *)
+ WT_ALIGNMENT (long *)
+
+	Set / get the text alignment in horizonal direction in relation
+	to the widget area and image.  Possible values are:
+	- AlignLeft   (button default)
+	- AlignCenter (label default)
+	- AlignRight
+
+
+ WT_ALIGN_VERT (long *)
+
+	Set / get the text alignment in horizonal direction in relation
+	to the widget area and image.  Possible values are:
+	- AlignTop
+	- AlignCenter (button default)
+	- AlignBottom (label default)
+
+
+ WT_ALIGN_MODE (long *)
+
+	Set / get the alignment flags.  Flags are:
+	- LabelTextHorzOut (button default)
+	- LabelTextVertOut (label default)
+
+	LabelTextHorzOut specifies that text should not be horizontally
+	on same area with icon and LabelTextVertOut does same in
+	vertical direction.  These options are used only if the
+	alignment in that direction is not AlignCenter.
+
+
+ WT_MODE (long *)
+
+	For labels the WT_MODE option selects whether the label should have
+	a border or have no border:
+	- LabelModeWithBorder (eg. infoboxes)
+	- LabelModeNoBorder   (default)
+
+	For others you can specify how the button should react when the
+	user clicks on it.  Possible values are:
+	- ButtonModePush (default for wt_pushbutton_class): press the
+	  button down when user clicks on it and release the button when
+	  the user releases the mouse button.
+	- ButtonModeRadio (default for wt_radiobutton_class): press the
+	  button down when user clicks on it but never release it (user
+	  must release the button itself using WT_STATE).
+	- ButtonModeToggle (default for wt_checkbutton_class): press the
+	  button down when users clicks on it and release it when the user
+	  clicks on it the next time.
+
+	It's strongly suggested that the provided button defaults are
+	used for more consistent user interface.
+
+
+ WT_STATE (long *)
+
+	Set the state (selected/unselected) for a button or label
+	widget.  The following values are possible:
+	- ButtonStatePressed
+	- ButtonStateRealeased (default)
+
+
+ WT_ICON (BITMAP *)
+
+	Set / get the area of image or drawing used in the label widget.
+	The BITMAP structure needs to be valid while the widget exists.
+	Drawing is done by the function specified by the WT_DRAW_FN
+	function.  See example.
+
+
+ WT_DRAW_FN (void (*fn) (widget_t *w, short x, short y, BITMAP *icon))
+
+	Install a "drawing function" that is invoked when the button or
+	label is beeing created or -- if the button or label has already
+	been realized -- when the drawing function is changed.
+
+	The task of 'fn' is to decorate the area of the widget at (x, y)
+	of size specified in the BITMAP structure.  In most cases that
+	would be an image defined by the BITMAP structure that you set
+	to the widget with WT_ICON option.  The W window you must draw
+	to can be found out using wt_widget2win(w).
+
+	Default is no callback.
+
+
+ WT_EVENT_MASK (long *)
+
+	Set / get events that the label should accept. Possible values
+	are EV_MOUSE | EV_ACTIVE.
+
+
+ WT_EVENT_CB (WEVENT * (*cb) (widget_t *w, WEVENT *ev))
+
+	Set / get function handling the events set by WT_EVENT_MASK.
+	Default is no callback. If callback doesn't process the given
+	event, it should return it, otherwise NULL.
+
+
+ WT_ACTION_CB (void (*cb) (widget_t *w, int pressed))
+
+	Install the callback function 'cb', which is called when the
+	button is pressed or released.  'w' will be set to the button
+	widget the action took place on.  'pressed' is set to 1 of the
+	button is beeing pressed, 0 if the button is beeing released and
+	-1 if the mouse pointer leaves the button area while the left
+	mouse button was still pressed.
+
+	The default is no callback.
+

@@ -1,0 +1,1 @@
+#define WETSCAPE_VERSION "0.1"

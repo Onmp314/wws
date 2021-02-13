@@ -1,0 +1,23 @@
+.TH WON 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+won \- start a W program on a remote machine
+.SH SYNOPSIS
+won \fIhost\fP [\fIcommand\fP]
+.SH DESCRIPTION
+.I won
+is more or less a trivial W equivalent to X \fIxon\fP.  You can use it
+to run W programs on a remote host through \fIssh\fP.  If you don't
+specify a command to run, \fIwon\fP starts \fIwterm\fP.
+.SH EXAMPLES
+You can use \fIwon\fP like this:
+.nf
+	$ won otherhost # just to start a wterm
+	$ won otherhost wvt # wvt instead
+	$ won c wterm -r -b -g 80,40,-1,0 # put e.g. ".wlaunchrc"
+.fi
+.SH SEE ALSO
+.IR wterm (1),
+.IR ssh (1)
+.IR xon (1)
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

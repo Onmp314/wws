@@ -1,0 +1,58 @@
+
+Untested diffs for compiler warnigs:
+
+* sign-bool.diff
+	Some changes for GCC 4.x uchar* vs. char* warnings.
+	They are not properly tested (both with compilers having
+	signed and unsigned char etc)
+
+
+I have also written W display/input code for several (X11) programs which
+have separated that part clearly from rest of the sources. The files here
+are:
+
+* mountains.c
+	A replacement for 'X_graphics.c' source file in the 'XMountains'
+	fractal landscape (mountain) generator v2.2.
+
+* hf-lab.c
+	A replacement for 'x_iface.c' source file in the John Beale's
+	HF-Lab (HeightField Labratory) v0.90.  HF-Lab itself can create
+	light shaded view of the heightfield, but best results you'll of
+	course get by ray-tracing the heightfield with a raytracer like
+	POV-ray and then viewing it with wbm.  You can get latest HF-Lab
+	from John Beale's home page at:  http://www.best.com/~beale/.
+
+* heretic.c
+	W new display/input code for (linux) Heretic.  As mouse isn't much
+	of an input method, I strongly recommend a W version that supports
+	key release events (SDL&GGI version of W does) as then you can use
+	keyboard for playing.
+
+
+NOTES
+
+You need to do some changes to the program makefiles so that they'll
+compile for W instead of X.  Mainly this is changing the X library
+options to '-L/usr/local/lib -lW' and replacing X code file with
+the W one...
+
+Running these programs on 256-color resolution is recommended although
+they work also with monochrome servers.  Then the output is dithered.
+
+All the programs do heavy calculations, so don't even imagine running
+them on a machine lacking FPU and a bit of 'Oomph'. :-)
+
+
+	- Eero Tamminen
+
+
+------ original notes -------
+
+
+here you should find a set of diffs for bigger programs - however, there's
+currently only one for wearth, pardon: xearth-1.0. I once had a patch for
+gnuplot-3.5, but I seem to have lost it. Anyway, have fun!
+
+ciao,
+TeSche

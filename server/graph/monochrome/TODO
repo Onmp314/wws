@@ -1,0 +1,22 @@
+bfmask8.c:	done	(uchars instead of ushorts/ulongs)
+bitblit.c:	done	(-"-)
+bitmap.c:	done	(was ok)
+dline.c:	done	(uchars instead of ushorts or ntohs() bits)
+line.c:		done	(uchars instead of ulongs)
+mouse.c:	done	(ntohl())
+point.c:	done	(ntohs() bit)
+scroll.c:	done	(uchars instead of ulongs)
+text.c:		done	(ntohl() ulongs)
+
+These could be implemented better.  My way was just Quick'an-Dirty^tm
+conversion from the packed monochrome driver.  On big endian machines
+(network byte order) ntohs / ntohl do nothing and on most(?) little
+endian machines there's a single assembler instruction to do them
+so that shouldn't slow this driver down that much.
+
+It isn't yet completely portable.  Mouse drawing still does long
+accesses to short boundaries...
+
+
+	- Eero
+

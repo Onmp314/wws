@@ -1,0 +1,31 @@
+.TH WARP 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+warp \- image warping toy for W
+.SH SYNOPSIS
+warp [-r] <P8M file>
+.br
+djpeg -grayscale <JPEG file> | warp [-r]
+.br
+djpeg -colors <colors> <JPEG file> | ppm24to8 | warp [-r]
+.SH DESCRIPTION
+\fIwarp\fP 'warps' the given image until user closes the \fIwarp\fP
+window or presses a key in it.  \fIwarp\fP works only with DIRECT8 type
+images.  For converting the popular PPM format to this, you can use the
+\fIppm24to8\fP W utility.
+.SH OPTIONS
+If you'll give \fIwarp\fP the \fB-r\fP option, \fIwarp\fP will use
+the root window.
+.SH ORIGINAL AUTHOR
+\fIwarp\fP was originally a demo created by \fBEmmanuel Marty\fP
+<emarty@mirus.fr> for the GGI project (GGI will be a generic graphics
+interface for x86-linux and other unix platforms aiming at eliminating a
+need to run graphics applications 'suid root' just so that they can
+manipulate video hardware).
+.PP
+W port was done by \fBEero Tamminen\fP.
+.SH SEE ALSO
+.IR wbm (1),
+.IR ppm24to8 (1),
+.IR w_readpbm (3)
+.SH LAST CHANGED
+17th June 1998 by Eero Tamminen

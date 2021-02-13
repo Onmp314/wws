@@ -1,0 +1,56 @@
+.TH w_allocColor 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_allocColor(), w_freeColor() \- alloc/free a color
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_allocColor(WWIN *" win ", uchar " red ", uchar " green ", uchar " blue ");"
+.sp
+.BI "short w_freeColor(WWIN *" win ", short " color ");"
+.fi
+.SH DESCRIPTION
+.TP
+\fIw_allocColor\fP()
+will reserve and set a color with requested RGB values into the private
+color map for the window and returns a handle for it.  W server tries
+to find the least used color index for the new color so that palette
+would change as little as possible when changing focus to another window
+with different palette.
+.TP
+\fIw_freeColor\fP()
+will cancel the reservation for a previously allocated color entry or
+shared color.  If you give a negative value, this will free all colors
+except the shared ones.  This is mainly of use when you want to free
+inherited (or WROOT) colors, but don't know which they are.
+.PP
+If window doesn't have a colortable of it's own, one is created.  Child
+windows will inherit the parent's colortable.
+.SH NOTES
+You should do all the allocations before window is opened as
+\fIw_allocColor\fP() doesn't change the window palette \fBon screen\fP,
+just the window color table.  \fIw_changeColor\fP() will change the
+palette also on screen.
+.PP
+You can't free shared colors for the root window as other programs
+running in root window may rely on them being fixed to certain values.
+The WSERVER struct returned by \fIw_init\fP() tells how many shared
+colors there are.
+.PP
+I'd also recommend that you wouldn't free the first two colors for any
+any window as W server uses those for the window borders.  For
+allocating window the colors used by a given BITMAP, you can use the
+\fIw_allocMap\fP() function.
+.SH RETURNS
+\fIw_allocColor\fP() returns a handle to the requested color or a
+negative value in a case of an error.  \fIw_freeColor\fP() returns 0 on
+success.
+.SH SEE ALSO
+.IR w_allocMap (3),
+.IR w_changeColor (3),
+.IR w_setForegroundColor (3),
+.IR w_convertBitmap (3),
+.IR w_allocbm (3),
+.IR w_init (3)
+.SH LAST CHANGED
+6/1998 by Eero Tamminen

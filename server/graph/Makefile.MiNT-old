@@ -1,0 +1,71 @@
+#
+# MiNT graphics library makefile for obsolete GNU make / linker versions
+#
+
+include ../../.config
+
+ifdef PACKEDMONO
+PMONO = 1
+else
+PMONO = 0
+endif
+
+ifdef PACKEDCOLORMONO
+PCOLORMONO = 1
+else
+PCOLORMONO = 0
+endif
+
+ifdef PACKEDCOLOR
+PCOLOR = 1
+else
+PCOLOR = 0
+endif
+
+CFLAGS = $(BASECFLAGS) $(SERVERCFLAGS)
+
+OBJS = init.o mint.o $(wildcard generic/*.o) $(wildcard packed/*.o) \
+	$(wildcard direct8/*.o) $(wildcard monochrome/*.o)
+
+
+all: subdirs
+	$(MAKE) graph.olb
+
+subdirs:
+	$(MAKE) -C generic
+ifdef DIRECT8
+	$(MAKE) -C direct8
+endif
+ifdef BMONO
+	$(MAKE) -C monochrome
+endif
+ifdef PACKEDMONO
+	$(MAKE) -C packed MONO=1
+endif
+ifdef PACKEDCOLORMONO
+	$(MAKE) -C packed COLORMONO=1
+endif
+ifdef PACKEDCOLOR
+	$(MAKE) -C packed COLOR=1
+endif
+
+
+graph.olb: $(OBJS)
+	$(RM) $@
+	$(AR) $@ $(OBJS)
+ifdef RANLIB
+	$(RANLIB) $@
+endif
+
+
+mint.o: mint.c
+	$(CC) $(CFLAGS) -DPMONO=$(PMONO) -DPCOLORMONO=$(PCOLORMONO) \
+	-DPCOLOR=$(PCOLOR) -c mint.c -o mint.o
+#	-DBMONO=$(BMONO) -DDIRECT8=$(DIRECT8) \
+
+
+clean:
+	$(RM) *.o **/*.o
+
+veryclean: clean
+	$(RM) graph.olb

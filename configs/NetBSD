@@ -1,0 +1,40 @@
+# (Amiga) NetBSD defines
+
+ARCH   = NetBSD
+NETBSD = 1
+
+WLIB  = libW.a
+WTLIB = libWt.a
+
+DIRECT8 = 1
+
+# If you don't mind less debuggable applications, you can move
+# -fomit-frame-pointer option from SERVERCFLAGS to BASECFLAGS.
+BASECFLAGS	= -pipe -Wall -Wmissing-prototypes -O2 -I/sys/arch
+SERVERCFLAGS	= -DNETBSD_GRF=5 -DGRF_VMODE=1 -fomit-frame-pointer
+SERVERLIBS	= -ltermcap
+CLIENTLIBS	= -lW
+MATHLIB		= -lm
+CRYPTLIB	= -lcrypt
+
+# if wterm/wvt shouldnt' set TERMCAP enviroment variable, comment this out
+EXPORT_TERMCAP = 1
+
+# extras for programs needing GNU getopt
+UTILCPP               = /server/util
+UTILLIB               = /server/util -lutil
+
+CC = gcc
+MAKE = gmake
+RANLIB = ranlib
+AR = ar r
+CP = cp
+LN = ln
+RM = rm -f
+CHMOD = chmod
+INSTALL = install
+INSTALLBIN = install -s -m 755
+INSTALLDIRS = install -d
+
+# stuff you want to remove with 'make clean'
+JUNK = core *.rej *.orig

@@ -1,0 +1,29 @@
+.TH w_printchar 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_printchar(), w_printstring() \- print character/string to window
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_printchar(WWIN *" win ", short " x0 ", short " y0 ", short " c ");"
+.sp
+.BI "short w_printstring(WWIN *" win ", short " x0 ", short " y0 ", char *" s ");"
+.fi
+.SH DESCRIPTION
+.I w_printchar()
+prints a single character (0-255) at the given position in the text style
+previously set by
+.I w_settextstyle.
+If no style was explicitly set,
+.B F_NORMAL
+is the default.
+.PP
+.I w_printstring()
+prints complete (zero-terminated) strings of arbitrary length, but doesn't
+wrap at the right border of the window, so don't print strings that are too
+long.
+.SH SEE ALSO
+.IR w_strlen (3),
+.IR w_settextstyle (3)
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

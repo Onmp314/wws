@@ -1,0 +1,30 @@
+.TH w_gettime 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_gettime() \- OS independent time function
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.B long w_gettime(void);
+.fi
+.SH DESCRIPTION
+.I w_gettime()
+returns the number of milliseconds spent after a certain moment (OS
+dependent) in the past.  You could for example calculate time
+differencies from one 'frame' to another and use it in games as the
+.I w_queryevent() timeout
+argument.
+.SH BUGS
+Once in a couple of weeks the difference of values from successive calls
+is wrong as the millisecond counter goes round (long int accuracy is
+only 31 bits).  This shouldn't be a problem if you'll use the difference
+only as
+.I w_queryevent(3)
+argument and wait also for user events.
+.SH SEE ALSO
+.IR w_queryevent (3)
+and
+.IR wjewel (6)
+source.
+.SH LAST CHANGED
+30th May by Eero Tamminen

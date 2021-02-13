@@ -1,0 +1,32 @@
+.TH RING 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+ring/ringd \- message client & server for W
+.SH SYNOPSIS
+.nf
+ringd &
+ring [<server address>] <message>
+.fi
+.SH DESCRIPTION
+\fIRing\fP will call the \fIringd\fP server at the given address and
+sends it the message. Ringd server will show all the messages it receives
+in the windows it pops up into the middle of the screen or on standard
+error if it's unable to connect W server.
+.PP
+You can use this for sending and receiving little notices like "I'm
+going for snack, meet me at the front door" between friends.  It's an
+alternative for e-mail and \fIwbiff\fP.  ;-)
+.SH OPTIONS
+If there are more than one argument, \fIring\fP will use the first one
+as the address of machine where to send the message.  'localhost' is the
+default address.  Message is rest of the arguments.  It's better to
+always quote what you're sending so that shell won't accidentally expand
+$ and other special characters in your message.
+.SH AUTHOR
+(w) 11/1996 by Eero Tamminen
+.SH SEE ALSO
+.IR wbiff (1)
+.PP
+Check out \fIUsing C on the UNIX system\fP by \fBO'Reilly\fP if you're
+interested where I got the socket code.  These programs were the first
+socket programs I have made.
+

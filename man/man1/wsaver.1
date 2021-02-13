@@ -1,0 +1,30 @@
+.TH WSAVER 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wsaver \- screen saver for W
+.SH SYNOPSIS
+wsaver \fIseconds\fP
+.SH DESCRIPTION
+.I wsaver
+is the new - external - screen saver. If you start it you must give a numeric
+argument which is the number of seconds before it should get activated. Note
+that this number must be greater than 10.
+.PP
+After the given time has expired without any user activity, \fIwsaver\fP
+will activate one of it's 'modules' at random.  If you'll give a number
+smaller than 10, \fIwsaver\fP will demo module corresponding to that
+number in the root window.  Without a number \fIwsaver\fP shows the
+available modules.
+.PP
+You can naturally have only one screen saver running at a time, and
+since wsaver creates its window only when it gets activated it can also
+fail due to memory problems. In this case the screen will simply
+stay as it is, so you don't need to worry.
+.SH LIMITATIONS
+\'Ant-walk' module will use colors with a color server if there are
+enough shared colors.  Other modules don't use colors.
+.PP
+There are no module specific options.
+.SH CHANGED
+15th Feb 1996 by TeSche
+.br
+26th Feb 1998 by Eero Tamminen, added five new modules.

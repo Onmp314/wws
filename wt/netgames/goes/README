@@ -1,0 +1,110 @@
+
+These are game clients for my GameFrame framework. They implement the
+Gomoku, Pente and Go games which are all played on a (19x19) Go board.
+
+
+STARTING GAME
+
+Before starting a game one has to contact another game client.  This
+happens either by setting up a server and accepting a connection or by
+connecting yourself to another game server.
+
+With curses versions one needs to use '-c' option to specify the address
+into which to connect (e.g.  'cpente -c saturn.outer.space.org').  If
+this option isn't used, the game will itself setup a server.  Graphical
+user interface versions should have a separate configuration dialog from
+which you can perform either of these actions.
+
+After connecting another player, you can start the game and begin to
+play.  Note that continue (for clients that support board editing before
+play) asks confirmation from the other player before proceeding.
+
+
+RULES
+
+In the rules below game pieces are called 'stones'. On all the games
+stones are positioned to the board one at the time and never moved.
+
+
+GOMOKU RULES
+
+Players position a stone at the time and the game is won by the person
+who first gets five of his/her stones onto a row, either horizontally,
+vertically or diagonally.
+
+It's proven that the starter can always win the game, but with amateur
+players that's not an issue (mainly concerns players on inter/national
+level, who will play the Renju variant which sets some limitations to
+the starting player).
+
+
+PENTE RULES
+
+In addition to Gomoku rules, opponent's stones can also be removed from
+the board.  This can be accomplished by positioning one's own stones to
+both ends of the opponent's pair (only pairs can be removed).  Game is
+won by the first player who gets five-in-a-row or removes five pairs
+from the opponent.
+
+The game is made more even with the restriction that the starter needs
+to place his second stone three positions off the first one.  As the
+starter always has to position his stone onto the board center, this is
+done by the game itself.
+
+
+GO (Wei-ch'i)
+
+Go is an ancient game, which is at least as significant in East as Chess
+is on West.  There have been mentions about it about 4000 years old
+(Chess as it's known now, is about 600 years old).  Go rules are simple,
+but the strategy is complex.  That and the size of the Go board make
+the game harder to play for computers than Chess.
+
+GO RULES
+
+The aim of Go is to surround as much of territory (board) as possible.
+Game is played by positioning stones onto the board in turns.  The
+game ends when both players pass their move i.e. they don't see any way
+to increase the area they have conquered.
+
+Legal positions for a new piece are ones which have freedom(s) or will
+capture opponents stone/group(s) if that will not make a ko.
+
+Captured groups are removed from the board.
+
+GO TERMS
+
+Freedom = empty position horizontally or vertically beside the stone.
+Group   = group of stones of the same color which connect to each other
+	  horizontally or vertically.
+Suicide = placing a stone into a position which has no freedoms or
+	  into the last freedom of a group of the same color.
+Capture = Removing the last freedom of opponent's stone/group by
+          placing own stone into it.
+Ko	= Repetition of an earlier board situation.
+Eye	= an empty board position surrounded horizontally and vertically
+	  by stones of one group.
+Dead    = at end of the game a group that can be captured (has only
+	  one or no eyes (and is on the opponent's territory)) and can't
+	  be saved (not on neutral territory / not enough space for
+	  building eye(s)).
+
+At the end of the game, dead groups are removed from the board.
+
+The player with more points wins.  There are slightly differing rules
+(Chinese, Japanese, AGA (go organization)) for calculating the points.
+Player gets points from the areas that are completely surrounded and
+from the prisoners that s/he has taken during the game play.  Normally
+the starter's advantage (0.5 points) is accounted in the scoring.  For
+more info see rec.games.go newsgroup and it's FAQ.
+
+The current Go client requires that dead groups are removed by hand
+after both players have passed (game ends) and then game is passed again
+to calculate the score.  If one tries to remove opponent's group,
+opponent has to confirm the action.
+
+
+6th August,
+
+	Eero Tamminen		http://www.modeemi.cs.tut.fi/~puujalka/
+

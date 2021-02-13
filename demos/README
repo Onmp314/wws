@@ -1,0 +1,24 @@
+Most of these programs are created just to test and/or demonstrate a W
+server or library feature and aren't in itself usable.
+
+3point.c	Circle through 3 points
+boxtest.c	thick line box demo
+filltest.c	w_fill demo
+gfxdemo.c	w_ellipse/w_bezier demo
+linetest.c	w_setlinewidth demo
+pietest.c	w_arc demo
+warp.c		Wlib image conversion demo
+wbuttons.c	Wlib button demo
+wcolor.c	W color demo
+wdim.c		F_LIGHT font attribute demo
+wfont.c		show given font(s) in several different styles
+wfontdemo.c	load / show fonts in given directory
+wmouse.c	mouse shape changing demo
+wresize.c	w_resize/w_line demo
+wscroll.c	w_scroll demo
+
+With warp you could animate your root window if your machine has enough
+'oomph' (pentium or better) ;-).
+
+
+	- Eero

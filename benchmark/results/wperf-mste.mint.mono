@@ -1,0 +1,88 @@
+This is WPERFMON, running on W1R3 PL2
+screen: 640x400, 2 colors
+window: 320x200
+font: 5x8 (fixed8.wfnt)
+testing null operation...
+38328 ops in 10.075000 seconds -> 3804.268066 ops/sec
+43435 ops in 10.085000 seconds -> 4306.891602 ops/sec
+43435 ops in 10.070000 seconds -> 4313.307129 ops/sec
+43235 ops in 10.025000 seconds -> 4312.718262 ops/sec
+43369 ops in 10.055000 seconds -> 4313.177246 ops/sec
+average: 0.000238 secs/op, 4209.938477 ops/sec
+testing plot...
+14026 ops in 10.195000 seconds -> 1375.772461 ops/sec
+14196 ops in 10.255000 seconds -> 1384.300293 ops/sec
+14164 ops in 10.265000 seconds -> 1379.834351 ops/sec
+14196 ops in 10.275000 seconds -> 1381.605835 ops/sec
+14111 ops in 10.230000 seconds -> 1379.374512 ops/sec
+average: 0.000725 secs/op, 1380.183594 ops/sec
+testing line...
+3120 ops in 13.110000 seconds -> 237.986282 ops/sec
+3120 ops in 13.115000 seconds -> 237.895538 ops/sec
+3120 ops in 13.100000 seconds -> 238.167938 ops/sec
+3120 ops in 13.110000 seconds -> 237.986282 ops/sec
+2600 ops in 12.425000 seconds -> 209.255524 ops/sec
+average: 0.004301 secs/op, 232.500763 ops/sec
+testing vline...
+5866 ops in 10.890000 seconds -> 538.659302 ops/sec
+5866 ops in 10.860000 seconds -> 540.147339 ops/sec
+5866 ops in 10.890000 seconds -> 538.659302 ops/sec
+5781 ops in 10.720000 seconds -> 539.272400 ops/sec
+5866 ops in 10.890000 seconds -> 538.659302 ops/sec
+average: 0.001855 secs/op, 539.078369 ops/sec
+testing hline...
+12156 ops in 10.255000 seconds -> 1185.372925 ops/sec
+12241 ops in 10.330000 seconds -> 1184.995117 ops/sec
+12156 ops in 10.250000 seconds -> 1185.951172 ops/sec
+12156 ops in 10.285000 seconds -> 1181.915405 ops/sec
+12156 ops in 10.245000 seconds -> 1186.530029 ops/sec
+average: 0.000844 secs/op, 1184.950928 ops/sec
+testing ppoly...
+300 ops in 18.645000 seconds -> 16.090105 ops/sec
+277 ops in 17.219999 seconds -> 16.085947 ops/sec
+300 ops in 18.655001 seconds -> 16.081478 ops/sec
+300 ops in 18.655001 seconds -> 16.081478 ops/sec
+300 ops in 18.645000 seconds -> 16.090105 ops/sec
+average: 0.062167 secs/op, 16.085821 ops/sec
+testing circle...
+766 ops in 26.065001 seconds -> 29.388067 ops/sec
+766 ops in 24.600000 seconds -> 31.138210 ops/sec
+766 ops in 24.555000 seconds -> 31.195276 ops/sec
+851 ops in 27.285000 seconds -> 31.189299 ops/sec
+766 ops in 24.549999 seconds -> 31.201630 ops/sec
+average: 0.032453 secs/op, 30.813425 ops/sec
+testing pcircle...
+1021 ops in 23.625000 seconds -> 43.216930 ops/sec
+936 ops in 21.674999 seconds -> 43.183392 ops/sec
+936 ops in 21.680000 seconds -> 43.173431 ops/sec
+936 ops in 21.674999 seconds -> 43.183392 ops/sec
+936 ops in 21.674999 seconds -> 43.183392 ops/sec
+average: 0.023154 secs/op, 43.188614 ops/sec
+testing bitblk...
+460 ops in 24.559999 seconds -> 18.729643 ops/sec
+409 ops in 21.820000 seconds -> 18.744272 ops/sec
+460 ops in 24.580000 seconds -> 18.714401 ops/sec
+409 ops in 21.780001 seconds -> 18.778696 ops/sec
+409 ops in 21.830000 seconds -> 18.735685 ops/sec
+average: 0.053363 secs/op, 18.739635 ops/sec
+testing vscroll...
+1135 ops in 14.710000 seconds -> 77.158394 ops/sec
+1135 ops in 14.480000 seconds -> 78.383980 ops/sec
+1072 ops in 13.570000 seconds -> 78.997787 ops/sec
+1135 ops in 14.485000 seconds -> 78.356926 ops/sec
+1072 ops in 13.540000 seconds -> 79.172821 ops/sec
+average: 0.012756 secs/op, 78.392319 ops/sec
+testing character output...
+5614 ops in 10.465000 seconds -> 536.454834 ops/sec
+5671 ops in 10.570000 seconds -> 536.518494 ops/sec
+5614 ops in 10.460000 seconds -> 536.711304 ops/sec
+5652 ops in 10.535000 seconds -> 536.497375 ops/sec
+5671 ops in 10.575000 seconds -> 536.264771 ops/sec
+average: 0.001864 secs/op, 536.488953 ops/sec
+testing string output...
+13440 ops in 13.255000 seconds -> 1013.956970 ops/sec
+14144 ops in 13.950000 seconds -> 1013.906799 ops/sec
+14144 ops in 13.940000 seconds -> 1014.634155 ops/sec
+14144 ops in 13.930000 seconds -> 1015.362488 ops/sec
+14144 ops in 13.950000 seconds -> 1013.906799 ops/sec
+average: 0.000986 secs/op, 1014.357117 ops/sec

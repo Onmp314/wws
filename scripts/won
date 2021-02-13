@@ -1,0 +1,10 @@
+#!/bin/sh --
+# "won" is more or less a W equivalent to "xon".
+# You can use it like this:
+#	 $ won otherhost # just to start a wterm
+#	 $ won otherhost wvt # wvt instead
+#	 $ won c wterm -r -b -g 80,40,-1,0 # used in my .wlaunchrc
+host="$1"
+shift || exit 2
+if [ $# = 0 ]; then set wterm;fi
+ssh -n "$host" env WDISPLAY="${WDISPLAY:-`hostname`}" "$@" &

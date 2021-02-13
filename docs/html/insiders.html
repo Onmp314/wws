@@ -1,0 +1,220 @@
+<html>
+<head>
+<title>Entwined in the Entrails</title>
+</head>
+<body>
+
+<h1>Technical Information about W</h1>
+
+One main goal of W is easy graphics programmability.  That has been
+achieved with sensible default values, easy server connection / window
+initialization, and server based window backups.  The last one will (on
+cost of memory) ease server clipping and lessen the network load.<p>
+
+Contents:
+<ul>
+	<li><a href=""parts">W window system components</a>
+	<ul>
+	<li><a href="#server">W server</a>
+	<li><a href="#library">W library</a>
+	<li><a href="#toolkit">W Toolkit</a>
+	</ul>
+	<li><a href="#pipeline">W architecture / graphics pipeline</a>
+	<li><a href=""size">W window system size</a>
+</ul>
+
+<hr>
+
+
+<h2>W window system components</h2>
+
+<h3><a name="server">W server</a></h3>
+
+W server is composed of the initialization code which handles terminal
+and signals, initializes screen, functions accessing it and W server
+socket, reads configuration and acts on it.  The main loop handles the
+windows, redraws and menu, mouse and keyboard events + of course invokes
+server functions according to the CLIENT requests.<p>
+
+The graphics drivers are in a library that is linked to the W server
+binary.  At the startup the OS/HW specific graphics initialization
+function, based on the current graphics mode, sets the screen properties
+(might also first change into specified graphics mode) into SCREEN
+struct and selects which driver functions will be used i.e. returns a
+pointer to a suitable SCREEN graphics function pointer table
+structure.<p>
+
+Currently there are initialization routines for Linux, (several
+different graphics backends) Atari MiNT, SunOS and Amiga NetBSD. Atari
+graphics routines are best optimized because W was originally
+developed under MiNT.  The two-color nature of the W server and backup
+bitmaps kind of nullifies arguments for the high/True Color mode
+drivers....  The graphics types supported are:
+
+<ul>
+	<li>One bitplane bitmap.  Big-endian byte order (packed, MONO
+	    driver).  Memory wise this would be the wisest choice as
+	    windows are backed up by the server.
+	<li>There's now also a slightly more portable version (BMONO
+	    hack) of the above which works also on x86 but is a bit
+	    slower.  As W requires linear memory, VGA architecture
+	    limits you to 640x480x2 resolution.
+	<li>Interleaved bitmaps, of which only two bitplanes are used.
+	    Big-endian byte order (packed, COLORMONO driver).  This is
+	    faster than the COLOR driver (on graphics devices where
+	    bitplanes are on separate bitmaps, monochrome driver could
+	    be used instead if processor allows long accesses on word
+	    boundaries).
+	<li>Interleaved bitmaps with palette.  A special array is used
+	    to determine which plane(s) need to be set for the
+	    back/foreground colors.  Big endian byte order.  (packed,
+	    COLOR driver).
+	<li>8-bit, chunky bitmap with palette (DIRECT8 color driver).
+</ul>
+<p>
+
+Interleaved bitplanes (an Atari format) contain the first 16 pixels on
+first bitplane, then the same pixels on next bitplane and so on until
+the next 16 pixels on the first bitplane, then same pixels on the next
+bitplane etc.<p>
+
+All of the drivers need graphics memory to be linearly accessible.  On
+older x86 PCs graphics cards use paged memory.  Didn't make one feel
+like supporting them :).<p>
+
+
+<h4>Screen memory</h4>
+
+Under MiNT the screen memory block address is acquired by XBios call for
+the logical screen address.  On unix machines the frame buffer device is
+mmap()'ed to memory or some additional library is used for acquiring a
+'screen'.  Then the graphics functions just write to the returned bitmap
+address.
+<p>
+
+
+<h3><a name="library">W library</a></h3>
+
+W library takes care of marshaling (packaging arguments into structs
+before sending them over network for unmarshalling) function calls,
+buffering the graphics requests, and some utility functions.  Besides
+socket buffering, a lot of the W library code has gone / will go to the
+routines that deal with w_get/putblock() functions as W server might be
+in a different graphics mode from the one used by the client bitmaps and
+therefore numerous conversion and alignment routines are needed.  Other
+utilities include a simple button gadget implementation and reading/writing
+of images.<p>
+
+
+<h3><a name="toolkit">W Toolkit</a></h3>
+
+Kay R&ouml;mer has created a W toolkit that is similar to the X toolkit.
+With it user can create user interface component hierarchies in an
+object-oriented manner.  The user interface components are called
+'widgets'.  A widget can be a simple (referring to hierarchy, not code
+size) one like scrollbar, button or fileselector or it can be a
+container like shell (W window), viewport (scrollable area) or
+pane (arranges child widgets horizontally or vertically).<p>
+
+User can attach callback functions to widgets which will be invoked
+when a certain widget specific action is performed (for example button
+widget is clicked). There can also be timer and file event callbacks.<p>
+
+After user has created the widget hierarchy/ies and put it/them onto the
+screen he gives the application control over to the toolkit which will
+then call the user functions as needed.  This way handling the user
+input is easier and more consistent.  Extending and changing the user
+interface will also be much easier as there are lots of ready made
+interface components already available.  Even complex ones like
+fileselector, HTML and terminal widgets.<p>
+
+As there isn't (yet) a Wt user interface builder, the widget hierarchies
+have to be built 'by hand' and tested by compiling the code. After some
+experimenting with the toolkit this shouldn't be much of a hindrance as
+long as one keeps the widget manuals (listing the widget options) at
+hand. :-)<p>
+
+
+<hr>
+
+<h2><a name="pipeline">W architecture / graphics 'pipeline'</a></h2>
+
+<img src="w-client-server.png">
+
+<h4>Wt, W GUI toolkit</h4>
+<ul>
+	<li>Layout and draw the widgets onto container windows.
+	<li>Check for incoming W and file events and timeouts.
+	<li>Call the widget's handler for that event.
+</ul>
+...Calls Wlib function(s)...
+
+<h4>Wlib, W client library</h4>
+<ul>
+	<li>Function argument validity is tested.
+	<li>graphics request packet is composed.
+	<li>packet is copied to the socket buffer.
+</ul>
+...  when buffer fills up or user requests an event, buffer contents are
+'bulk'-sent to ...
+
+<h4>W server</h4>
+<ul>
+	<li>Stuff on the socket is read into socket buffer.
+	<li>Request packet is extracted from the socket buffer.
+	<li>Request process function is called with the client pointer
+            and window handle.
+	<li>Window pointer is looked up from hash table based on
+            the window handle.
+	<li>Different window based attributes are set (graphics
+           context, clipping rectangle).
+<p><em>Window partially visible</em> or -DREFRESH compilation option used:
+	<li>Graphics are drawn to the window backup.
+	<li>The window 'dirty' (changed part) rectangle is updated.
+	<li>When the socket buffer doesn't contain any more packets to
+	    process or there's a query event, the 'dirty' area(s) will
+	    be flushed onto the screen.
+<p><em>Window on top or fully visible</em>:
+	<li>If graphics would come under mouse, mouse will be disabled.
+	<li>Graphics are drawn to the window and window is marked as 'dirty'.
+	<li>When another window is topped, the contents of the 'dirty'
+	    window are copied from screen to the window backup.
+</ul>
+
+<img src="w-server.png">
+
+<p>
+
+<hr>
+
+<h2>W window system size</h2>
+
+<p>W1R4 code size is about (as reported by <em>wc</em>):
+<p>
+<pre>
+		 lines		  KB
+------------------------------------
+W server	 23000		 550
+W library	  7000		 160
+W2X library	  3000		  70
+W toolkit	 23000		 470
+------------------------------------
+		 56000		1250
+
+W applications	  7000		 170
+Wt applications	 14000		 300
+W games		 12000		 300
+Wt games	 15000		 380
+W/Wt demos	  4000		  80
+------------------------------------
+		108000		2480
+</pre>
+About half of the W server code is for the low level graphics routines
+needed with different screen formats in the W server.
+<p>
+
+<hr>
+<a href="mailto:oak@welho.com">oak@welho.com</a>
+
+</body>
+</html>

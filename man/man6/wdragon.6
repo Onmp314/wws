@@ -1,0 +1,177 @@
+.TH WDRAGON 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wdragon \- Mah-Jongg game for W
+.SH SYNOPSIS
+.B wdragon
+[-help]
+[-double interval]
+[-font family]
+[-size font size]
+[-styles font styles]
+[-geometry geometry]
+[-/+iconic]
+[-/+reverse]
+[-/+shadows]
+[-sides type]
+[-/+sticky]
+.SH DESCRIPTION
+\fIWDragon\fP plays a solitaire version of the game of Mah-Jongg.
+
+Mah-Jongg is played with a set of tiles.  In solitaire Mah-Jongg, the tiles
+are set out in a particular pattern and the object of the game is to eliminate
+all of the tiles.  \fIWDragon\fP plays with the tile pattern known as "The
+Dragon".  This pattern has 5 levels of tiles.  From above, this
+pattern somewhat resembles a sleeping dragon.
+
+Tiles are removed from the game two at a time.  The two tiles removed
+must "match" and they must both be "free".
+
+A tile is "free" if on the left or on the right side there is no tile
+that is on the same stacking level as this tile.  There may be tiles
+that are at a lower level than this tile but not one at the same or
+higher level.  To select a free tile for removal just click on it.
+\fIWDragon\fP will refuse to select a tile that is not free.  To remove
+a pair of tiles simply double-click on one of the tiles.  You have the
+option of selecting one tile and then double-clicking on the second, or
+else selecting both tiles and then double-clicking upon either tile,
+or else selecting both tiles and then clicking the right mouse button.
+
+Two tiles match if a) they both have the same picture upon their
+faces, b) they are both flowers, or c) if they are both seasons.
+
+There are seven types of tile.
+
+Flowers - There are four tiles that represent flowers.  These are the
+Orchid, the Plum, the Mum, and the Bamboo tiles.  Any two flowers match.
+
+Seasons - There are four tiles that represent the four seasons.  These
+are the Spring, Summer, Autumn, and Winter tiles.  Any two seasons match.
+
+Dragons - There are three types of dragons and there are four each of
+the dragons.  There is the Red dragon, the White dragon, and the Green
+dragon.  Only two dragons of the same type match each other.
+
+Winds - There are four each of the four winds.  These are the East,
+West, North, and South tiles.  Only two winds from the same direction
+match each other.
+
+Bams, Dots, and Craks - These tiles are numbered 1 through 9.  There
+are four each of each numbered tile.  Only two tiles of the same type
+with the same number match each other.
+
+.SH OPTIONS
+The \fIwdragon\fP program accepts the options listed below:
+.TP
+.B \-help
+This produces a verbose message describing the command line options.
+.TP
+.B \-double interval
+In order to play the game you must double-click upon tiles.  This
+option allows you to set the maximum time interval between clicks that
+separate the two clicks that make up a double click.  The default is
+250 milliseconds.  Clicks further apart than this will be treated as
+separate single clicks instead of one double click.
+.TP
+.B \-geometry geometry
+Use this option to specify the geometry to be used for the
+\fIwdragon\fP window.  There are five sizes that \fIwdragon\fP prefers,
+450x340, 650x500, 870x660, 1080x820, and 1290x980.
+.TP
+.B \-iconic
+Use this option and \fIwdragon\fP will first appear as an icon.  Use
+the \fB+iconic\fP form and \fIwdragon\fP will \fBnot\fP first appear as
+an icon.
+.TP
+.B \-reverse
+Use this option for reverse-video and use the \fB+reverse\fP option
+for normal-video.
+.TP
+.B \-shadows
+Use this option and tiles will not have 3-D shadows and use
+the \fB+shadows\fP and tiles will have (the default) 3-D shadows.
+.TP
+.B \-sides type
+This option can be used to specify the way that tile sides are drawn.
+There are four possiblities.  "gray" (the default), "black", and "line".
+.TP
+.B \-sticky
+By default, the first selection is "sticky" (+sticky) which means that
+attempts to select a second tile that is free but which doesn't match
+the first are rejected.  If the first selection is not sticky
+(-sticky), an attempt to select a free tile that doesn't match the first
+will deselect the first tile and leave only the second selected.
+.SH MOUSE BUTTONS
+Click button 1 on any tile to select it.  Click on any menu button to activate
+it.
+
+Click button 2 to obtain a (next) hint on a possible move.  See the Hint menu
+button below for more information.
+
+Click button 3 to remove two selected tiles from the game.
+.SH MENU BUTTONS
+There are several buttons visible in \fIwdragon's\fP window and there
+are two sets of buttons.  The inital set includes:
+.TP
+.B "New Game"
+Press this button to reshuffle the tiles and start a new game.
+.TP
+.B "Restart"
+Press this button to restart the current game.  This gives you a
+chance to try again.
+.TP
+.B "Save"
+Press this button to save the current game into the file
+$HOME/.dragon-save.  The current game is saved at the current point
+for later resumption.
+.TP
+.B "Other"
+Press this button to get to the other set of buttons.
+.TP
+.B "Hint"
+This button can be used in two ways.  First, if you are stuck for a
+move then just press this button repeatedly and \fIwdragon\fP will show
+successive possible moves.  Of course, there may not be any.  Second,
+if you want to remove a particular tile but you cannot see any
+matching free tiles then select the tile and then press this button to
+see if \fIwdragon\fP agrees with you that there aren't any matching
+free tiles.
+.TP
+.B "Restore"
+Press this button to read the $HOME/.dragon-save file and to resume a
+saved game.
+.TP
+.B "Quit"
+Press this button to exit the game.
+.PP
+The other set of buttons include:
+.TP
+.B "Redraw"
+Press this to cause the board to be redrawn.
+.TP
+.B "Sides"
+Press this repeatedly to cycle through the available set of drawing
+options for the tiles.
+.TP
+.B "Samples"
+Press this to display the full set of tiles.  Press it again to get back to
+the game.
+.TP
+.B "Other"
+Press this to get back to the first set of buttons.
+.TP
+.B "Cheat"
+Press this button to toggle Cheating mode.  When this is turned on you
+can remove any two arbitrary tiles.  Don't cheat!
+.SH "SEE ALSO"
+wserver(1)
+.SH BUGS
+.LP
+See the README file for the current version.  Report new bugs to
+jensk@hpbbn.bbn.hp.com.
+.SH COPYRIGHT
+The W port is being distributed under the GNU General Public License.
+See the GPL file with the documentation for details.
+.SH AUTHOR
+Original by Gary E. Barnes (Rational; geb@rational.com); ported to W1R3
+by Jens Kilian (jensk@hpbbn.bbn.hp.com).
+.br

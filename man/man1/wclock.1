@@ -1,0 +1,25 @@
+.TH WCLOCK 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wclock \- analog clock for W
+.SH SYNOPSIS
+wclock [-g \fIgeometry\fP] [-b \fIpattern id\fP] [-r] [-h]
+.SH DESCRIPTION
+\fIWclock\fP is an analog clock.  It's window is updated about once a
+minute or when a key is pressed.  You can get rid of \fIwclock\fP with
+the 'q' key or by sending it a signal.
+.SH OPTIONS
+You may use the `-g' option to dictate size and position.  With color
+servers you can use the '-c' option to set clock background to one of
+the shared server colors (normally 0-7).  For larger clock sizes you
+could set a background pattern with '-b' option (value as hexadecimal).
+\'-r' makes \fIwclock\fP to draw into root window and `-h' just displays
+the usage line.
+.PP
+IMHO \fIwclock\fP looks best at very small (<80x80) or large sizes
+(>240x240). For example '-g 31,31 -c 3' or '-g 480,480 -b 1511'.
+.SH SEE ALSO
+.IR w_setpattern (3)
+.SH ORIGINAL AUTHOR
+TeSche, itschere@techfak.uni-bielefeld.de
+.SH LAST CHANGED
+2/98 by Eero Tamminen

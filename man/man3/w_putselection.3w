@@ -1,0 +1,104 @@
+.TH Clipboard 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_putselection(), w_getselection(), w_freeselection() \- W clipboard manipulation
+.br
+w_selopen, w_selappend, w_selclose
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "w_selection_t *w_getselection(char *" type ");"
+.sp
+.BI "int w_putselection(char *" type ", char *" data ", long " len ");"
+.sp
+.BI "void w_freeselection(w_selection_t *" sel ");"
+.sp
+.sp
+.BI "w_clipboard_t w_selopen(char *" type ");"
+.sp
+.BI "w_clipboard_t w_selappend(w_clipboard_t " id ", char *" data ", long " len ");"
+.sp
+.BI "void w_selclose(w_clipboard_t " id ");"
+.fi
+.SH DESCRIPTION
+W clipboard offers applications a mechanism for data exchange.  These
+data `clips' are stored on a specific directory on disk and the clip
+file name in that directory represents clip type.
+.PP
+At the moment clipboard is implemented in the W library, so it will work
+only between applications on the same machine.
+.SH FUNCTIONS
+\fIw_putselection\fP, \fIw_getselection\fP and \fIw_freeselection\fP are
+the main methods of using the clipboard.
+.TP
+\fIw_putselection\fP (char *type, char *data, long len)
+Puts into clipboard data at `data' of lenght `len' under name `type'.
+Returns negative number on error.
+.TP
+\fIw_getselection\fP (char *type)
+Allocates a selection structure, reads data under clip `type' into and
+returns structure pointer on NULL.
+.TP
+\fIw_freeselection\fP (w_selection_t *)
+Frees the selection given as argument.
+.PP
+If you need to manipulate the data going into the clipboard and don't
+want to allocate space for the temporary results, you can use
+\fIw_selopen\fP, \fIw_selappend\fP and \fIw_selclose\fP functions.
+.TP
+\fIw_selopen\fP (char *type)
+Opens clipboard clip `type' (locks it) and returns clip handle or zero.
+.TP
+\fIw_selappend\fP (w_clipboard_t id, char *data, long len)
+Appends `data' of lenght `len' into clip with handle `id'.
+.TP
+\fIw_selclose\fP (w_clipboard_t id)
+Closes (and unlocks) clip with handle `id'.
+.PP
+Note that faulty programs may lock out the clip.  Killing the offending
+program should open the lock.  On OSes which don't have a separate
+system call for file locking, file locking is ignored.
+.SH CLIP TYPES
+Here are generic clip type identification strings defined in Wlib.h and
+what characters clips of those types may or should contain.
+.TP
+.I W_SEL_TEXT
+tab, newline and characters with code >= 32
+.TP
+.I W_SEL_VALUE
+decimal numbers ('0' -> '9')
+.TP
+.I W_SEL_FILE
+file path / name
+.TP
+.I W_SET_TYPE
+name for a clip type
+.PP
+\fIT_SEL_TEXT\fP is reserved for \fBuser initiated\fP text cut / copy /
+paste operations exclusively.  Normally these are handled automatically
+by W toolkit widgets manipulating text, but other applications may want
+to use it too.  Clients which don't translate '\t' or '\n' characters
+should either ignore or convert to spaces values that are smaller than
+32, not just `show' them (fonts might have null width chars on those
+positions and that will disrupt window offsets for fixed width font
+programs).
+.PP
+If clipboard is used for communication between `known' partners,
+applications should use their own clip types.  Types not mentioned above
+should use program name as a part of the clip type.  For example
+Wetscape could use clip type `wetscape.html'.
+.PP
+Clip type string should not exceed lenght specified in \fIW_SELTYPE_MAX\fP,
+as it will be cut to that lenght (at least if it's sent over network).
+.SH FURTHER CHANGES
+If clipboard later moves over to W server and client message mechanism
+is added, client sending data to a single application through clipboard
+could lock the clip, send message to receiver and receiver would then on
+message arrival read the data and unlock it.
+.PP
+There shouldn't be any need for changing the clipboard interface when
+clipboard is moved over to W server.
+.SH SEE ALSO
+\fIwchars\fP source and \fIW toolkit\fP.
+.SH LAST CHANGED
+4/97 by Eero Tamminen

@@ -1,0 +1,32 @@
+.TH w_bmheader 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_bmheader() \- initialize BITMAP values based on its type and width
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_bmheader(BITMAP *" bm ");"
+.fi
+.SH DESCRIPTION
+.I w_bmheader()
+sets the other BITMAP header values correctly in regards to
+.B type
+and
+.B width
+values.
+.PP
+Palette will be set to NULL just in case.  If you need palette,
+set it after calling this function!
+.PP
+This function is mainly intended for routines inside W library to
+create 'dummy' BITMAPs for certain
+.I Wlib
+functions like
+.I w_convertFunction().
+.SH RETURNS
+The function returns 0 or a negative number to indicate unknown BITMAP type.
+.SH SEE ALSO
+.IR w_allocbm (3),
+.IR w_putblock (3)
+.SH LAST CHANGED
+26th June 1998 by Eero Tamminen

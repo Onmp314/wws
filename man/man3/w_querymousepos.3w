@@ -1,0 +1,17 @@
+.TH w_querymousepos 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_querymousepos() \- return mouse position
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_querymousepos(WWIN *" win ", short *" x0 ", short *" y0 ");"
+.fi
+.SH DESCRIPTION
+.I w_querymousepos()
+asks for the mouse position in a window. If the mouse is outside the window
+something negative will be reported as coordinates. If you want to know the
+absolute mouse positions, ask for relative position in window
+.B WROOT.
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

@@ -1,0 +1,87 @@
+.TH Image 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_convertBitmap, w_convertFunction, w_ditherOptions \- image conversion functionality
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+\fBBITMAP *w_convertBitmap(BITMAP *\fIsource\fB,
+short\fI dst_type\fB, short\fI dst_colors\fB);
+.sp
+.BI "uchar *(*w_convertFunction(BITMAP *" src ", BITMAP *" dst ", int " row "))();"
+.sp
+.BI "void w_ditherOptions(uchar *" graymap ", int " expand ");"
+.fi
+.SH DESCRIPTION
+.I w_convertFunction()
+returns a function to convert source bitmap type to destination type
+line-by-line.  The row argument is used to align dithering on successive
+lines of output with mono destination target.  May change the 'dst'
+argument.  This is used by \fIw_convertBitmap()\fP and
+\fIw_putblock()\fP functions and normally you shouldn't call it
+yourself!
+.PP
+DIRECT24 to DIRECT8 format conversion is not supported as that would
+need converting the color palette in addition to the data.  For DIRECT
+to monochrome conversions this function also initializes the color to
+grayscale conversion array (see below) using the row variable.
+.PP
+.I w_convertBitmap()
+converts the source BITMAP into a BITMAP of requested type, which it has
+allocated, and then returns that.
+.PP
+As this converts the whole image before returning it, it has a slight
+advantage over \fIw_putblock()\fP and can do dithering to monochrome
+with the better FS-dithering (error propagation) algorithm instead of
+ordered dithering.  DIRECT24 to DIRECT8 format conversions are done
+through monochrome format, because Wlib functions don't deal with
+palettes.
+.PP
+.I w_ditherOptions()
+function can be used to control dithering of DIRECT8 bitmaps.
+.PP
+With first argument you can set the 256 byte conversion array used
+for converting colors to grayscale values.  If that's not set when
+\fIw_convertFunction()\fP is called, Wlib will construct the conversion
+array itself.
+.PP
+With second argument you can disable or set intensity range expansion
+for FS-dithering.  It's used as a default, but if your machine is slow
+or you're doing an animation program or otherwise outputting lots of
+color images with the same palette, you should zero it.
+.SH WLIB IMAGE FORMATS
+W library knows of four image formats:
+.RS
+1. BM_PACKEDMONO, monochrome, 1 bit
+.br
+2. BM_PACKEDCOLOR, color, interleaved, 2-8 bits
+.br
+3. BM_DIRECT8, color, 8 bits
+.br
+4. BM_DIRECT24, color, 24 bits
+.RE
+.PP
+Of these formats second and third have a palette, `color' information of
+others is contained in their image data.  Second format is reserved
+exclusively for servers and it wouldn't be of much use for clients
+anyway.  Fourth format is intended as a convenience for simple image
+manipulators.
+.PP
+Note that Wlib doesn't know or care about the colors image uses.  If
+you're not converting to monochrome (server) you should first reduce the
+amount of colors in the image to the number of colors used by the W
+server before calling these or \fIw_putblock()\fP function.  You should
+also map the colors to W server palette or use palette private for the
+output window.
+.PP
+BM_PACKEDCOLOR -> BM_PACKEDMONO conversion maps all the other colors
+besize zero (white) to black.  As this is used only when you get images
+from the server (an Atari one), it shouldn't generally matter.  If you
+want dithering, convert image first to BM_DIRECT8 type.
+.SH SEE ALSO
+.IR w_putblock (3),
+.IR w_allocbm (3),
+.IR w_copybm (3),
+.IR w_freebm (3)
+.SH LAST CHANGED
+10/1997 by Eero Tamminen

@@ -1,0 +1,112 @@
+.TH WSERVER 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wserver \- the W Window System server
+.SH SYNOPSIS
+wserver
+.SH DESCRIPTION
+.I W
+is a simple window system written by
+.I Torsten Scherer
+and later patched up by several other people.
+Started under MiNT for the Atari ST/TT range of computers it now runs
+also under Linux on various platforms (68k and x86 tested).  W was
+obviously inspired by X11, but you shouldn't compare it to that.
+Main differencies are that W server has a simple window manager builtin
+and W does all the redraws by itself from window backups.  This was
+easier and saves some socket overhead.
+.PP
+W supports only few graphics modes; a fairly well optimized 32-bit big
+endian monochrome mode (does long accesses at short boundaries), a less
+optimal endian-neutral monochrome mode and an 8-bit chunky mode.  W
+server also supports Atari specific interleaved bitmap format upto 8
+planes.
+.SH CONFIGURATION
+First W tries to read file '.wconfig' in your home directory for some user
+customizations. If there isn't such a file the default from $(DATADIR)/wconfig
+is used, which should also have been installed by `make install'. If none of
+these files exist built-in defaults will be used.
+.PP
+With the 'wconfig' file you can set the W font path and which fonts will be
+used for window titles and menu. The root window menu items can be configured
+like this:
+.PP
+menuitem=<title>,<action-command with any number of args>
+.PP
+Then W tries to execute file `.wrc' in your home directory.  This file
+should be a regular shell script containing commands you want to execute
+to customize the startup procedure.  A sample `wrc' is included in the
+root directory of this archive.  If there is no `~/.wrc' a default
+$(DATADIR)/wrc will be executed which should have been installed during
+`make install'.  If this one also fails to exist nothing will happen.
+You'll then have to use the menu to start programs.
+.PP
+.SH RUNNING
+You can start the server just by typing:
+.PP
+wserver
+.PP
+Once started the server creates socket endpoints for clients to connect to.
+Currently it creates an AF_UNIX socket /tmp/wserver and an AF_INET for port
+7777. If that one is already in use, it will fall back to a AF_UNIX version
+only.
+.PP
+If both of these bind()s fail the server will exit immediately. Note that if
+the server crashes by some reason it may perhaps not be able to remove the
+file /tmp/wserver. If it should claim it can't bind to that address because the
+file already exists at the next start, you may think about manually erasing it
+and try again.
+.PP
+Clients connect to the AF_UNIX socket by default, because this one is
+guaranteed to exist locally (the AF_INET socket maybe not) and it's quicker.
+Each client, when started, looks for an environment variable WDISPLAY which,
+if existing, is assumed to hold the name of a host to connect to. Contrary to
+X11 it should really only contain the host name, not any display or perhaps
+port suffix.
+.PP
+If you start a client and get a movable rectangle on the screen then that's
+the client wanting you to determine where to put its window. If you press the
+left mouse button, you'll place the window to the current position, and if you
+press the right button you'll discard this window and probably also the whole
+client. But most programs now understand the geometry option to specify a
+place to put the window when started from the command line. See the
+.I w_scan_geometry
+manual page.
+.PP
+If the window was created with W_MOVE, you can move it later by pressing the
+left mouse button somewhere on the border of the it. You will then get the
+movable rectangle too and can place or discard the move, but this time the
+latter won't kill the client but instead leave the window where it was.
+.PP
+If you press the right mouse button on the border of a window, you'll
+top  it (note that this may not work if there's a window with the W_TOP
+flag in front of it).  If the window was already on top you'll un-top it
+instead.
+.PP
+If you press the left mouse button somewhere on the background, you'll get a
+small menu from which you can select a program to be run. The last item in the
+menu is `exit', which will kill all running clients and exit W. If you're
+compiled your version with -DREFRESH you may also see a 'refresh' item. This
+one will redraw the complete screen in case it got trashed somehow - but a
+-DREFRESH wserver is *a bit* slower than a direct one...
+.PP
+Mouse button pressed in windows are reported to the specific client program,
+so it's a bit hard to predict here what'll happen... ;)
+.SH BUGS
+lots & uncounted presumably... ;)
+.SH FILES
+.nf
+~/.wrc
+~/.wconfig
+$(DATADIR)/wrc
+$(DATADIR)/wconfig
+.fi
+.SH SEE ALSO
+Manual pages for the W utilities like
+.IR wterm (1)
+and the
+.IR Wlib.h (3)
+include file and it's manual page.
+.SH CHANGED
+15th Feb. 1996 by TeSche
+.br
+24th Feb. 1998 by Eero Tamminen

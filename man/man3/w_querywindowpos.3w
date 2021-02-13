@@ -1,0 +1,19 @@
+.TH w_querywindowpos 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_querywindowpos() \- return window position
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+\fBshort w_querywindowpos(WWIN *\fIwin\fB, short\fI effective\fB,
+short *\fIx0\fB, short *\fIy0\fB);
+.fi
+.SH DESCRIPTION
+.I w_querywindowpos()
+ asks for either the working area
+.B (effective
+= 0) or total area
+.B (effective
+= 1) position of a window.
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

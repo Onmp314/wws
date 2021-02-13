@@ -1,0 +1,200 @@
+
+     Wyrms (C) 1995, 1996 by Eero Tamminen
+
+
+THE GAME
+
+Idea is as old as they come... Eat, grow and avoid obstacles.
+
+Game is intended for two players and there are different versions for
+Atari TOS, W and curses.  You can play it also under X with the help of
+W2Xlib.
+
+
+GAME CONTROLS
+
+On TOS the control is with joystick by default.  On other versions both
+of the players use keyboard (a,z, x,c ,s and 8,2, 4,6, 5 are the
+defaults).
+
+
+COMMAND LINE ARGUMENTS
+
+Wyrms expects to get at least one argument as the level on which the
+wyrms are about to battle. If level was not found, an empty one will be
+created. Command line arguments are (# should be replaced with a
+number):
+
+  -w #	How many wyrms players got.
+
+  -s #	Set worm speed (moves per second).
+
+  -b #	Length bonus size in blocks.
+
+  -l #	How much wyrms' length is increased.
+
+  -1 #	Specify which controls (0-3) player one will use.
+
+  -2 #	Specify which controls player two will use.
+
+  -e	Edit the level files given as arguments.
+
+  -h	Shows the help level (help.h).
+
+For example:
+	wyrms level.1 -s 4 level.1
+
+would go through level.1 two times, at the second time with half the
+speed (8 moves / sec is the default speed).
+
+The normal procedure would be to drag all the level files, one wishes
+to play, onto the Wyrms program. Another way would be to install Wyrms
+for e.g. *.lev files (and to install default parameters if needed) and
+to click onto a level file one wants to play.
+
+
+BONUSES
+
+Bonuses are something that wyrms can get (in practice, run over).  Some
+of the bonuses have immediate effect and others need to be activated or
+are activated with a crash into something.  You can have only one bonus
+of each type at the time. All the activated bonuses use a common timer.
+This means that if you'll hit a speed bonus just after slipping on shit,
+you'll end up much farther and faster than you though...
+
+The current bonus tokens are:
+
+A number. Your main goals. Will increase your length and score.
+When the number is 9, you'll get to the next level and the opponent
+loses a life.
+
+A flash.  Pressing the button will make you to move at double speed for a
+little while.  This 'turbo' mode was the thing that originally got me to
+write this game.
+
+A leaf.  Eating this makes you able to excrete once, which will increase
+your score too).  The one who runs into the crapola, will slide
+uncontrollably for a little while.
+
+Explosives. Will get you through the next obstacle you'll crash into
+(wall, other player etc.). A head-to-head collision with the other worm
+is fatal though.
+
+A key. You'll need this to open a door. Opening a door increases your
+score.
+
+An arrow. Player is allowed to go through this item only in the direction
+pointed by the arrow. Then the arrow disappears.
+
+The home. You'll pick up another wyrm from your home hole ;-).
+
+
+COPYRIGHT
+
+This game, Wyrms, is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License (GPL) as
+published by the Free Software Foundation.
+
+
+BACKGROUND
+
+I have programmed this game in C.  There are a couple of lines GCC
+assembler (Motorola & MIT syntax) for handling the IKBD joystick
+interrupts on the TOS version.  I used the GCC v2.3.3 with MiNTlibs PL
+36 and SozobonX C v2 compilers with the Everest 3.3 and ME-3.5 text
+editors under the MiNT v1.12h4 and Thing desktop v0.59 on my 8MHz STfm
+(4/30MB) to program and compile this.  My previous programming
+experience is about two years of GFA basic programming and a two years
+of C programming.
+
+
+THANKS TO
+
+Johan Klockars for programming the wonderful Mgif image manipulation
+program (also free).
+
+Jarkko Kniivil"a on helping me when I started C.  And being a portable
+and (especially) modular code fanatic.
+
+J"urgen Lock for arguing with me by E-mail about the relative merits of
+GFA Basic and C on spring 1994 when I was still using Gfa... And for the
+IMHO most useful MiNT utility -- virtual consoles.
+
+Jerry Geiger and his 'team' for continuously updating SozobonX C (my
+'main' hd with GCC/X etc.  stuff broke last fall and it took some time
+before I managed to cramp all the needed stuff onto my remaining hd).
+At last (August -95) SozobonX has the much awaited prototype
+checking <g>.
+
+
+	15th February, 1996
+
+	Eero Tamminen		t150315@cc.tut.fi
+	Sahantie 2		http://www.modeemi.cs.tut.fi/~puujalka
+	23600 Kalanti
+	FINLAND
+
+
+-----------------
+CHANGES
+
+20.7.1995
+- v0.6, the first released version.
+- Keyboard control and command line arguments added.
+
+22.7.1995
+- v0.7, added an intro screen, bonuses and their actions.
+
+24.7.1995
+- v08, added help screen, random length bonuses and better levels
+  / worm guiding.
+
+15.8.1995
+- v0.9, added scores, level editor and improved the general level wrapper.
+- Made a GEM proggie for setting the variables and running Wyrms.
+- TOS Wyrms will now restore the system variables (IKBD interrupt
+  vectors) also when it's killed.
+
+22.8.1995
+- 0.95, X version (uses xsystem.c instead of the system.c).
+- Binary level handling improved.
+- Game control input is now buffered.
+- Player can now have several bonuses. Four new bonuses (arrows).
+
+9.9.1995
+- v.96, GEM version. X version fixed.
+- Added error() function for short error messages.
+- Moved and changed draw_map() into OS specific part.
+
+18.9.1995
+- v0.97, Removed intro screen.
+- Improved X draw_map().
+- Completed the level editor.
+
+19.10.1995
+- v0.98, Changed the GEM and X versions to use my Grafix library.
+  It might 'poll' a bit more than a native versions, but that
+  should be unnoticeble.
+- Made a curses (text) version.
+- Game can now be interrupted any time.
+- Binary levels are centered to the play area.
+
+15.2.1996
+- v0.99, Now that GUI versions of wyrms dominate 3 to 2, I decided to add
+  some mouse support to the level editing (see level.txt).
+- The images are now in 16x8 array of image blocks instead of
+  a 1x128 one. That way editing / converting them is easier...
+- Made 16x16 bitmaps and added support for them.
+- ASCII levels are centered horizontally to the play area.
+- Stand alone W version of Wyrms (i.e.  one doesn't need to use my W port
+  of the grafix library, Wlib in itself is very easy to program with).
+
+17.2.1996
+- v1.0, Some final fixes to the level editor.
+- Aligned 16x16 bonus blocks better on the image bitmap.
+- Fixed the select timeout timeval struct usage in wait/sys_frame().
+  For example Linux didn't like about negative usec values at all...
+
+26.10.1997
+- Removed grafix-lib GEM and X versions. X versions can now be done
+with the W2Xlib. Maybe somebody will do similar one for GEM too...?

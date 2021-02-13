@@ -1,0 +1,205 @@
+.TH PBM 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_readpbm(), w_writepbm() \- read/write PBM image file
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "BITMAP *w_readpbm(char *" fname ");"
+.sp
+.BI "short w_writepbm(char *" fname ", BITMAP *" bm ");"
+.fi
+.SH DESCRIPTION
+W needed one image format which all the programs were able to
+understand.  I decided that PBM would be easy (small) enough to
+implement as it's not compressed.  It's also reasonable common on unix
+and free of copyright restrictions.  The PBM functions are:
+.TP
+.B w_readpbm()
+Allocate and read given file as one of the formats mentioned below.  If
+filename is NULL, stdin is read instead.  Returns read file as BITMAP
+or NULL if operation failed.
+.TP
+.B w_writepbm()
+Write given W bitmap as binary PBM image (monochrome, palette or
+truecolor) into given file.  If filename is NULL, writes into stdout.
+Returns 0 on success or a negative value to indicate an error.
+.PP
+Wlib will convert images to a suitable format when they are sent
+for the server.  As this may take some time, it would be better
+if basic applications had always both mono and color icons.
+.SH PBM DESCRIPTION
+\fBPBM\fP (\fBP\fPortable \fBB\fPit\fBM\fPap) is an intermediary format
+used by \fINetPBM\fP package.  \fINetPBM\fP is a fairly widely spread
+freeware image conversion and manipulation package on unix.  Because
+\fBPBM\fP format is portable and easy to implement, many other image
+manipulation and conversion utilities support it too.  some of the most
+useful of them are Independent JPEG Group's free \fIcjpeg\fP and
+\fIdjpeg\fP utilities for compressing and decompressing JPEGs (to and
+from formats:  PBM, Targa, Gif, Windows Bitmap).
+.PP
+Another portable `network' image format is PNG.  It's new, also free and
+well designed, but the compression library size is almost half a
+megabyte of source, so don't expect W library to include PNG support.
+.SH PBM HEADER FORMAT
+PBM files start with a file identifier which is composed of two
+characters, a \fBP\fP and image format type:
+.br
+.I 1
+ASCII monochrome (not implemented)
+.br
+.I 2
+ASCII grayscale (not implemented)
+.br
+.I 3
+ASCII truecolor (not implemented)
+.PP
+.I 4
+binary monochrome
+.br
+.I 5
+binary grayscale
+.br
+.I 6
+binary truecolor
+.PP
+.I A
+my own monochrome ASCII format
+.br
+.I C
+my own color ASCII format with palette
+.br
+.I 8
+my own binary color format with palette
+.PP
+Type identification is followed with image width and height in decimals.
+On grayscale and color images width and height are followed with a
+maximum grayscale / color (component) value in the whole image, also in
+decimals.
+.PP
+Header elements may be separated from each other with any amount of
+white space (tabs, spaces, newlines).  Everything on a line following a
+`#' character is taken as a comment and thus ignored (between `#' and a
+value has to be white space too).  There may not be comments after
+maximum color value (or height with monochrome bitmaps)!!!
+.PP
+Binary images must have exactly _one_ white space character (usually
+newline) after header, before data for the image bitmap starts.  Binary
+data is ordered as concatenated image rows (as usual).
+.PP
+Here's an example of a binary grayscale image header:
+.RS
+.nf
+P5
+# smiley icon
+32 24
+255
+.fi
+.RE
+.PP
+Generally you'll recognize PBM image files from either `.pbm'
+(BitMap), `.pgm' (GrayMap), `.ppm' (PixMap) or `.pnm' (aNyMap)
+filename extension.
+.SH MY OWN BINARY FORMAT
+After image type id, width and height, there's a value for number of
+colors.  First data part is composed of `3 * colors' bytes of palette
+information, where each color entry has byte for red, green and blue
+color component.  Second data part following immediately palette is image
+data of `width * height' bytes.
+.PP
+PBM formats don't include palette.  That's why I included these.
+.SH PBM BINARY IMAGE DATA
+Monochrome binary data is a byte stream where eight image bits are
+packed per byte, giving total data length of `(width + 7) / 8 * height'
+bytes.
+.PP
+Grayscale binary data is a stream of bytes with values ranging between
+zero and maximum grayscale value in the header.  Data length is `width *
+height' bytes.
+.PP
+Color binary data is a stream of RGB byte-triples with byte values
+ranging between zero and maximum color channel value in the header.
+First byte in the `triple' is red value, second green value and third a
+blue value.  Data length is `width * 3 * height' bytes.
+.SH ASCII FORMATS
+Characters representing the image data:  The characters representing one
+line of the image have to be together and in number exactly as many as
+image is wide.  Of course there also has to be as many of these
+character groups as image is high.  Character groups have to be
+separated with white space.
+.PP
+Color mapping is composed of characters with ASCII codes greater than 32
+(space).  There has to be as many characters as image has colors.  At
+most 64 characters may be mapped (should I increase this?).
+.PP
+In monochrome image headers image height is followed with two `color'
+mappings.  First character represents white (background color) pixels
+and second black (foreground color) ones.  For example:
+.RS
+.nf
+PA
+# This is a 8x6 sized box icon
+# (w) 1997 by Eero Tamminen
+8 6 .#
+########
+#......#
+#......#
+#......#
+#......#
+########
+.fi
+.RE
+.PP
+In color image headers the image height is followed with number of
+colors in the image and the color values in hexadecimal (red + green +
+blue) prefixed with a character they mapped to.  For example:
+.RS
+.nf
+PC		# color identification
+
+# This is a 62x12 sized color box
+# (w) 1997 by Eero Tamminen
+56 12
+
+# Number of colors and five colors:
+#	light and dark gray, dark red and blue
+# color definition format:
+#	character & red, green and blue components
+# red, green and blue are hexadecimal values between 0-255
+# (last place for a comment)
+4
++ aa aa aa
+x 66 66 66
+# 44 00 00
+o 00 00 ff
+
+########################################################
+#++++++++++++++++++xxxxxxxxxxxxxxxxxxoooooooooooooooooo#
+#++++++++++++++++++xxxxxxxxxxxxxxxxxxoooooooooooooooooo#
+#++++++++++++++++++xxxxxxxxxxxxxxxxxxoooooooooooooooooo#
+#++++++++++++++++++xxxxxxxxxxxxxxxxxxoooooooooooooooooo#
+#++++++++++++++++++xxxxxxxxxxxxxxxxxxoooooooooooooooooo#
+#++++++++++++++++++xxxxxxxxxxxxxxxxxxoooooooooooooooooo#
+#++++++++++++++++++xxxxxxxxxxxxxxxxxxoooooooooooooooooo#
+#++++++++++++++++++xxxxxxxxxxxxxxxxxxoooooooooooooooooo#
+#++++++++++++++++++xxxxxxxxxxxxxxxxxxoooooooooooooooooo#
+#++++++++++++++++++xxxxxxxxxxxxxxxxxxoooooooooooooooooo#
+########################################################
+.fi
+.RE
+.PP
+With my own formats I recommend using the image type identifier as the
+second last letter in the filename (`.p8m', `.pam', `.pcm', if you'll
+need to differentiate the image formats.
+.SH SEE ALSO
+.IR w_allocbm (3),
+.IR w_duplicatebm (3),
+.IR w_freebm (3),
+.IR w_allocColor (3),
+.IR w_putblock (3),
+.IR w_getblock (3),
+.IR w_readimg (3),
+.IR w_xpm2bm (3)
+.SH LAST CHANGED
+4/1997 by Eero Tamminen
+

@@ -1,0 +1,58 @@
+.TH BDF2WFNT 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+bdf2wfnt \- convert BDF fonts to W font format
+.SH SYNOPSIS
+bdf2wfnt [\fIoptions\fP] [\fIBDF file\fP]
+.SH DESCRIPTION
+\fIbdf2wfnt\fP is an utility for converting X Window System BDF fonts to
+W font format. \fIbdf2wfnt\fP reads a BDF font from file or standard input
+and outputs a W font to standard output.
+.SH OPTIONS
+.TP
+-m
+Try to fit characters into as small space as possible by ignoring
+the character descent and x-offset in the bounding box. Most likely
+some characters won't quite align along the baseline, but you can correct
+that with \fIfontedit\fP.  The resulting character height will then be
+about the same as BDF font PIXEL_SIZE.
+.TP
+-v
+Output information all the characters converted.
+.PP
+Any other option shows the program usage.
+.SH BDF FONTS
+You can acquire BDF fonts from your X server by running first a
+\fIxfs\fP font server and then querying it with \fIfstobdf\fP.  You can
+check out the names of available fonts with \fPxlsfonts\fP, their looks
+with \fIxfontsel\fP and the whole charsets with \fIxfd\fP.
+.SH EXAMPLES
+First run the X font server:
+.br
+	xfs &
+.PP
+and then get one font like this:
+.br
+	fstobdf -server tcp/localhost:7100 -fn font
+.PP
+Just replace 'font' with a real X font name
+like '-misc-fixed-medium-r-normal--7-70-75-75-c-50-iso8859-1'
+or a wildcard abbreviation like '-*-fixed-*-r-*-*-7-*'.
+.PP
+If you'll pipe \fIfstobdf\fP output through \fIbdf2wfnt\fP and
+\fIfontedit\fP (use '-' option for stdin), the font will be saved to
+current directory with a suitable name for the W server.  As X font
+family name may not be suitable for W, you could set a new one with
+\fIfontedit\fP '-n <name>' option.  For example I prefer 'book' instead
+of 'New Century Schoolbook', it's so much easier to write...
+.SH HISTORY
+\fIbdf2wfnt\fP is derived from the \fIbdf2c\fP program by Andrew
+Scherpbier.
+.SH SEE ALSO
+.IR fontedit (1),
+.IR fstobdf (1),
+.IR xfd (1),
+.IR xfs (1),
+.IR xfontsel (1),
+.IR xlsfonts (1)
+.SH LAST CHANGED
+6th Mar 1998 by Eero Tamminen

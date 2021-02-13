@@ -1,0 +1,86 @@
+PLATFORM SPECIFIC BUGS
+
+SVGALIB:
+SVGAlib handles monochrome mode differently from other modes (it thinks
+white on white and black on black are cool default states), so W needed
+a little hack.  Result is that after virtual console switch away and back
+SVGAlib will again uses white-on-white palette (not fatal, just restart
+W server).  8-bit mode should work ok and mono is a bother only if you
+need virtual consoles.
+
+If you have a newer system, I recommend using GGI.  And with libGGI
+SVGAlib wrapper, you can run also your dynamically linked SVGAlib apps
+under X using libGGI... Recommended!
+
+Linux framebuffers & GPM:
+GPM (mouse server for x86-linux) doesn't seem to like if I catch virtual
+console switches, therefore you have to run it with --debug argument to
+disable that (and therefore W server can't restore screen after console
+switch).
+
+libGII (GGI supplementary library):
+There were minor bugs in the new input handling functions until May 15th
+1999. Try using the latest version from CVS if there's not yet current
+enough release of libGII.
+
+libGGI:
+There were some threading issues with libGGI until end of 1999 when
+GGI moved from Glibc/pthread mutexes to it's own (wserver/GGI/GII
+started looping infinitely in sched_yield() although wserver doesn't
+use threads)...
+
+
+NON-OBVIOUS W FEATURES (GOTCHAS :))
+
+* You can have only one application with a W_TOP window running at the
+  time.  W_TOP is intended for whole screen programs like wgone and
+  wsaver or programs like wcprgt, not for escaping window stacking order.
+
+* w_allocColor() doesn't change the on-screen palette even for window
+  having focus, it's intended to be called before window is opened!  For
+  immediate (ie not needing focus change to take effect) on-screen
+  palette changing, use w_changeColor().
+
+* As W doesn't use half pixel co-ordinates (circles are drawn with center
+  and radius values instead of the enclosing rectangle co-ordinates),
+  line widths will be odd values (1, 3, 5...).  Line widths are ATM an
+  ugly hack (mine) anyway :).
+
+* Rasterized (w_d*()) graphics operations use window bitmap position
+  (0,0) as the raster pattern origin.  Common origin garantees that
+  patterns drawn with different graphics primitives will align.  However
+  that's only true for -DREFRESH servers.  As default W server output is
+  optimized by writing the output for windows on top straight to the
+  screen instead of the window bitmap.  Patterns drawn this way may not
+  align with ones drawn in different window position or ones drawn into
+  the window bitmap.  You gain some, you lose some...  If this matters,
+  draw to a hidden window and use blitting.  Btw.  although -DREFRESH
+  server is sligthtly slower, it's also smaller (+ less tested).
+
+* If you want to use at the same time several programs drawing to the
+  root window, the results might not be what you would expect.  W
+  graphics contexts are window specific.  Therefore another program
+  might change an attribute one program has already set... FIX:
+  kill the programs and restart only ones which can co-exist.
+  (Remember always to (re)set attributes (mode, linewidth, pattern,
+  color, font, text style) before your program draws to the root
+  window as 'somebody' might have changed rootwin GC attributes.)
+
+* W server might chrash if sent:  a) a dynamic lenght packet with the
+  packet size set lower than the size(s) for content inside the packet
+  are or b) if the packet size is larger than the W packet buffer.  I
+  haven't tested this but would be interested if you'll do and notice
+  that indeed is the case!
+
+* The 'time' field difference between two WEVENTs is incorrect once
+  in every couple of days. You can stuff only so much milliseconds
+  into a long... This is mostly used for differentiating double/triple
+  clicks from single clicks so it shouldn't matter that much.
+
+* W is not (yet) 64-bit compatible or at least won't work correctly when
+  client and server are on  machines with different word lenghts.
+  In any way, why would you want to run little W on such a powerful
+  machine? :-)
+
+
+	- Eero

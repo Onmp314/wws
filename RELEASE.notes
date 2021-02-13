@@ -1,0 +1,237 @@
+Read the README before installing!
+
+----------- 2009 notes ---------------
+
+Changes, August:
+- Add Unix98 pty naming i.e. linux ptmx and pts support to Wterm + Wvt as
+  Linux doesn't anymore support the old pseudo terminals, see "man 4 pts".
+- Updated the W-Lua interpreter and Lua bindings to work with Lua v5.1.
+- Added versioning to all the shared libraries (libW, libWt, libW2X).
+- Made installation directory re-locatable, added Debian packaging.
+- FHS compliance: non-binary files go to DATADIR, not LIBDIR.
+- Fixed overlapping string copies and more GCC 4.x warnings.
+- Install also scripts, wlaunch icons and documentation.
+- Wrote missing manual pages for several games and apps.
+- Version updated to 1.4.5.
+
+----------- 2008 notes ---------------
+
+Changes, August:
+- SDL backend now uses largest available (8-bit) resolution and fullscreen.
+- Fixed compiler errors and many of the new warnings for GCC 4.x[1]
+  (from Ubuntu Feisty Linux/Glibc version) and "const"ed strings
+  where applicable.
+- Fixes in Wt widgets,  WT_LABEL and related string getopt() methods
+  require char** instead of char* (strings are usually only setop()ed
+  so this hasn't been noticed).
+- Enable Wlib tracing if WTRACE environment variable is set.
+- Update/improve README and Makefile instructions.
+
+Only SDL and Linux 2.6 framebuffer backends were tested.
+
+[1] Gcc 4.x gives also many uchar* vs. char* pointer signedness differences
+warnings, most of these weren't fixed because they would need changing in
+W server, Wlib, W toolkit and spill to most applications.  Couple of worst
+ones (under wt/) are disabled with "-Wno-pointer-sign".
+
+
+----------- 2003 notes ---------------
+
+CHANGES
+
+- SDL is now the default target.
+- W toolkit and apps are now part of the whole package.
+- W server can now be be compiled with SDL. I added support for this as
+  SDL is a bit more common than GGI.  NOTE: SDL does a busyloop with
+  a small sleep because it doesn't offer select() like interface (for
+  listening both events and sockets).
+- I moved all the initialization and exit code to their respective
+  backend files under server/graph directory from the main window server
+  code under server/.  I have tested (compiling) this only for the SDL,
+  GGI and linux-fb backends so expect breakage for other backends.
+  Although this cleaned up the code, it meant also a bit of a code
+  duplication in server/graph/*c.
+- I compiled W server with GCC 3.3 and ran it with valgrind.
+  All the bugs these reported are fixed.
+- GGI backend works now also with X11 (and new version of GGI)
+- LUA language bindings are updated to Lua v4 (changes are incompatible
+  with the previous 3.2 version).
+- There are now "design" diagrams of the W window system and the W
+  server components.
+- HTML documentation is now upto date.
+
+
+BUGS
+
+- Both GGI and SDL colors work wrong on top of 8-bit X11 (X reverses
+  the order of bits I think).
+- For some reason my SDL-1.2.5 (SuSE 8,2) gives left+middle button
+  events from my right mouse button and I've kludged it by interpreting
+  by also middle button as right button in sdl.c (right button is
+  used both for pasting and window topping).
+
+
+NOTES
+
+I have tested only SDL backend properly. Of GGI and linux framebuffer
+backends I have tested that they compile.
+
+SDL & GGI are double buffered so in server/config.h I switch on the
+slower REFRESH mode and do screen updates after backbuffer has been
+updated. Framebuffer backend works faster than they, but it has some
+problems:
+- FB works only in 8-bit and monochrome modes
+- FB needs mouse support from GPM (adding support for the new
+  Linux input core would be nice as GPM sucks a bit, or at least
+  did when I last tested it)
+- FB doesn't translate all the keys (this isn't a problem for
+  wterm as shells interpret the escape sequences, but in text
+  widgets you can't e.g. use arrow keys)
+
+
+----------- 2000 notes ---------------
+
+---------- October notes -------------
+
+- Added W-lua, a version of Lua interpreter with binding for W window
+  system. Lua is a small language intended for embedding.
+- Wlib.h fixes for 'tolua', which generates the Wlib wrapper for
+  the Lua interpreter.
+
+----- August/September notes ---------
+
+Tested earlier changes:
+- socket.c works again, I slightly broke it... :-)
+- fixed makefile problems resulting from dynamically generated Wlib.h.
+- updated docs & .cvsignore files (added also more examples about
+  nice color text programs that work in wterm :-))
+- updated W toolkit package (diffs form other persons)
+
+
+----- July notes ---------
+
+This is a patch integration 'release'.  It compiles but is not
+otherwise tested.
+
+- Makefile has now 'installfull', 'cleanfull' and 'verycleanfull'
+  targets which deal with Wt, wxlib, demos, benchmark and fontutils
+  which normal targets won't touch.
+- w_queryevent() shouldn't now return from w_queryevent() when
+  timeout is < 0 and there are no ready FDs, *until* it has an event
+  to return (earlier it return NULL if if select() got something, but
+  it wasn't yet a complete event packet).
+- Benjamin C. W. Sittler <bsittler@iname.com>:
+  - Wterm color/reverse handling patch (does resets now correctly)
+    and color script updates
+  - server port can now be set from command line
+  - Wlib.h is now dynamically generated so that Wlib version number gets OK
+  - Some W2Xlib updates
+  - other minor changes
+- Jay Carlson <nop@place.org>:
+  - 'wkbd' application (not complete yet)
+  - optional CLICK_TO_FOCUS window manager policy (I would like to see
+    this selectable from command line :-))
+  - WTINYSCREEN defines (if set, use different fonts/sizes in server & apps)
+  - fix for absolute mouse co-ordinates (seen as *really* fast window
+    positioning in Wserver on GGI/X :-))
+  - other minor changes
+
+----- June notes ---------
+
+- MacMiNT updates including better color functionality on Mac/MiNT.
+
+----- April notes ------
+
+- PS version of W logo :-).
+- Some mono icons for wlaunch.
+- Minor documentation fixes and new W scripts.
+- Increase max packet data size from 1020 to 4000 (also max
+  image data width, see lib/block.c).
+- DirectBuffer check to GGI code and allow GGI screen size
+  overriding from command line.
+
+----- 1999 --------
+
+---- October notes ---------
+
+- Frank Wille brought the (Amiga) NetBSD part up to date.
+
+----- June notes ---------
+
+- A few MacMiNT fixes.
+- GGI is again the default target on x86-linux (you can still compile
+  W for framebuffers or svgalib on x86 though).
+
+----- May notes ---------
+
+- Implemented key release and modifier events (to be able to make a
+  proper W port of Heretic :))).  ATM works only for GGI  (due to
+  dastardly way console grabs this info on other 'platforms').
+- Added Jonathan Oddie's MacMiNT port code.  It includes two devices
+  which translate Mac mouse and keyboard (with arrow key mapping) to
+  Atari MiNT style events for W server.  Needs still some testing.
+- moved -Wmissing-prototypes from SERVERCFLAGS to BASECFLAGS in configs
+  to catch missing 'static' keywords from W app function declarations.
+- Changed all(?) the remaining Wlib function and internal server bitmasks
+  from signed to unsigned.  INITP packet 'uid' is now long sized.
+- Implemented EVENT_MMOVE event type (mouse move reporting).
+- Accelerate only relatively reported mouse movements.
+- GII bug got fixed and W GGI support works again, better than ever...
+  Previously you could run W apps under X with W2Xlib for debugging,
+  now you can run also W *server* under it (as default, in 8-bit)!
+- Ported Heretic for W (piece of cake because it was already
+  ported for several different platforms).
+
+---- April notes ---------
+
+- Fixed Wlib w_bmheader() bug which chrashed wbm, wetscape and
+  some other programs when outputting mono images on color server.
+- Updated wbiff (I plan to use it with *X* at work... <wink>).
+- Fixed W2Xlib w_putblock() region flush offset.
+- Added pbmbitflip utility.
+
+It seems that I have forgotten to mention that GGI and W2Xlib map
+special (arrow and function) keys to specific W key events and
+Wt now knows about them... So, with them you won't need to use
+Emacs style keybindings just to move cursor within Wt apps...
+
+---- March notes ---------
+
+Simplified get_eventmask() and changed mouse looping functions to
+call event_mouse() straight. Changed mouse and kbd initialization
+return value meanings.
+
+GGI changed it's API again.  Because that's starting to get annoying
+and I haven't yet gotten the new GII stuff to work, fbdev+GPM is
+now the default x86-linux target.  Remember to use '--debug' wserver
+option to get mouse working (GPM doesn't like VT-switch catching).
+
+---- January notes -------
+
+Changed graphics driver, mouse and kbd initializations, added x86-linux
+framebuffer/GPM support and updated libGGI support (now it will actually
+work, at least to an extent :)).
+
+Only one of the x86-versions which will work completely correctly is
+SVGAlib one *in* 8-bit mode.  Others won't restore screen after
+VT-switch (for different reasons) and GII doesn't (yet) seem to
+map dead keys... For more info on the x86-linux stuff, see docs/TODO.
+
+Still only x86-linux and MiNT versions tested (haven't got others).  For
+example I haven't got any idea whether Sun or NetBSD (Amiga) graphics
+initialization and event handling code have been correct during the
+past two years....
+
+---- 1998 notes ------
+
+This is an official W version 1, Release 4 based on my unofficial
+Release 4 sources.  Libraries are now under LGPL copyright and the rest
+under GPL copyright.  The only official thing is the licence change,
+other changes still need verifying / fixing for other than x86-linux
+v2.2.x platforms.
+
+If you have an earlier W installation, you'll have to recompile
+everything as usual (see docs/CHANGES.Eero if you wonder why).
+
+
+	- Eero

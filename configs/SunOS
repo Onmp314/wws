@@ -1,0 +1,47 @@
+# SunOS / Sparc defines
+#
+# Sparc2/SunOS-4: sun4c
+# Sparc5/Solaris-2.4: sun4m
+# Ultra1/Solaris-2.5.1: sun4u
+#
+# only works on sun4c so far, so no further discrimination
+#
+# make has to be GNU make and C compiler preferably gcc.
+
+ARCH = SunOS
+
+WLIB  = libW.a
+WTLIB = libWt.a
+
+DIRECT8 = 1
+
+# If you don't mind less debuggable applications, you can move
+# -fomit-frame-pointer option from SERVERCFLAGS to BASECFLAGS.
+BASECFLAGS	= -pipe -Wall -Wmissing-prototypes -O3
+SERVERCFLAGS	= -fomit-frame-pointer -Iutil
+SERVERLDFLAGS	= -Lutil
+SERVERLIBS	= -ltermcap -lutil
+CLIENTLIBS	= -lW
+MATHLIB		= -lm
+
+# if wterm/wvt shouldnt' set TERMCAP enviroment variable, comment this out
+EXPORT_TERMCAP = 1
+
+# extras for programs needing GNU getopt
+UTILCPP		= /server/util
+UTILLIB		= /server/util -lutil
+
+CC = gcc
+MAKE = make
+RANLIB = ranlib
+AR = ar r
+CP = cp
+LN = ln
+RM = rm -f
+CHMOD = chmod
+INSTALL = install
+INSTALLBIN = install -s -m 755
+INSTALLDIRS = install -d
+
+# stuff you want to remove with 'make clean'
+JUNK = core *.rej *.orig

@@ -1,0 +1,36 @@
+.TH WMINES 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wmines \- minesweeper for W
+.SH SYNOPSIS
+wmines [-w \fIwidth\fP] [-h \fIheight\fP] [-m \fImines\fP] [-r \fIrounds\fP]
+.SH DESCRIPTION
+.I Wmines
+is a minesweeper game.  Your mission is to isolate all the mines on the
+window. A number in a block tells how many mines are in the immediate vicinity
+of the block. You need to deduce from the numbers around an un-clicked block
+whether it has a mine under it or not. If you think not, click the block. If
+the block concealed a mine, you lose, otherwise you'll see a new number (or an
+empty block if there are no mines around).
+.PP
+You can exit the program at the middle of a game with the 'q' key.
+.SH ARGUMENTS
+.TP
+-w
+Lets you specify the minefield width in blocks.
+.TP
+-h
+Lets you specify the minefield height in blocks.
+.TP
+-m
+How many mines the minefield will contain.
+.TP
+-r
+How many rounds you want to play (with increasing amount of mines, losing game
+quits the program).
+.PP
+Minefield width, height and amount of mines have reasonable limits. Minimum
+values are:
+.PP
+wmines -w 10 -h 10 -m 10 -r 1
+.SH LAST CHANGED
+11/1995 by Eero Tamminen

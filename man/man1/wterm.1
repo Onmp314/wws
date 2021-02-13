@@ -1,0 +1,164 @@
+.TH WTERM 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wterm \- W terminal emulator
+.SH SYNOPSIS
+wterm [-b] [-c] [-h] [-r] [-v] [-g \fIgeometry\fP]
+[-f \fIfont family\fP] [-s \fIfont size\fP]
+[\fIprogram {args}\fP]
+.SH DESCRIPTION
+\fIwterm\fP is the *powerful* terminal front-end for `w'... <evil-grin>
+.PP
+Well, it's a program emulating a `wterm' terminal to run a shell in it.
+You can specify which font to use with the `-f' and `-s' options.
+.PP
+The `wterm' terminal type has VT52 escape codes + additional eight
+attribute extensions switching on and off bold, dimmed, italics and
+underline text effects.  It doens't support color, just black and white.
+.PP
+\fIwterm\fP sets into the environment variables
+.B TERM
+and
+.B TERMCAP
+a it's name and a description of it's capabilities.  This way you
+shouldn't need a /etc/termcap entry any more even for programs which
+don't understand terminfo.
+.SH OPTIONS
+.TP
+\fB-g\fP \fIwd,ht,x,y\fP
+You may use the geometry option `-g' to set \fIwterm\fP window size to
+other than the default 80*25 characters.  It's particularly useful when
+you want to use the larger fonts.  The option takes an argument like:
+\fB80,25,0,0\fP, four values for columns, lines, x-position and
+y-position separated with `,'.  In the case of \fIwterm\fP columns and
+lines are counted in characters, not pixels.
+.IP
+The position part may either be omitted (in which case you'll have to
+place the window) or may give the window position in pixels on the
+screen.  If you give a negative number the value will be counted from
+the opposite border on instead of the upper left corner.  See manpage
+for \fIscan_geometry\fP for more info.
+.TP
+\fB-c\fP
+If you want \fIwterm\fP to emulate the physical console, you may give
+the option `-c'.  Only one \fIwterm\fP at the time can do this.  This
+will catch output done to the console by any program and write it in the
+window.
+.IP
+Catching console output now works for all three OS supported, but is a
+bit tricky for Linux as there is no pre-determined console:  I've seen
+talkd being so clever not to write to /dev/console (which wterm would
+have caught) but to write to the tty wserver is running on - this
+doesn't destroy the screen, but you'll never see that message!
+.IP
+MiNT W1 with the XDD driver should be much safer than previous versions
+so you shouldn't need to worry about this (see xconout2 README for more
+info).
+.TP
+\fB-f\fP \fIfamily\fP
+You can set the font family with the `-f' option and...
+.TP
+\fB-s\fP \fIsize\fP
+ ... the font size with the `-s' option.
+.TP
+\fB-b\fP
+The default is a steady cursor.  With option `-b' you'll get
+blinking cursor instead.
+.TP
+\fB-r\fP
+With the `-r' option you can start \fIwterm\fP with reversed colors.
+.TP
+\fB-v\fP
+If you want a visual bell rather than a beep for ASCII 7, you can
+give the `-v' option on the command line.
+.TP
+\fB-h\fP
+Option `-h' stands for `help' and shows you the usage line.
+.TP
+\fB-d\fP
+Option `-d' can be used to make W library output function trace
+information.
+.PP
+Rest of the command line should be the command you wish to execute in
+\fIwterm\fP.  If you don't give a command the shell given by the
+environment variable SHELL is started.  If this variable doesn't exist,
+the login shell from your /etc/passwd entry is used.  If that also
+doesn't exist, /bin/sh is used.  If that (or the program you specified)
+\fBalso\fP doesn't exist not very much will happen...
+.PP
+\fIwterm\fP naturally quits when the executed command ends.
+.SH TERMINFO
+There might be programs which demand
+.B TERMINFO
+terminal description although there's a valid
+.B TERMCAP
+one.  At least some programs compiled with ncurses work better if you
+have one.  You can compile the \fIwterm\fP terminfo source file with
+\fItic\fP.
+.SH XTERM COMPATIBILITY
+If \fIwterm\fP is compiled with the XTERM_EMU define, it will understand
+the \fIxterm\fP (ANSI) colors and output mouse events in both the X10
+and X11 modes when requested.  Former gives application one report per
+click, second mode reports both the mouse button press and release.
+There are a couple of console programs, supporting the mouse escape
+sequences, that I know of:
+.PP
+In \fIEmacs\fP just execute (M-x) the `xterm-mouse-mode' function or add
+this line to your `~/.emacs' file:
+.br
+	(xterm-mouse-mode 1)
+.PP
+For the \fIJed\fP editor you could create a W alias in your startup script:
+.br
+	alias wjed="jed -f 'evalfile(\\"mousex\\")'"
+.PP
+\fIMidnight Commander\fP file manager / browser needs to be run with the
+`-x' option.
+.PP
+In \fIPine\fP there's a configuration option for `enable-mouse-in-xterm',
+select it and save the configuration.  You'll also need to `export
+DISPLAY=""' (or `setenv DISPLAY') for this to work.
+.PP
+With \fITin\fP you just need to turn ON the `use_mouse' option in
+`~/.tin/tinrc'.
+.PP
+If you know any others, please mail them to the W mailing list!
+.PP
+.SH COLOR APPLICATIONS
+There are also some other nice, well behaving color applications available
+for text terminals, such as: \fIslsc\fP spreadsheet, \fIslrn\fP news reader,
+\fImutt\fP mail reader, \fImmail\fP BBS mail reader, \fIlynx\fP and
+\fIw3m\fP WWW-browsers, \fIfunktracker\fP mod tracker, \fIaumix\fP and
+different text mode CD-players,  \fIcolor-cal\fP calender, \fIxaos\fP
+fractal zoomer, \fImyman\fP pacman game...
+.PP
+The 'generic' option that will enable color for most programs (which
+don't read color capabilities from terminfo database) having hardcoded
+xterm/ANSI color codes is '-c'.  This works at least for \fIMidnight
+Commander\fP and \fIMinicom\fP.  Programs using \fIAA\fP, \fISlang\fP
+or \fIncurses\fP libraries, should in general work automatically right.
+.SH SECURITY
+You might want to run this SUID to something so that system terminal log
+files can be updated.  In that case be careful for whom you'll allow to
+run this as this isn't checked for holes very thoroughly.
+.SH EXAMPLES
+Here's an example using several of the \fIwterm\fP options:
+.br
+	wterm -f fixed -s 10 -r -g 80,50 top s &
+.PP
+If you want to reverse terminal colors (on monochrome W server), these
+two shell macros change the background color (replace "\\e" with ESC
+character):
+.br
+	alias black="echo \\eb0\\ec1\\eE"
+.br
+	alias white="echo \\eb1\\ec0\\eE"
+.PP
+ESC-b and ESC-c control codes change the fore- and background colors
+to color mapped to the given index.
+.SH SEE ALSO
+.IR pts (4),
+.IR tic (1),
+.IR scan_geometry (3),
+vt52.txt
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

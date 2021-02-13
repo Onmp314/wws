@@ -1,0 +1,44 @@
+.TH w_open 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_open(), w_close() \- open/close a window
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_open(WWIN *" win ", short " x0 ", short " y0 ");"
+.sp
+.BI "short w_close(WWIN *" win ");"
+.fi
+.SH DESCRIPTION
+.I w_open()
+opens a window previously created by
+.I w_create()
+or
+.I w_createChild()
+at the given coordinates. The coordinates may be selected so that part of the
+window will lay outside of the screen, or even the complete window - but you
+won't find that very clever.
+.PP
+If you give
+.B UNDEF
+(-32768) as coordinates you'll get a rectangle on the screen so that you can
+determine the place to put the window with the mouse interactively. In this
+case press the left mouse button to place the window or the right button to
+discard it.
+.PP
+.I w_close()
+closes a window. I will also close all of its childs, but remember the state
+they were in so that they'll automatically be reopened if you reopen their
+parent.
+.SH RETURNS
+Both of them return 0 if everything is OK and something negative in case of
+any error (like you're discarded a place).
+.SH BUGS
+none?
+.SH SEE ALSO
+.IR w_create (3),
+.IR w_delete (3),
+.IR w_resize (3),
+.IR w_move (3)
+.SH LAST CHANGED
+13th. Feb. 1996 by TeSche

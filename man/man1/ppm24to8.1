@@ -1,0 +1,54 @@
+.TH ppm24to8 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+ppm24to8, ppm8to24 \- convert images between PPM and W P8M format
+.SH SYNOPSIS
+.nf
+ppm24to8 [PPM file]
+.br
+ppm8to24 [P8M file]
+.fi
+.SH DESCRIPTION
+.I ppm24to8
+and
+.I ppm8to24
+are filters for converting image data between the standard PPM (Portable
+PixMap used by netPBM tools and other) truecolor format and the
+.I Wlib
+specific P8M variant which uses a palette and which the
+.B wbm
+utility therefore understands much better.
+.PP
+The standard PBM/PGM/PPM formats don't have a palette, they store all
+the color information in the image data itself.  Their image header
+doesn't tell how many colors they actually have, just how many bits are
+used to represent them.  As
+.I wbm
+(being a very simple program) needs to know how many and which colors
+the images have to set the window palette, it doesn't understand
+truecolor images.  Large P8M format images also take less memory because
+their image data is 8-bit and just the palette entries 24-bit.
+.PP
+For example on how these could be used, see the
+.I wbm
+manual page.
+.SH BUGS
+Currently
+.I ppm24to8
+and
+.I ppm8to24
+store both the source and destination images in memory instead of doing
+the conversion 'on-the-fly'.  For example for a 640x400 image this could
+mean 640*400*(3+1) = 1MB of wasted memory.
+.PP
+If you run out of memory, you could store intermediate results to disk
+(see examples in the
+.I wbm
+manual page) or you could add the 'on-the-fly' operation to these
+filters by using modified versions of the
+.I Wlib
+PBM read/write code and add the results to standard W distribution. :-)
+.SH SEE ALSO
+.IR wbm (1)
+.SH LAST CHANGED
+12th June 1998 by Eero Tamminen
+

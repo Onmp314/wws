@@ -1,0 +1,14 @@
+BUGS		- Known W bugs (mainly W backend shortcomings)
+CHANGES		- More detailed notes of Tesche's changes upto 1996
+CHANGES.Eeros	- More detailed notes of my changes upto 1999
+COPYRIGHTS	- Copyrights held on W code
+FAQ		- Frequently asked questions
+GPL		- GPL license
+LGPL		- LGPL license
+PORTING		- Instructions on porting W to other platforms
+README		- Read this first!!!
+README.MacMiNT	- Notes on the W MacMiNT port
+README.old	- Tesche's old W README
+README.*        - Notes for other parts of W (subdirectories/components)
+RELEASE.notes	- Latest release notes from 1998 onwards
+TODO		- (Oldish) things to do

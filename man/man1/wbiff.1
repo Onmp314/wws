@@ -1,0 +1,35 @@
+.TH WBIFF 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wbiff \- mail monitor for W
+.SH SYNOPSIS
+wbiff [options]
+.SH DESCRIPTION
+.I Wbiff
+is a tool to show you if new mail has arrived in your mail folder. It
+looks by default for /var/spool/mail/$USER, but there's an option for
+setting what file to watch.  You could monitor eg your syslog file...
+.PP
+You can give
+.I Wbiff
+an option to start a (normally a mail reader) program when you click
+it's window.
+.SH OPTIONS
+.TP
+\fB-c, --command\fP
+Set which command to execute when you click onto wbiff window.
+.TP
+\fB-g, --geometry\fP
+Set wbiff window size and position.
+.TP
+\fB-m, --monitor\fP
+Set which file you want to monitor.
+.TP
+\fB-d, --debug\fP
+Set Wlib debugging on.
+.TP
+\fB-h, --help\fP
+Display help and exit.
+.SH ORIGINAL VERSION
+1994 by TeSche
+.SH LAST CHANGED
+4/1999 by Eero Tamminen

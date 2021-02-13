@@ -1,0 +1,83 @@
+# defines for MiNT on the Macintosh
+# known to its devoted followers (all two of them) as MacMiNT :)
+
+ARCH = MiNT
+MAC = 1
+
+# If you have linker supporting the old style library names, use bW.olb
+# and bWt.olb.  NOTE: Some Makefiles use ifeq($WLIB,bW.olb) test to check
+# whether to use old or new library name.
+WLIB  = bW.olb
+WTLIB = bWt.olb
+
+# set the folowing to wherever you keep your macintosh libraries and headers
+# (converted for MacMiNT, naturally)
+MACLIB = /mac/lib
+MACINC = /mac/h
+
+# graphics drivers compiled into server; enable BMONO if your screen width isn't
+# a multiple of 32 pixels
+PACKEDMONO = 1
+#BMONO = 1 
+DIRECT8 = 1
+
+# Default binaries are compiled with -mbaserel flag as that makes
+# them smaller (with -mpcrel) and their code can be shared in memory.
+# There are a few gotchas though:
+#
+# Gdb can't debug binaries loaded as basererelative, so you'll also have
+# to switch off the baserel flag from program header ('toglclr -fshare $@')
+# before debugging a baserelatively compiled binary.
+#
+# Because baserelative offsets are word sized, linker won't
+# compile program as baserelative when its DATA size exceeds 64K.
+# You might try moving the largest array last, as it's the range of
+# variables *start* addresses which counts.
+#
+# NOTES:
+# - If you don't mind less debuggable applications, you can move
+#   '-fomit-frame-pointer' option from SERVERCFLAGS to BASECFLAGS.
+# - I use -mint in CFLAGS to make sure __MINT__ is defined for compiling
+# - Depending what names your libraries have (been linked to) you might
+#   need to add -mint to SERVERLDFLAGS and CLIENTLDFLAGS too.
+# - curses library contains termcap functions if you don't have it separately.
+
+BASECFLAGS	= -mint -DMAC -Wall -Wmissing-prototypes -O2 -mpcrel
+SERVERCFLAGS	= -fomit-frame-pointer -Iutil
+SERVERLDFLAGS	= -Lutil -L$(MACLIB)
+SERVERLIBS	= -ltermcap -lsocket -lutil -llibmac
+CLIENTCFLAGS	= -mbaserel
+CLIENTLDFLAGS	= -mbaserel
+CLIENTLIBS	= -lbW -lbsocket
+#MATHCFLAGS	= -m68881
+MATHLIB		= -lbpml
+
+# 
+# extras for programs needing GNU getopt
+UTILCPP		= /server/util
+UTILLIB		= /server/util -lbutil
+
+# Kay Roemer's portlib has crypt() for wgone and forkpty() for wterm/wvt
+CRYPTLIB	= -lbportlib
+PORTLIB		= -lbportlib
+
+# if wterm/wvt shouldnt' set TERMCAP enviroment variable, comment this out
+EXPORT_TERMCAP = 1
+
+# prefix for the (gdb) symbol file linker binary
+SYM_LD = -B/usr/bin/sym-
+
+CC = gcc
+MAKE = make
+#RANLIB = ar s
+AR = gcc-ar rs
+CP = cp
+LN = ln -s
+RM = rm -f
+CHMOD = chmod
+INSTALL = install
+INSTALLBIN = install -s -m 755
+INSTALLDIRS = install -d
+
+# stuff you want to remove with 'make clean'
+JUNK = core *.rej *.orig

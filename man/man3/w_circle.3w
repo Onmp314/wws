@@ -1,0 +1,30 @@
+.TH w_circle 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_circle(), w_dcircle(), w_pcircle(), w_dpcircle() \- draw a circle
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_circle(WWIN *" win ", short " x0 ", short " y0 ", short " r ");"
+.sp
+.BI "short w_dcircle(WWIN *" win ", short " x0 ", short " y0 ", short " r ");"
+.sp
+.BI "short w_pcircle(WWIN *" win ", short " x0 ", short " y0 ", short " r ");"
+.sp
+.BI "short w_dpcircle(WWIN *" win ", short " x0 ", short " y0 ", short " r ");"
+.fi
+.SH DESCRIPTION
+.I w_circle()
+draws a circle with radius 'r' (and aspect ratio = 1) at (x, y) in the
+given window, using the current mode.
+.PP
+.I w_dcircle()
+draws a dashed circle, using the current pattern.
+.PP
+.I w_pcircle()
+draws a filled circle, using the current mode.
+.PP
+.I w_dpcircle()
+draws a dashed filled circle, using the current pattern.
+.SH LAST CHANGED
+14th. Feb. 1996 by TeSche

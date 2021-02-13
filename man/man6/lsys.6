@@ -1,0 +1,157 @@
+.TH LSYS 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+lsys \- L-system parser for W
+.SH SYNOPSIS
+.nf
+lsys [<options>] < rules
+.fi
+.SH DESCRIPTION
+.I Lsys
+is an L-system parser.  L-systems are grammar based fractals.  The
+grammars consist of certain tokens that denote graphical actions.  Some
+of the tokens can then be recursively expanded (to a specified depth)
+following the rule(s) in the grammar.  The images (after the resulting
+new grammar has been translated to graphics) are self-similar at
+different magnifications and therefore fractals.
+.SH ARGUMENTS
+.TP
+\fILsys\fP options are:
+\fB-w\fP \fIwindow width\fP		(image is auto-scaled
+.br
+\fB-h\fP \fIwindow height\fP		 to this size)
+.br
+\fB-d\fP \fIrecursion depth\fP		(0-4 are reasonable)
+.br
+\fB-a\fP \fI360 / turn angle\fP		(3->, in degrees)
+.PP
+The rules file may include the following things in the order given:
+.IP
+\(bu angles (360 / turn angle to use)
+.br
+\(bu axiom  (initial rule)
+.br
+\(bu recursion rules
+.br
+\(bu comments
+.TP
+Recursion rules have the following syntax:
+<token> = <rule>.
+.PP
+Of the tokens used in the rules, following are converted to graphics
+instructions:
+.IP
+.I f
+: draw forward
+.br
+.I F
+: move forward
+.br
+.I +
+: turn clockwise		(see the angle argument)
+.br
+.I -
+: turn anti-clockwise
+.br
+.I [
+: store position		(used for branching)
+.br
+.I ]
+: restore position
+.PP
+White space (spaces, tabs, newlines) in the input will be ignored.
+.PP
+Lsys stops input parsing at the first non-rule string (second non-space
+character not '='), before which you can have as many rules as you wish.
+.PP
+You could also give the angle and rules 'interactively' (quit input with
+carriage return (to flush stdin) and ctrl-D (EOF)) although without
+prompt that might not be very comfortable though...
+.SH EXAMPLES
+The lsys default, classical van Koch's snowflake, is:
+.IP
+.nf
+6
+f++f++f
+f=f-f++f-f
+.fi
+.TP
+Explanation:
+\(bu angle used = 360/6 = 60 degrees
+.br
+\(bu axiom (initial rule) draws a triangle
+.br
+\(bu rule changes every line segment to '_/\\_' recursively
+.PP
+Use different depth values (0-) and see for yourself how the rule
+"f-f++f-f" ('_/\\_') is applied to every occurrence of 'f' (straight
+line):
+.IP
+.nf
+lsys -d 1 < /dev/null
+.fi
+.PP
+Other grammars to try out are (with depths about 2->):
+.TP
+Plant:
+.nf
+12
+f
+f=f[+f]f[-f]f
+.fi
+.TP
+Bush:
+.nf
+16
+f
+f=ff+[+f-f-f]-[-f+f+f]
+.fi
+.TP
+Dragon curve (depths 8->):
+.nf
+4
+x
+x=x+yf+
+y=-fx-y
+.fi
+.TP
+Peano space fill:
+.nf
+4
+x
+x=xfyfx+f+yfxfy-f-xfyfx
+y=yfxfy-f-xfyfx+f+yfxfy
+.fi
+.TP
+Square Sierpinsky:
+.nf
+4
+f+f+f+f
+f=ff+f+f+f+ff
+.fi
+.PP
+As you see the grammars can include untranslatable tokens.  You can use
+them to compose more complex grammar expansion rules.
+.SH TECHNICAL NOTES
+Because lsystems' fractal dimensions may differs for different grammars
+/ recursion depths, I have to calculate the whole grammar to check image
+dimensions for auto-scaling.  That may take some time before lsys starts
+to draw to the opened window.
+.PP
+For example, using depth 5 on the last grammar example would expand it
+into 67228 (4*7*7*7*7*7) 'f' tokens (= lines, which take 16 bytes each
+to transmit to W server).  Also the line length given to 'f' token would
+be less than one pixel with the default window size.
+.PP
+Because of those plant models, I decided that the starting direction
+should be up.
+.SH LITERATURE
+See any general book on fractals...
+.PP
+Nowadays 3D, raytraced, genetic, mutating, multilevel etc.  enhanced
+L-system programs are used to create realistic looking 3D plants, fire
+etc.  for film-industry, environment simulations and other hi-tech
+visualizations.
+.SH AUTHOR
+Eero Tamminen, t150315@cc.tut.fi
+.SH LAST CHANGES
+Feb 1996 by Eero

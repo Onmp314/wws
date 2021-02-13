@@ -1,0 +1,63 @@
+
+ This is a beta release of my little Toolkit for W. I consider it fairly
+complete by now, except for three things:
+
+ - some missing widgets (namely scale, multiline text input and menus)
+ - only one ficus per application (not one for every toplevel window)
+ - only one user-event-handler function per widget
+
+ this may change in the future.
+
+
+ What do you need to use it?
+
+ - w1r3pl2 patched with all the diffs in patches/w1r3pl2-patches.tar.gz
+
+
+ What is it?
+
+ Well, The W Toolkit is a widget library that sits on top of Wlib. It provides
+you with:
+
+ - widget support functions
+ - timeout handling
+ - handling for additional inputs/outputs
+ - a simple clipboard
+ - some convenience functions for standard dialogs (alert, entrybox,
+   popup, fileselsector).
+ - widgets, of cause
+
+ Widgets can be distinguished into two basic categories: 1) simple widgets, like
+buttons, that contain no other widgets, and 2) composite widgets that are used
+as containers for other widgets. Currently there are the following widgets:
+
+ - simple ones:
+   * push-button, radio-button, check-button
+   * label (just like button, except you cannot push it down)
+   * drawable (thing that you can draw into, what did you expect?)
+   * scrollbar
+   * icon-edit-widget
+   * html-widget
+   * (one line) text-input-widget
+   * vt 52 widget
+   * list box widget
+   * fileselecto widget
+   * (multiline) text display widget
+
+ - composite ones:
+   * shell (toplevel window with title bar etc)
+   * box (arranges its children in a left-to-right top-to-bottom order)
+   * pane (stacks its children in X or Y direction)
+   * form (simply places childs where you told them via WT_XPOS, WT_YPOS)
+   * viewport
+   * Tk-like packer
+
+ For documentation look into Doc/, for some test programs Test/.
+
+ If you want to write widgets, there are a lot you can choose from:
+multiline-textinput, menubar, menu-panes, status-bar, ...
+
+
+have fun, Kay.
+
+$Id: README,v 1.1.1.1 1998/11/01 19:15:04 eero Exp $

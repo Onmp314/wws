@@ -1,0 +1,91 @@
+----- 3/1998 -----
+
+New files:
+
+* bdf2wfnt.c
+* bdf2wfnt.1
+* COPYRIGHT.bdf2c
+* vga16.wfnt
+
+Vga16.wfnt is a VGA line graphics font. You could use it for example for
+viewing DOS texts, connecting to (older) PC-BBSes, playing Nethack with
+the 'IBMgraphics' option set and so on.  Originally it was 'vga.bdf'
+font coming with the GPL Dosemu program.
+
+
+'bdf2wfnt' is an utility for converting X Window System BDF fonts into W
+font format.  It's derived from 'bdf2c' program by Andrew Scherpbier.
+The original copyright is in the 'COPYRIGHT.bdf2c' file.  Program is
+documented in the 'bdf2wfnt.1' file.
+
+
+You can save any font your X server uses, as BDF with the 'fstobdf'
+program.  'xlsfonts' lists all the fonts server has.  You can browse the
+fonts with 'xfontsel' program and use 'xfd' to see the whole charset for
+the font.  Note that 'fstobdf' needs font server ('xfs') to be running,
+only after that you can use something like this:
+	fstobdf -server tcp/localhost:7100 -fn font | bdf2wfnt | fontedit -
+
+Where 'font' is one of the names listed by 'xlsfonts'.  If you'll use
+'*' or '?'  wildcards, the first matching font will be used.  'fontedit'
+will save the font into current directory with a correct name for W
+server.  You can then just copy it into the W font directory for testing
+with eg.  'wchars'.  If you're not happy with results, use 'fontedit' to
+finetune the font header and data.
+
+Note that most fonts are copyrighted.  Check their licensing before
+you'll distribute them further!
+
+
+I would be interested about programs converting other font types to BDF
+or W font format.  For example Wine Windows emulator comes with
+'fnt2bdf' program with which you can convert Windows *bitmap* fonts into
+BDF.
+
+I'm of course also interested about free fonts.  TeX fonts are free
+so a conversion utility for them would be nice.  Then somebody could
+port XDvi to W (hint, hint, hint)...
+
+
+	- Eero
+
+----- TeSche's original notes -----
+
+ You may have already read elsewhere that from W1R2 on I use X11 fonts
+instead of the Atari ones - they're nicer, there're more and they're not
+copyrighted... at least not that strictly than the Atari fonts. To be fair,
+here's a credit:
+
+ These fonts were taken from the X11R6 distribution of the X-Consortium at
+MIT in the hope that they'll be useful for this window manager too. You should
+be able to get the raw fonts from every site mirroring X11R6.
+
+ Since I don't know about the format they come in the original version (and
+because I think my format is *very* quick and memory-saving) I had to convert
+them. There's no fully automatic way to do this, but here's a brief description
+about what to do if you want to use other X11 fonts than the supplied ones:
+
+ 1) Find a machine running X11R6 (earlier version may do well too).
+
+ 2) Use 'xfontsel' to select the font you want to use.
+
+ 3) Use 'xfd -* <fontname>' to display the font.
+
+ 4) Use 'xv' to take a window shot of the xfd window and save it as a pbm-raw
+monochome picture.
+
+ 5) Run 'fontconv' on all the 'pictures' you've taken with steps 2 - 4.
+
+ Fontconv currently generates fixed width fonts only, allthough there's
+theoretical support for proportional fonts in W1R2 - this may come later.
+There's one place where you're asked to enter any combination of 'b' or 'i'
+chars in fontconv for each font - this is used to set the flags in the font
+header indicating if this is a bold or italic (or bolditalic) font. There's
+(currently) no way to detect this automatically.
+
+ Since you've got to run through this procedure only once for each font - if
+you make everything right - I don't consider this too much trouble at the
+moment to do something better. At least it didn't disturb me...
+
+ciao,
+TeSche

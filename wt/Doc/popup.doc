@@ -1,0 +1,132 @@
+
+ The `popup' widget class
+ ------------------------
+
+ 1 Usage
+ -------
+
+	#include <Wlib.h>
+	#include <Wt.h>
+
+	widget_t *popup = wt_create (wt_popup_class, <parent>);
+
+
+ 2 Description
+ -------------
+
+The popup widget offers user a pull- or pushdown `menu' depending on how
+they are used (see WT_STATE option).  If popup is persistant (doesn't
+vanish when mouse button is released), left click will select menu item
+or submenu and right click will remove the popup, otherwise they
+submenus are opened automatically and selection happens when mouse
+button is released.
+
+
+ 2b Related utilities
+ --------------------
+
+Toolkit has wt_popup_cb() utility function for managing normal popups:
+	void wt_popup_cb(widget_t *parent, wt_menu_item *menu, int pressed);
+
+Where `parent' is container for the popup (normally top widget), `menu'
+is pointer to the menu structure array and `pressed' tells function what
+to do.  If application calls this function from a button widget
+callback, the `pressed' argument can be passed straight, otherwise
+application has to parse mouse button press and release event as button
+widgets do.  Only left mouse button events should be used.  Function
+uses the `info' member of the last item of the `menu' (it's end marker)
+for storing the popup pointer.  This has following implications:
+
+	- There will be only one popup / menu visible at the time.
+	- This `info' member has to be initialized to NULL.
+	- It may not be changed while popup is being handled.
+
+				   
+
+ 3 Configuration Options
+ -----------------------
+
+Here are the options that can be set or queried with setopt() and
+getopt() functions.
+
+
+WT_USRVAL (long *)
+
+	Store a user defined value (which is a long, but you pass a
+	pointer to it) in the widget. This is useful if you have to
+	associate some extra data with a widget.
+
+
+WT_XPOS (long *)
+
+	Set / get the X position of the widget, which is relative to the
+	upper left corner of the parent window.
+
+
+WT_YPOS (long *)
+
+	Set / get the Y position of the widget, which is relative to the
+	upper left corner of the parent window.
+
+
+WT_WIDTH (long *)
+
+	Set / get the width of the widget.
+
+
+WT_HEIGHT (long *)
+
+	Set / get the height of the widget.
+
+
+WT_FONT (char *) / (WFONT **)
+
+	Set / get the font used.
+
+
+WT_LIST_ADDRESS (wt_menu_item *menu)
+
+	Set / get the menu item structure array from which popup entries
+	are parsed.  The structure and meaning of it's members is
+	described in `menuitem.doc'.
+
+
+WT_STATE (long *)
+
+	Set / get whether popup mouse will vanish when mouse if
+	released, or should it first wait a mouse press:
+		PopupTransient
+		PopupPersistant	(default)
+
+	Popups which are brought into being with mouse pressed should be
+	set to PopupTransient before realization.  If mouse is released
+	on top of the widget that initiated the popup, only then popup
+	should be changed to a PopupPersistant.
+	
+
+WT_DRAW_FN (void (*) (widget_t *, short x, short y, BITMAP *)
+
+	If this isn't set, popup item icons _won't_ be drawn!  Global
+	wt_drawbm_fn() function is available for handling bitmaps, for
+	other illustrations you'll have to create your own function.
+
+
+WT_ALIGNMENT (long *)
+
+	Set / get how the texts / icons are aligned on the popup:
+		AlignLeft	(default)
+		AlignCenter
+		AlignRight
+
+	If popup contains icons, all the item texts are offset with the
+	width of the widest icon, so that texts will be aligned.
+	Vertically item icon and text are separately centered to to
+	the space allocated for them.
+
+
+WT_ACTION_CB (void (*) (widget_t *popup))
+
+	Set / get what funtion will be called after selection to get rid
+	of the popup.  Has to be set before realization!  (normally just
+	a parent's function that does wt_delete() on the popup and then
+	removes reference to it)

@@ -1,0 +1,20 @@
+.TH WCHARS 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wchars \- show characters in the given W font
+.SH SYNOPSIS
+.nf
+wchars <font family> <font size> [<styles: bilru>]
+.fi
+.SH DESCRIPTION
+.I Wchars
+shows the whole character table for the font that Wlib returns with
+given parameters.  If you give "" as the family, or 0 as size, the
+server will use the default value.  Styles that can be requested with
+identification letters are:  bold, italics, light, reverse, underline.
+.PP
+If you left-click a character or press a key in the window, character in
+question is inverted and it's ASCII-code is shown in the window title.
+.PP
+You can insert the character into Wlib clipboard with a right-click.
+.SH AUTHOR
+(w) 11/1996 by Eero Tamminen

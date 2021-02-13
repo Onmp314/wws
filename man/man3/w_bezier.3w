@@ -1,0 +1,33 @@
+.TH w_bezier 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_bezier(), w_dbezier() \- draw a bezier curve
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.B short controls[8];
+.sp
+.BI "short w_bezier(WWIN *" win ", short *" controls ");"
+.sp
+.BI "short w_dbezier(WWIN *" win ", short *" controls ");"
+.fi
+.SH DESCRIPTION
+.I w_bezier()
+draws a bezier curve defined by the two control vectors given
+in the controls array, using the current mode.
+.PP
+.I w_dbezier()
+draws a dashed bezier, using the mode and current pattern.
+.PP
+The control array contains the four (x,y) coordinates pairs that define
+the start and end positions for the two control vectors.
+.SH NOTES
+Bezier curves are drawn by subdivisioning the curve until
+the line segments are small enough.
+.SH SEE ALSO
+.IR w_line (3),
+.IR w_poly (3),
+.IR w_setmode (3),
+.IR w_setpattern (3),
+gfxdemo source
+.SH LAST CHANGED
+13th. Feb. 1996 by TeSche

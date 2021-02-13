@@ -1,0 +1,23 @@
+.TH w_flush 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_flush() \- flush buffered W server requests
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "void w_flush(" void ");"
+.fi
+.SH DESCRIPTION
+.I w_flush()
+will flush the libs internal buffer for outgoing calls. Normally data isn't
+immediately send to the wserver but buffered instead to avoid socket overhead,
+so graphic output may be undesirably delayed (or even suppressed if the program
+terminates after doing its job). Whenever you call
+.I w_queryevent()
+or
+.I w_flush()
+this buffer will be send to the wserver so that graphic output will be done.
+.SH SEE ALSO
+.IR w_queryevent (3)
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

@@ -1,0 +1,4 @@
+usr/bin/xbm2w
+usr/lib/libW*.so
+usr/share/man/man1/xbm2w.1
+usr/share/man/man3/*

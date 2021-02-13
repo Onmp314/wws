@@ -1,0 +1,50 @@
+
+WARZONE HISTORY
+
+Started game as a test program for my sinple Grafix GEM library under the
+name 'King of the Hill' around 1994/1995. At the spring of 1996, I
+converted the game for W window system and Wlib.
+
+
+August 1996
+- Converted game to W window system.
+- New weapons: Roller, Bouncer.
+
+
+September 22th 1996
+- Lots of changes.
+- New Weapon: Nuker.
+- Dynamically allocated shots.
+- Better damage control.
+- startup dialog.
+
+
+September 25th 1996
+- Fixed lots of bugs.
+- Better integration to W toolkit.
+- Lots of changes to gameplay (finetuning).
+- New weapons: Digger, Tripler and proper Laser.
+- Shields: Absorb, Bounce, Repulse.
+- Multiple rounds.
+
+
+September 26th 1996
+- Documentation.
+- Separated different game object managements better.
+- Started waeapon/shield list management handling.
+- New shield: Raise.
+- Wind.
+
+
+September 28th, 1996
+- Weapon part lists are now hierarchical.
+- Re(de)fined weapon movement variables.
+- New weapons: Bigger, Surprise.
+
+October 26th, 1997
+- Changed player input to use 'range' and 'dial' widgets.
+- Fixed a bug with 'surprise' shot type.
+
+
+	- Eero			http://www.modeemi.cs.tut.fi/~puujalka/
+	

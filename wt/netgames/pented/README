@@ -1,0 +1,40 @@
+
+	Pented, a Pente server
+
+
+INTRODUCTION
+
+This is a port of William Schubert's X11 Pente game brain to my
+GameFrame framework.  It offers a Pente game server for the Pente client
+that I have done.  The Pente client has an additional undo feature,
+which isn't support by this Pente server.
+
+GameFrame is a library that offers a framework for turn based, networked
+two player games using BSD sockets.
+
+
+OPTIONS
+
+The only command line argument the server understands, is the playing level:
+	pented -l <level>
+
+Level 1 is complete idiot, level 3 is good for quick games and levels 4
+and 5 use recursive board evaluation for harder opposition.  The default
+3 should be fast enough for even the lowliest of machines.
+
+
+PENTE RULES
+
+Players position a stone at the time.  In addition to more popular
+Gomoku game, opponent's stones can also be removed from the board.  This
+can be accomplished by positioning one's own stones to both ends of the
+opponent's pair (only pairs can be removed).  Game is won by the first
+player who gets five-in-a-row (five pieces either in horizontal,
+vertical or diagonal row) or removes five pairs from the opponent.
+
+The game is made more even with the restriction that the starter needs
+to place his second stone three positions off the first one.
+
+
+	- Eero
+

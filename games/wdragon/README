@@ -1,0 +1,79 @@
+CHANGES
+
+++eero, 11/97
+- Converted tile bitmaps from shorts to bytes for endian neutralness.
+++eero, 6/98
+- Fixed double clicking so that it removes only legal tiles.
+- Added tile shadows and enlargened their default width.
+- Added +1 to tile shadow clearing width.
+
+Btw. Did you notice that WDragon doesn't use W fonts?  It draws
+the texts on the buttons with lines...
+
+
+- original README for Jens Kilian's version follows -
+
+02/26/96
+
+This is a port of the "Dragon" program for X11 to W1R3 on the Atari ST.
+The port is not yet complete; specifically,
+
+	- double-clicking doesn't work
+	- some of the graphics options (reverse video, tile shadows)
+	  don't work (due to missing functionality in W)
+	- some tiles aren't highlighted properly
+
+I'd also like to add some nicer bitmaps.
+
+As distributed, the program uses only the smallest of the available bitmaps.
+If you want larger windows, change the N_BITMAP_SIZES parameter in the
+Makefile.  I have only a plain Atari ST with monochrome monitor, and I
+can't use any of the larger sizes.
+
+Have fun,
+
+	Jens.
+
+- original README for the X11 version follows -
+
+05/18/89
+
+Dragon is a game.  It implements a version of the ancient game of Mah-Jongg.
+
+Dragon is known to work on a Sun 3/60 running SunOS 3.5 with X11R3 from
+MIT.  It compiles with the Sun compiler and with gcc version 1.31.
+
+I have been told that the current version (this one right here) runs
+correctly on monochrome, gray-scale, and color DEC equipment.  Presumably
+it will run correctly on most servers at this point.
+
+Dragon is a "monochrome" application; it uses two colors; the default
+"foreground" color and the default "background" color as defined and
+determined by the X Toolkit.
+
+If you do a "make all" initially then the Makefile will be rebuilt using
+the MIT imake program.  If you do not have the MIT imake program (or don't
+want to use it) then rename the Makefile.Canned file to be Makefile and
+hand-edit it for use at your site.
+
+04/19/89
+
+As of this writing, the Athena Dialog widget has a bug that can cause Dragon
+to get a segmentation/memory error.  There is code in X11R3/lib/Xaw/Dialog.c
+in the SetValues function that looks like this:
+
+********
+    {
+	Arg args[1];
+!	XtSetArg( args[1], XtNlabel, w->dialog.label );
+	XtSetValues( w->dialog.labelW, args, XtNumber(args) );
+    }
+********
+it needs to be changed to:
+********
+    {
+	Arg args[1];
+!	XtSetArg( args[0], XtNlabel, w->dialog.label );
+	XtSetValues( w->dialog.labelW, args, XtNumber(args) );
+    }
+********

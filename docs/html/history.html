@@ -1,0 +1,184 @@
+<html>
+<head>
+<title>Gone and buried</title>
+</head>
+<body>
+
+<h3>W history</h3>
+
+Torsten Scherer (TeSche) starts W in 1994 because X is too heavy under
+MiNT... The goals were: W should be lightweight and easy to program
+graphics window system, use client-server model and be able to run
+WTerm, Wload, WClock and simple games.  Torsten achieved these goals
+admirably, I'd say!  :-)<p>
+
+Currently W and W toolkit are "maintained" by Eero Tamminen.<p>
+
+
+<h4>New W 1 features (Dec 1994)</h4>
+
+<ul>
+  <li>Use sockets instead of named pipes.
+  <li>Kay R&ouml;mer (MiNT networking support / library author) joins
+      the development team.
+</ul>
+<p>
+
+<h4>New W 1 Release 2 features (Dec 1995)</h4>
+
+<ul>
+  <li>SunOS and m68k Linux support.
+  <li>Bug fixes and lots of modifications to the W.
+  <li>Buffered socket communications. Speeds up things quite a lot.
+  <li>Stuff not totally inside a window is discarded for safety.
+  <li>New font scheme with support for proportional fonts.
+  <li>Faster background window updating (only 'dirty' area).
+  <li>Eero Tamminen joins the team.
+  <li>Lots of new fonts.
+  <li>New source layout.
+</ul>
+<p>
+
+<h4>New W 1 Release 3 features (Feb 1996)</h4>
+
+<ul>
+  <li>Preliminary Amiga NetBSD support.
+  <li>Graphics contexts (TeSche).
+  <li>Convex polygons (Kay).
+  <li>Clipping for graphics functions (Kay).
+  <li>Faster patterned graphics functions (Eero).
+  <li>Basic widget toolkit library functionality on top of Wlib (Kay).
+  <li>Unlimited number of windows, sub windows (for the toolkit)
+      and window gadgets (TeSche & Kay).
+  <li>'Proper' manual pages instead of the ASCII ones (TeSche).
+</ul>
+<p>
+
+<h4>W1R4-beta features (1997)</h4>
+
+<ul>
+  <li>Preliminary x86 Linux support (Torsten).
+  <li>Get/putblock functions can now do most mono<->color conversions
+      either in W server or library (TeSche & Eero).
+  <li>Support for user settable colors (TeSche).
+  <li>Experimental window resizing (TeSche).
+  <li>Ellipse and bezier functions (Eero).
+  <li>Graphics modes to the pattern functions (Eero).
+  <li>Better support for the W toolkit in Wlib (TeSche).
+  <li>Basic widgets for the W Toolkit (Kay & Eero).
+  <li>HTML 1.0 conforming WWW-Browser and an enhanced W terminal (Kay).
+</ul>
+<p>
+
+<h4>New W 1 Release 4 features (1998)</h4>
+
+<ul>
+  <li>Graphics modes for patterned graphics routines.
+  <li>BMONO monochrome driver for x86-linux/svaglib. DIRECT8
+      driver works now with svgalib too.
+  <li>Arc and pie functions.
+  <li>Incomplete and crude line width support.
+  <li>Server fonts and font path can be set in configuration file.
+  <li>New font format offering more information about the font.
+  <li>w_init() returs defaults for font family and size.
+  <li>New text styles (bold, 'italic' (slanted), light).
+  <li>Completed bitmap format conversions (no palette conversion).
+  <li>PBM (Portable BitMap) read/write functions.
+  <li>A couple of new utilities and games.
+  <li>Updated Wlib manual pages.
+  <li>W2Xlib Wlib emulation library for X11.
+  <li>W server license is now GPL and W library licencies are LGPL.
+  <li><i>Eero Tamminen</i> is now official maintainer of W and Wt.
+</ul>
+<p>
+
+<h4>New W features (1999)</h4>
+
+<ul>
+  <li>New libGGI/libGII graphics/input backend.
+  <li>New Linux framebuffer/GPM graphics/input backend.
+  <li>Separate key press and release events (for W port of Heretic).
+  <li>W can map keys (arrows, function keys) if backend support
+      keycode translations.
+  <li>MacMiNT version of W (by Jonathan Oddie).
+  <li>Timestamps for events.
+  <li>Mouse acceleration.
+</ul>
+<p>
+
+
+<h4>New W features (2000)</h4>
+
+<ul>
+  <li>Wterm/wvt color handling fixed, server port can be specified
+      from command line (Benjamin Sittler).
+  <li>Optional CLICK_TO_FOCUS window manager policy (Jay Carlson).
+  <li>W bindings for Lua language interpreter.
+  <li>Max image width increased form 1020 to 4000 (in Wlib image
+      conversion functions).
+</ul>
+<p>
+
+
+<h4>New W features (2003)</h4>
+
+<ul>
+  <li>New SDL graphics/input backend.
+  <li>W server works with backends that double buffer the output (it
+      calls screen_update() when appropiate).
+  <li>Server code restructuring which might have broken other backends.
+  <li>W bindings for Lua updated to Lua v4.
+  <li>Updated HTML documentation.
+</ul>
+<p>
+
+<hr>
+
+For more complete description of the changes between different versions,
+see the <a href="../docs/">Changelogs</a> file(s).
+<p>
+
+<hr>
+
+<h3>Authors' W development systems:</h3>
+
+<h4>Torsten Scherer (1996)</h4>
+<ul>
+	<li>Atari TT (32MHz m68030).
+	<li>19" monochrome monitor.
+	<li>OS: m68k-Linux.
+</ul>
+
+<h4>Kay R&ouml;mer (1996)</h4>
+<ul>
+	<li>Atari MegaSTe.
+	<li>?
+	<li>OS: MiNT.
+</ul>
+
+<h4>Eero Tamminen</h4>
+<ul>
+	<b>1996:</b>
+	<li>Atari ST (8MHz m68000) 4/32MB.
+	<li>12" monochrome monitor.
+	<li>OS: MiNT.
+	<br><b>1998:</b>
+	<li>Intel P133, 32MB/2GB.
+	<li>Matrox Millenium / 15" color monitor.
+	<li>OS: Linux (slightly patched v2.0.28).
+	<li>STonX ST emulator for testing big endianess.
+	<br><b>2002:</b>
+	<li>AMD XP 1700, 512MB/40GB.
+	<li>Matrox G550 / 17" color monitor.
+	<li>OS: Linux (SuSE 8).
+</ul>
+<p>
+
+No, I don't have Windows&reg; at home as I don't trust product for which
+there's no source available...
+
+
+<hr>
+<a href="oak@welho.com">oak@welho.com</a>
+</body>
+</html>

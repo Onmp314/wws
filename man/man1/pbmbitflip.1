@@ -1,0 +1,24 @@
+.TH pbmbitflip 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+pbmbitflip \- convert XBM images to W mono images
+.SH SYNOPSIS
+.nf
+xbmtopbm [PBM file]
+.fi
+.SH DESCRIPTION
+.I pbmbitflip
+is a helper-filter for converting a regular X XBM image file into
+a W BM_PACKEDMONO bitmap file.  It flips the image data bits
+(X uses different bit order from W).
+.SH USAGE
+W scripts/ directory has
+.I xbm2h
+example script showing how to use this in converting XBM includes
+to W image includes.
+.SH SEE ALSO
+.IR ppm24to8 (1),
+.IR ppm8to24 (1),
+.IR wbm (1)
+.SH LAST CHANGED
+April 1999 by Eero Tamminen
+

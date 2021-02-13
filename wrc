@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# This is a sample startup file for W.  W server executes this through
+# the shell, so you can do here pretty much anything.
+
+# depending on your enviroment, some of these might be needed
+unset TERMCAP
+unset SYSTERM
+TERM=wterm
+
+wclock -g ,,0,0 &
+wload -g ,,0,93 -u 3 &
+wterm -g ,,-0,-0 &
+
+# my own 1997 preferences ++eero
+#wvt -g ,,0,0 -f lucidat -s 13 -r  &
+#wterm -g ,8,-0,-0 -f fixed -s 7 -r &
+#wcjpeg afrog.jpg -r -s &

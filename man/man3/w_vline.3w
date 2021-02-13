@@ -1,0 +1,24 @@
+.TH w_vline 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_vline(), w_dvline() \- draw a vertical line
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_vline(WWIN *" win ", short " x0 ", short " y0 ", short " ye ");"
+.sp
+.BI "short w_dvline(WWIN *" win ", short " x0 ", short " y0 ", short " ye ");"
+.fi
+.SH DESCRIPTION
+.I w_vline()
+draws a vertical line, using the current mode.
+.PP
+.I w_dvline()
+draw a dashed vertical line, using the current mode and pattern.
+.PP
+Both of the are substantially faster than the generic line functions.
+.SH SEE ALSO
+.IR w_line (3),
+.IR w_hline (3)
+.SH LAST CHANGED
+14th. Feb. 1996 by TeSche

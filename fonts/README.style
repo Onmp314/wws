@@ -1,0 +1,119 @@
+I added a bit of extra information to the W font headers. Here's
+what they contain now:
+
+typedef struct {
+  long magic;			/* font `generation' id */
+  long lenght;			/* font data lenght */
+  short header;			/* FONTHDR + info lenght */
+
+/* font type */
+  short height;			/* font size */
+  ushort flags;			/* proportional, CHARSET etc. */
+  ushort styles;		/* styles implemented in font */
+
+/* style effect variables */
+  short thicken;		/* `boldness' */
+  ushort skew;			/* slanting pattern */
+  ushort reserved;
+  ushort effect_mask;		/* usable (=readable) style effects */
+
+/* font cell information */
+  short baseline;		/* baseline offset for vertical aligning */
+  short maxwidth;		/* width of the widest char */
+
+  char family[16];		/* font family name, NULL terminated */
+} FONTHDR;
+
+
+Followed with optional ASCII strings (included into `header' lenght)
+character width table and the streamed font data (every character
+bitstream is aligned to 32 bits).  Minimum header size is therefore 300
+bytes and smallest font file size for a font with all characters is 1324
+bytes (fonts upto size 3x10, 4x8 or 5x6).
+
+flags, styles and effects members use the flags defined in the Wlib.h
+header file.  Font family name may contain only ASCII letters as it's
+used for font *filename* composition (which has to be portable).
+
+The new 'magic' string is "WFN1". Values in the font header are in
+big endian (network) byte order as before.
+
+
+Style implementations:
+
+* F_REVERSE: not hard to guess, eh?
+* F_UNDERLINE: line is drawn to y0 + baseline + 2.
+* F_ITALIC:  when going down on font scanlines, every time there's a bit
+  set in the skew pattern, the font is shifted to left.  The 'baseline'
+  will be aligned to given horizontal position.
+* F_BOLD:  font data is shifted right and ORed with itself 'thicken'
+  times.  ATM W server does that only once, so F_BOLD textstyle is of
+  use mainly for small fonts only (characters in the font need one empty
+  pixel column on their right side!).  'fontedit' does shifting
+  'properly' and in both in vertical and horizontal directions.
+* F_LIGHT:  font data is ANDed with the current window pattern.  Font
+  size should be quite large for this style to be readable.
+
+Effect_mask is used to mask off requests for styles which font already
+implements and styles which would produce unreadable text (for example
+F_LIGHT on small fonts).
+
+When applications uses fonts with different sizes on the same line,
+the fonts should be aligned along their baselines.
+
+
+SPEED
+
+Using several styles at the same time instead of none doesn't take
+(noticably) more time.  Underline is implemented separately with hline
+(because of the slanted style, reverse option can't be done with pbox).
+w_printchar and w_printstring use internally the same code in W server,
+just the request packets differ.
+
+
+	- Eero Tamminen
+
+
+---- the original readme ---------
+
+ this is a brief documentation of how fonts are stored in W. this has
+changed really often in the last few releases so I don't directly want to
+claim it won't change again in a future release, but then I think it has
+somehow settled by now, so here it is:
+
+ font file layout for W1R2
+ =========================
+
+ fonts under W are pixel fonts only. each font file contains only one font
+in a fixed size and in one attribute. the same font with other attributes
+(like bold or italic) must go to a different file. fonts always consist of
+all 256 characters. the font file starts with a header:
+
+typedef struct {
+  long magic;
+  ushort flags;
+  short height;
+  char widths[256];
+} FONTHDR;
+
+ followed by the font data.
+
+ 'magic' is the 4 character string 0x57464E54 (string "WFNT")
+
+ 'flags' is a combination of F_BOLD and F_ITALIC
+
+ 'height' is the height of the chars in pixel
+
+ 'widths[]' is the width of each of the chars in pixel (here's the theoretical
+support for proportional fonts burdened:)
+
+ font data is a bitstream of pixels, where each character is coded from the
+top left corner to the lower right one. the first pixel of each character is
+defined to be aligned to a long boundary, the other pixels of that character
+follow in a bitstream without caring of boundaries or alignments. this way
+up to 31 bits are wasted per char, but who cares for that?
+
+ got me so far? good, because there's nothing more to say about that...
+
+ciao,
+TeSche

@@ -1,0 +1,34 @@
+.TH w_setsaver 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_setsaver() \- register client as screen saver
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "short w_setsaver(short " seconds ");"
+.fi
+.SH DESCRIPTION
+.I w_setsaver()
+registers a client as a screen saver to the wserver, where
+.B seconds
+is the number of seconds of idle time after which you want the screensaver to
+be activated. This number may not be smaller than 10 seconds.
+.PP
+Once you've successfully called
+.I w_setsaver()
+you must expect
+.B EVENT_SAVEON
+and
+.B EVENT_SAVEOFF
+events which will be send from the wserver and act accordingly. Whether you
+create the window first and wait for the saver to be activated then or first
+wait and only create a window each time the saver should really be run is your
+problem. My saver does it the second way, which may of course fail due to
+memory problems.
+.SH RETURNS
+zero if everything is OK or something negative if any error occurred (number of
+.B seconds
+smaller than 10 or already another screensaver running?)
+.SH BUGS
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

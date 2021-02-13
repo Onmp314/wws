@@ -1,0 +1,25 @@
+.TH w_readimg 3w "Version 1, Release 4" "W Window System" "WLIB FUNCTIONS"
+.SH NAME
+w_readimg() \- read monochrome GEM IMG file
+.SH SYNOPSIS
+.nf
+.B #include <Wlib.h>
+.sp
+.BI "BITMAP *w_readimg(char *" fname ", short *" width ", short *" height ");"
+.fi
+.SH DESCRIPTION
+.I w_readimg()
+reads a monochrome IMG graphics file to a BITMAP struct, padding data so
+that it fits for a later
+.I w_putblock()
+and returns the size of the IMG through the x- and y-pointers.
+.SH RETURNS
+a non-zero pointer to a BITMAP struct if everything is OK or NULL otherwise
+(IMG not found or isn't monochrome?)
+.SH SEE ALSO
+.IR w_readpbm (3),
+.IR w_xpm2bm (3),
+.IR w_putblock (3),
+.IR w_freebm (3)
+.SH LAST CHANGED
+15th. Feb. 1996 by TeSche

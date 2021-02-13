@@ -1,0 +1,35 @@
+#
+# An example W toolkit configuration file
+#
+# Format:
+# - Everything on line after '#' character is ignored.
+# - Configurations are set with: 'variable=value'.
+# - Maximum read line lenght is 255 characters.
+#
+# Note:
+# - If you don't set an option, a W toolkit default is used.
+# - Convention is that if setting is widget specific, setting is prefixed
+#   with the widget (group) name.
+
+# First the global settings
+
+font_normal = fixed
+font_fixed = fixed
+font_size = 10
+
+# Then widget specific ones...
+
+# new century schoolbook is nice proportional font for HTML widget
+html_normal = book
+html_fixed = fixed
+html_fsize = 13
+
+# override VT default (=shared) colors
+#vt_color0 = 0x000000	# black (bg)
+#vt_color1 = 0xff0000	# red
+#vt_color2 = 0x00dd00	# green
+#vt_color3 = 0xeeee00	# yellow
+#vt_color4 = 0x0000dd	# blue
+#vt_color5 = 0xff00ff	# magenta
+#vt_color6 = 0x00cccc	# cyan
+#vt_color7 = 0xdddddd	# light-gray (fg)

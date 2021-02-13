@@ -1,0 +1,30 @@
+.TH REVERSID 6 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+reversid \- Reversi / Othello board game server
+.SH SYNOPSIS
+.nf
+reversid -l \fIlevel\fP
+.fi
+.SH DESCRIPTION
+.I Reversid
+is a Reversi / Othello board game engine server for the networked
+turn based, two player game framework by Eero Tamminen.
+.SH OPTIONS
+The reversi server playing level (how deep the board checks for computer
+move are) can be set with the '-l <number>' option.  The default server
+level is 3 which is fast enough even for the lowliest of machines and
+offers suitable opposition for beginners.  Levels above 4 begin to offer
+some resistance depending on who starts.
+.SH REVERSI / OTHELLO RULES
+Players position one stone onto the board at the time.  The opponent's
+pieces that are between (horizontally, vertically and diagonally) the
+new piece and the earlier pieces of the same color, will be converted to
+the new color.  Only moves which convert opponent's pieces are legal.
+Game ends when both players pass.  The player with most stones on the
+board wins.
+.SH SEE ALSO
+.IR creversi (6),
+.IR amigod (6),
+.IR pented (6)
+.SH LAST CHANGED
+09/2009 by Eero Tamminen

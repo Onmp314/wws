@@ -1,0 +1,113 @@
+.TH WBM 1 "Version 1, Release 4" "W Window System" "W PROGRAMS"
+.SH NAME
+wbm \- simple image viewer for W
+.SH SYNOPSIS
+.nf
+wbm [options] [PBM file]
+.fi
+.SH DESCRIPTION
+.I Wbm
+reads and shows images in the PBM format.  It was originally done just
+to test the Wlib image conversion functions, but is fairly usable image
+viewer too when combined with NetPBM utilities and \fIdjpeg\fP.  NetPBM
+utilities can convert many common image formats to the uncompressed
+intermediate image format called PBM, the Portable BitMap.  \fIdjpeg\fP
+program can uncompress JPEG images to PBM format.
+.PP
+If \fIwbm\fP is called without an image file name, it will read standard
+input. That way you can use it with image conversion filters. There's a
+script called \fIwjpeg\fP which shows how this could be automated.
+.PP
+You can exit \fIwbm\fP by pressing a key in it's window.
+.SH OPTIONS
+if the image you'll give to \fIwbm\fP is a DIRECT (8 or 24-bit) one
+you can resize it with (other types can't be scaled):
+.TP
+\fB-g\fP \fIgeometry\fP
+Set the image window geometry in the format understood by Wlib
+scan_geometry() function ('-g w,h,x,y' or '-g w,h').
+.TP
+\fB-s\fP
+Will scale the image to the root window size. This overrides the
+size set with the above geometry option.
+.TP
+\fB-t\fP
+is an alternative for scaling as it tiles the image to the window.
+This is especially nice with the root window option.
+.TP
+\fB-r\fP
+Outputs image to the W root window.
+.PP
+If you want to test W server and library image conversion and
+transmission functions, there are three options:
+.TP
+\fB-c\fP \fItype\fP
+Convert image format to given type (see values in the Wlib.h) before
+it's sent to W server.  This is mainly of use with servers which have so
+little colors that you prefer converting images to monochrome.  If
+you'll use this option for monochrome conversion ('-c 1')
+your images will be FS-dithered instead of the ordered dithering that
+later done \fIw_putblock()\fP would use.
+.PP
+Letting \fIdjpeg\fP convert truecolor image to 8-bit grayscale will save
+quite a bit memory when you're converting image to monochrome.
+.TP
+\fB-e\fP
+Normally when you're converting images to monochrome, Wlib will do
+contrast expansion for the image palette before FS-dithering. If you
+want to disable this (on slower machines it might take some time,
+especially with truecolor images), use this option.
+.TP
+\fB-d\fP
+Switch Wlib debugging on. This will print what W library functions are
+called and with what parameters.
+.PP
+If you want to see just the image information, use the \fI-i\fP option.
+.SH NOTES
+\fIWbm\fP doesn't support colors very well.  It just sets the palette if
+server has enough free colors, but it won't reduce image colors if server
+has not.  Therefore you have to use an auxiliary program like
+\fIppmquant\fP to quantize image to number of colors available on W
+server.  Another utility called \fIppm24to8\fP will be needed for
+converting the 24-bit PPM images, that most of these tools produce, into
+Wlib specific P8M (8-bit 'PBM' image with palette) format which tells
+\fIwbm\fP how many colors it needs.  If you're running in monochrome,
+you could just convert the images into PGM, 8-bit grayscale format,
+that \fIwbm\fP understands.
+.SH  EXAMPLES
+Here are a few examples on how \fIwbm\fP could be used:
+.nf
+	giftopnm image.gif | ppm24to8 | wbm
+.br
+	giftopnm image.gif | ppm24to8 | wbm -r -t
+.br
+	giftopnm image.gif | ppmquant -fs 14 | ppm24to8 | wbm
+.br
+	ppmtopgm image.ppm | wbm -c 1
+.br
+	djpeg -grayscale image.jpeg | wbm -c 1 -r -s
+.br
+	djpeg -grayscale image.jpeg | wbm -c 1 -r -t
+.br
+	djpeg -colors 30 image.jpeg | ppm24to8 | wbm
+.br
+	djpeg -colors 248 image.jpg | ppm24to8 | gzip > image.p8m.gz
+.br
+	gunzip -c image.p8m.gz | wbm
+.br
+	gunzip -c image.p8m.gz | ppm8to24 | ppmquant -fs 6 | ppm24to8 | wbm
+.fi
+.PP
+Take a look at the scripts coming with W and modify them to your needs
+following the above examples.
+.SH AUTHOR
+(w) 1997 by Eero Tamminen
+.SH SEE ALSO
+.IR djpeg (1),
+.IR giftopnm (1),
+.IR ppmquant (1),
+.IR pbm24to8 (1),
+.IR wsetbg (1),
+.IR w_readpbm (3)
+.SH LAST CHANGED
+14th June 1998 by Eero Tamminen

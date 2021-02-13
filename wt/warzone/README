@@ -1,0 +1,137 @@
+
+	WarZone (w) 1996 by Eero Tamminen
+
+
+INTRODUCTION
+
+WarZone is a 2-8 player artillery game.  It's a bit similar to the
+'Scorched Earth' game on DOS and the 'Scorched Tanks' game on Amiga (to
+name a but few, more popular, games of this particular genre).  WarZone
+uses monochrome graphics and runs under W window system using W toolkit
+as it's interface engine.
+
+
+OPTIONS
+
+When starting WarZone you can specify how many players there will be.
+The number of players can't be changed in-game. The default is two.
+
+
+STARTING WarZone
+
+First WarZone presents you with a dialog for entering the player names
+and number of rounds to play.  First round (zone) begins when you click
+the 'Play' button.  WarZone can be quit by clicking the 'Quit' button
+when you'll get back to the startup dialog.
+
+
+PLAYING WarZone
+
+Each of the players have on the 'WarZone' window a circular habitat on
+the mountaineous surface of the moon.  Players take turns in selecting
+shields and shooting missiles at each other.  The starter is selected at
+random.
+
+From the open control dialog player can select the shield and missile to
+use and in which angle and with how much power the missile is launched.
+Clicking 'OK' button or closing the dialog will accept the dialog
+selections.
+
+At the top of the dialog is the current wind factor and at the bottom
+are listed player's habitat shield status, energy level and score.  When
+the shield's gone, missile hits begun to reduce habitat energy level.
+Energy level correlates straight to how much power can be used for
+launching the missiles.  When energy level goes to zero, habitat
+explodes and it's air hisses into void (if sound was enable when game
+was compiled :)).
+
+Missiles can harm a habitat directly, by hitting it (shields prevent
+that), by exploding near enough or by dropping the ground below the it.
+Player gets points from 'wounding' other habitats plus a bonus from
+destroying one.  Harming one's own habitat will lose points.
+
+Round can be interrupted by closing the WarZone window.
+
+
+SHIELD TYPES AND STRATEGY AGAINST THEM
+
+None:
+	Does nothing.
+
+Raise:
+	Raises the missiles that come near the habitat.
+	Shoot below habitat middle (evertyhing's legal in war(zone))...
+
+Absorb:
+	Swallows the missile contacting the habitat.
+	Shoot beside the habitat.
+
+Bounce:
+	Bounces off all the missiles contacting the habitat.
+	Shoot beside the habitat.
+
+Repulse:
+	Pushes off all the missiles coming near the habitat.  The shield
+	can be penetrated with a high velocity missile that is aimed at
+	the dead center of the shield.  Alternatively you might try
+	shooting Bigger/Nuker missiles beside the habitat.
+
+
+MISSILE TYPES
+
+Standard:
+	Uses the default explosive.
+
+Roller:
+	Rolls downwards on the ground.
+
+Bouncer:
+	Bounces twice from ground if doesn't hit anything.
+
+Digger:
+	Penetrates the ground and explodes when comes back to the
+	surface.
+
+Laser:
+	Moves in straight line except for the shield effects.  Doesn't
+	explode on ground (that's non-inflammable :)).  Limited range.
+
+Bigger:
+	50% bigger than Standard.
+
+Tripler:
+	Divides into three Standard missiles at the top of it's flight.
+
+Nuker:
+	Twice as big, heavy and devastating as Standard.
+
+Surprise:
+	When hits ground, spurts up five Standards.
+
+Note that none of the shields works for your own missiles. Ie. if wind
+brings them back or opponent bounces them on top of you, shame on you!
+
+
+TODO
+
+Implementing most of the features in 'Scorched Earth':
+
+- Dropping of habitats when ground below lowers.
+- New missiles like dirtball, lava and so on...
+- Bying of missiles/shields/gadgets and losing them from list after use.
+- Auxciliary gadgets like parasuits, battery and teleportation.
+- Carving mountains out of rock surface etc. images.
+- Computer players.
+
+
+NOTES
+
+I haven't done much to this as I have considered rewriting it completely
+in C++ someday. Maybe not even for W...
+
+
+
+28th September, 1996
+
+	- Eero			http://www.modeemi.cs.tut.fi/~puujalka/
+
